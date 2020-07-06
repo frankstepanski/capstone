@@ -1,6 +1,6 @@
 const { client } = require('./client');
 
-async createTables => {
+const createTables = async () => {
 
     // note: admin users will be created in admin screen only
     await client.query(
