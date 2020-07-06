@@ -1,5 +1,6 @@
 const { client } = require('./client');
 
+
 const createProduct = async ({
     name,
     description,
