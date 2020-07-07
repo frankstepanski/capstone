@@ -1,4 +1,12 @@
 const { client } = require('./client');
+const bcrypt = require('bcrypt');
+const SALT_COUNT = process.env.SALT_COUNT || 10;
+
+// take a string and return a hashed version
+async function hashStr(str) {
+    const hash = await bcrypt.hash(str, SALT_COUNT);
+    return hash;
+}
 
 // create new user (public and admin) screen
 const createUser = async ({
@@ -13,12 +21,13 @@ const createUser = async ({
 }) => {
   
     try {
+        const pw = await hashStr(password)
         const { rows: [ users ] } = await client.query(
             `INSERT INTO users(username, password, "firstName", "lastName", email, addresses, admin, active)
             VALUES ($1,$2,$3,$4,$5,$6,$7,$8)
             ON CONFLICT (username) DO NOTHING
             RETURNING *;
-            `, [username,password,firstName,lastName,email,addresses,admin,active]
+            `, [username, pw, firstName, lastName, email, addresses, admin, active]
         );
 
         return users;
@@ -66,6 +75,35 @@ const getAllUsers = async () => {
     }
 }
 
+const getUserByUsername = async (username) => {
+    try {
+        const { rows: [user] } = await client.query(`
+            SELECT * FROM users
+            WHERE username=$1;
+        `, [username]);
+
+        return user;
+    } catch (e) {
+        console.log(`> failed to get user with username ${username}`)
+        throw e;
+    }
+}
+
+// used to authenticate a user by UN and PW using bcrypt - necessary for login process
+const authenticate = async ({username, password}) => {
+    try {
+        const user = await getUserByUsername(username);
+        const authenticated = await bcrypt.compare(password, user.password)
+        if (!authenticated) {
+            throw new Error('invalid password');
+        }
+        return user;
+    } catch (e) {
+        console.log(`Could not authenticate user`)
+        throw e;
+    }    
+}
+
 const updateUser = async (id, fields = {} ) => {
 
     const setString = Object.keys(fields).map(
@@ -96,5 +134,7 @@ module.exports = {
     createUser,
     getUserById,
     getAllUsers,
-    updateUser
+    updateUser,
+    getUserByUsername,
+    authenticate
 }
