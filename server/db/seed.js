@@ -1,4 +1,13 @@
 const { client } = require('./client');
+const { 
+    createUser,
+    createCategory,
+    createProduct,
+    createReview,
+
+        } = require('./index');
+
+
 
 const createTables = async () => {
 
@@ -18,6 +27,15 @@ const createTables = async () => {
         ); `
     );
 
+    // each product belongs to only one category (1:1)
+    // lookup table
+    await client.query(
+        `CREATE TABLE IF NOT EXISTS categories (
+            id SERIAL PRIMARY KEY,
+            name VARCHAR(255) UNIQUE NOT NULL
+        );`
+    );
+
     await client.query(
         `CREATE TABLE IF NOT EXISTS products (
             id SERIAL PRIMARY KEY,
@@ -26,7 +44,7 @@ const createTables = async () => {
             price FLOAT(2) NOT NULL,
             stock INTEGER NOT NULL,
             rating FLOAT(1),
-            "categoryID" INTEGER REFERENCES categories(id) NOT NULL
+            "categoryId" INTEGER REFERENCES categories(id) NOT NULL
         );`
     );
 
@@ -51,22 +69,13 @@ const createTables = async () => {
         );`
     );
 
-    // each product belongs to only one category (1:1)
-    // lookup table
-    await client.query(
-        `CREATE TABLE IF NOT EXISTS categories (
-            id serial PRIMARY KEY,
-            name VARCHAR(255) UNIQUE NOT NULL,
-        );`
-    );
-
     // note: cart availabe only if user created; otherwise will in localstate
     // need another column???
     await client.query(
         `CREATE TABLE IF NOT EXISTS carts (
             id serial PRIMARY KEY,
             "userId" INTEGER REFERENCES users(id),
-            quantity INTEGER NOT NULL,
+            quantity INTEGER NOT NULL
         );`
     );
 
@@ -130,9 +139,9 @@ async function dropTables() {
         DROP TABLE IF EXISTS user_orders;
         DROP TABLE IF EXISTS orders;
         DROP TABLE IF EXISTS cart_products;
-        DROP TABLE IF EXISTS cart;
-        DROP TABLE IF EXISTS categories;
+        DROP TABLE IF EXISTS carts;
         DROP TABLE IF EXISTS products;
+        DROP TABLE IF EXISTS categories;
         DROP TABLE IF EXISTS users;
         `);
 
@@ -158,6 +167,17 @@ async function createInitialUsers() {
             email: 'frank.stepanski@gamil.com',
             addresses: [],
             admin: false,
+            active: true
+        });
+
+        const user2 = await createUser({
+            username: 'adubs', 
+            password: 'password1',
+            "firstName": 'Aidan',
+            "lastName": 'Weber',
+            email: 'aidanweber37@gmail.com',
+            addresses: [],
+            admin: true,
             active: true
         });
 
@@ -281,7 +301,7 @@ async function createInitialReviews() {
             comment: "I got his t-shirt for my younger brother. He loves the fit and the colors look great!"
         });
 
-        console.log("Finished creating initial reviews!");
+        console.log(">>>>> Finished creating initial reviews!");
     }
     catch(error) {
         console.error("Error creating initial reviews @ db/seed.js createInitialReviews()! Error: ", error);
