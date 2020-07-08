@@ -1,5 +1,3 @@
-const { client } = require('./client');
-
 const { 
     createUser,
     createCategory,

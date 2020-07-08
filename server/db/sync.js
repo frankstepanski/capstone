@@ -1,8 +1,11 @@
 const client = require("./client");
 
-const sync = async (force = false) => {
+const sync = async (FORCE = false) => {
 
-  if (force) {
+try {
+
+  if (FORCE) {
+
     await client.query(`
         DROP TABLE IF EXISTS posts;
         DROP TABLE IF EXISTS product_reviews;
@@ -31,7 +34,7 @@ const sync = async (force = false) => {
            active BOOLEAN DEFAULT true
         ); `
     );
-
+ 
     // each product belongs to only one category (1:1)
     // lookup table
     await client.query(
@@ -53,7 +56,7 @@ const sync = async (force = false) => {
             "categoryId" INTEGER REFERENCES categories(id) NOT NULL
         );`
     );
-
+  
     await client.query(
         `CREATE TABLE IF NOT EXISTS reviews (
             id SERIAL PRIMARY KEY,
@@ -64,7 +67,7 @@ const sync = async (force = false) => {
             comment TEXT NOT NULL
         );`
     );
-
+    
     // product has many reviews (1:M)
     // join table
     await client.query(`
@@ -74,7 +77,7 @@ const sync = async (force = false) => {
             "reviewId" INTEGER REFERENCES reviews(id) NOT NULL
         );`
     );
-
+   
     // note: cart availabe only if user created; otherwise will in localstate
     // need another column???
     await client.query(
@@ -84,7 +87,7 @@ const sync = async (force = false) => {
             quantity INTEGER NOT NULL
         );`
     );
-
+  
     // cart has many products (1:M)
     // join table
     await client.query(`
@@ -94,7 +97,7 @@ const sync = async (force = false) => {
         "productId" INTEGER REFERENCES products(id) NOT NULL
         );`
     );
-
+  
     // an order will have many products (1:M)
     // products column will have multiple productIDs
     // join table
@@ -109,7 +112,7 @@ const sync = async (force = false) => {
             "shippingAddress" VARCHAR(255) NOT NULL            
         );`
     );
-
+  
     // user has many orders (1:M)
     // join table
     await client.query(
@@ -119,7 +122,7 @@ const sync = async (force = false) => {
             "orderId" INTEGER REFERENCES orders(id) NOT NULL
         );`
     );
-
+  
     // blog posts:
     await client.query(`
         CREATE TABLE IF NOT EXISTS posts(
@@ -129,6 +132,12 @@ const sync = async (force = false) => {
             comments INTEGER []
         );`
     );
+    
 }
 
+ catch (error) {
+    throw error;
+ }
+
+ }
 module.exports = sync;
