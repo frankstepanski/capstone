@@ -67,15 +67,15 @@ cartsRouter.delete('/:id', async function ( req, res, next ){
 });
 
 // add poduct to cart route:
-cartsRouter.put('/:productId', async function ( req, res, next ){
+//cartsRouter.put('/:productId', async function ( req, res, next ){
    
 
-});
+//});
 
 // delete product from cart route
-cartsRouter.delete('/:productId', async function ( req, res, next){
+//cartsRouter.delete('/:productId', async function ( req, res, next){
     
 
-});
+//});
 
 module.exports = cartsRouter;
