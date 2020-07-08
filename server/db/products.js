@@ -1,5 +1,6 @@
 const { client } = require('./client');
 
+const { addProductToCart, removeProductFromCart, getCartProductsByProductId } = require('./cart_products');
 
 const createProduct = async ({
     name,
@@ -107,14 +108,13 @@ const getProductByName = async(productName) => {
     }
 }
 
-const deleteProduct = async (productId) => {
+// products will only be deactivated (not deleted)
+const deactivateProduct = async (productId) => {
     try {
-        const { rows: [ deletedProduct ]} = await client.query(`
-            DELETE FROM products
-            WHERE id=$1
-        `, [productId]);
+
         
-        return deletedProduct;
+
+    
     } catch(error) {
         throw error;
     }
@@ -126,5 +126,5 @@ module.exports = {
     getProductById,
     getProductByName,
     updateProduct,
-    deleteProduct,
+    deactivateProduct,
 }
