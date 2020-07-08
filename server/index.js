@@ -3,6 +3,7 @@ const express = require ('express');
 const path = require('path');
 
 const { sync } = require("./db/index");
+const { seed } = require("./db/seed");
 
 const PORT = process.env.PORT || 3001;
 const FORCE = process.env.FORCE || false;
@@ -51,11 +52,8 @@ const startServer = new Promise((resolve) => {
 });
 
 sync(FORCE)
-// await seed(FORCE) ???
+  .then(seed)
   .then(startServer)
   .catch((error) => {
     console.error(`SERVER FAILED TO START: ${error.toString()}`);
   });
-
-  // client.end???
-  // .finally(() => client.end());
