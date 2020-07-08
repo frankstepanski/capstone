@@ -109,6 +109,7 @@ async function createInitialProducts() {
             stock: 16,
             rating: 4.0,
             "categoryId": 3
+
         });
 
         console.log(">>>>>Finished creating initial products");

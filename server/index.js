@@ -3,7 +3,7 @@ const express = require ('express');
 const path = require('path');
 
 const { sync } = require("./db/index");
-const { seed } = require("./db/seed");
+const  {seed } = require("./db/seed");
 
 const PORT = process.env.PORT || 3001;
 const FORCE = process.env.FORCE || false;
