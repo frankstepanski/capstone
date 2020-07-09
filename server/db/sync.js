@@ -29,8 +29,10 @@ try {
            "firstName" VARCHAR(255) NOT NULL,
            "lastName" VARCHAR(255) NOT NULL,
            email VARCHAR(255) NOT NULL,
-           addresses TEXT [],
-           "paymentInfo" TEXT [],
+           street VARCHAR(255) NOT NULL,
+           city TEXT NOT NULL,
+           state TEXT NOT NULL,
+           zip VARCHAR(12) NOT NULL,
            admin BOOLEAN DEFAULT false,
            active BOOLEAN DEFAULT true
         ); `
@@ -138,8 +140,7 @@ try {
         CREATE TABLE IF NOT EXISTS posts(
             id SERIAL PRIMARY KEY,
             title VARCHAR(50),
-            "postBody" TEXT,
-            comments INTEGER []
+            "blogText" TEXT
         );`
     );
     
