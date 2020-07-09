@@ -14,6 +14,7 @@ try {
         DROP TABLE IF EXISTS orders;
         DROP TABLE IF EXISTS cart_products;
         DROP TABLE IF EXISTS carts;
+        DROP TABLE IF EXISTS product_images;
         DROP TABLE IF EXISTS products;
         DROP TABLE IF EXISTS categories;
         DROP TABLE IF EXISTS users;
@@ -57,6 +58,15 @@ try {
         );`
     );
   
+    await client.query(
+        `CREATE TABLE IF NOT EXISTS product_images (
+            id SERIAL PRIMARY KEY,
+            name VARCHAR(255) NOT NULL,
+            base64data BYTEA,
+            "productId" INTEGER REFERENCES products(id) NOT NULL
+        );`
+    );
+
     await client.query(
         `CREATE TABLE IF NOT EXISTS reviews (
             id SERIAL PRIMARY KEY,
