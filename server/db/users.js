@@ -15,7 +15,7 @@ const createUser = async ({
     firstName,
     lastName,
     email,
-    addresses = [],
+    address,
     admin = false,
     active
 }) => {
@@ -23,7 +23,7 @@ const createUser = async ({
     try {
         const pw = await hashStr(password)
         const { rows: [ users ] } = await client.query(
-            `INSERT INTO users(username, password, "firstName", "lastName", email, addresses, admin, active)
+            `INSERT INTO users(username, password, "firstName", "lastName", email, address, admin, active)
             VALUES ($1,$2,$3,$4,$5,$6,$7,$8)
             ON CONFLICT (username) DO NOTHING
             RETURNING *;
