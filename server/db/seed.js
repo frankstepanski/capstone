@@ -7,6 +7,34 @@ const {
 
         } = require('./index');
 
+const { 
+    getAllUsers,
+    getUserById,
+    getUserByUsername,
+      } = require('./users')
+
+const {
+    getAllCategories,
+    getCategoryById,
+}     = require('./categories')
+
+const {
+    getAllProducts,
+    getProductById,
+    getProductByName,
+} = require('./products')
+
+const {
+    getReviewById,
+    getReviewsByProductId,
+    getReviewsByUserId,
+} = require('./reviews')
+
+const {
+    getAllOrders,
+    getOrderById,
+} = require('./orders')
+
 
 
 const createTables = async () => {
@@ -144,15 +172,10 @@ async function dropTables() {
         DROP TABLE IF EXISTS categories;
         DROP TABLE IF EXISTS users;
         `);
-
-       console.log(">>>>>Finished dropping tables")
-
-    }
-    catch(error) {
-        console.error("Error dropping tables. Error: ", error);
-        throw error;
-    }
-}
+        }catch(error){
+            console.error('Trouble dropping tables', error);
+            throw error
+        }}
 
 //Creates seed data of initial users
 async function createInitialUsers() {
@@ -183,9 +206,8 @@ async function createInitialUsers() {
 
         // create a few more:
 
-        console.log(">>>>>Finished creating initial users");
-
-     } catch(error) {
+       
+    } catch(error) {
             console.error("Error creating initial. Error: ", error);
             throw error;
         }
@@ -202,7 +224,6 @@ async function createInitialCategories() {
         const boards = await createCategory({name: 'boards'});
         const accessories = await createCategory({name: 'accessories'});
 
-        console.log(">>>>>Finished creating initial categories!");
 
     }
     catch(error) {
@@ -257,7 +278,6 @@ async function createInitialProducts() {
             "categoryId": 3
         });
 
-        console.log(">>>>>Finished creating initial products");
 
     }
 
@@ -301,7 +321,15 @@ async function createInitialReviews() {
             comment: "I got his t-shirt for my younger brother. He loves the fit and the colors look great!"
         });
 
-        console.log(">>>>> Finished creating initial reviews!");
+        const review3 = await createReview({
+            "productId": 3,
+            "userId": 1,
+            title: "Love my wheels!",
+            rating: 5,
+            comment: "I love the wheels from your store! They look great and ride smooth!"
+        })
+
+
     }
     catch(error) {
         console.error("Error creating initial reviews @ db/seed.js createInitialReviews()! Error: ", error);
@@ -356,7 +384,7 @@ async function createInitialOrders() {
             "shippingAddress": '12345 Street., City, ST, 12345'
         });
 
-        console.log(">>>>>Finished creating initial orders!");
+        
     }
     catch(error) {
         console.error("Error creating initial orders. Error: ", error);
@@ -365,31 +393,105 @@ async function createInitialOrders() {
 
 }
 
-async function bootstrap() {
+const seed = async (force = false) => {
+    
+    if (force) {
 
-    try {
+        try {
         
-        // note: seed.js is only run once, without a server
-        client.connect();
-        console.log("Connected to DB")
-
-        await dropTables();
-        await createTables();
         await createInitialUsers();
         await createInitialCategories();
         await createInitialProducts();
         await createInitialReviews();
         //await createInitialCarts();
-        //await createInitialOrders();
+        await createInitialOrders();
         
-
-    } catch(error) {
-        console.error("Error bootstrapping. Error: ", error);
-        throw error;
+        } catch(error) {
+            console.error("Error seeding. Error: ", error);
+            throw error;
+        }
     }
 }
 
-bootstrap()
-//.then(testDB)
-.catch(console.error)
-.finally(() => client.end());
+async function rebuildDB() {
+    try {
+        client.connect();
+        
+        await dropTables();
+        await createTables();
+        await seed();
+    } catch(error) {
+        console.error('Failed to rebuild DB', error)
+    }
+}
+    
+
+async function testDB() {
+        try {
+          console.log("Starting to test database...");
+    
+          console.log("getAllUsers called: Initial Users Created!:");
+          const users = await getAllUsers();
+          console.log("Result:", users);
+
+          console.log("getUserById called: Initial Users Created!:");
+          const userById = await getUserById(1);
+          console.log("Result:", userById);
+
+          console.log("getUserByUsername called: Initial Users Created!:");
+          const userByUsername = await getUserByUsername('fsjay');
+          console.log("Result:", userByUsername);
+    
+          console.log("getAllCategories called: Initial Categories created!");  const categories = await getAllCategories();
+          console.log("Result:", categories);
+
+          console.log("getCategoryById called: Initial Categories created!");  const categoryById = await getCategoryById(2);
+          console.log("Result:", categoryById);
+          
+          console.log("getAllProducts called: Initial products created!:")
+          const products = await getAllProducts();
+          console.log("Result:", products)
+
+          console.log("getProductById called: Initial products created!:")
+          const productById = await getProductById(2);
+          console.log("Result:", productById)
+
+        //   console.log("getProductByName called: Initial products created!:")
+        //   const productByName = await getProductByName(name);
+        //   console.log("Result:", productByName)
+    
+          console.log("getReviewsById called: Initial reviews created!:")
+          const reviewById = await getReviewById(2);
+          console.log("Result:", reviewById)
+
+          console.log("getReviewsByProductId called: Initial reviews created!:")
+          const reviewsByProductId = await getReviewsByProductId(3);
+          console.log("Result:", reviewsByProductId)
+
+          console.log("getReviewsByUserId called: Initial reviews created!:")
+          const reviewsByUserId = await getReviewsByUserId(1);
+          console.log("Result:", reviewsByUserId)
+
+          console.log("getAllOrders called: Initial orders created!:")
+          const allOrders = await getAllOrders();
+          console.log("Result:", allOrders)
+
+          console.log("getOrderById called: Initial orders created!")
+          const orderById = await getOrderById();
+          console.log("Result:", orderById)
+
+          
+    
+          console.log("Finished database tests!");
+        } catch (error) {
+          console.error("Error testing database!");
+          throw error;
+        }
+    }
+
+rebuildDB()
+    .then(testDB)
+    .catch(console.error)
+    .finally(() => client.end())
+
+module.exports = seed;
