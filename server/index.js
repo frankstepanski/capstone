@@ -11,19 +11,8 @@ const FORCE = process.env.FORCE || true;
 const server = express();
 
 // static files:
-server.use(express.static(path.join(__dirname, "build")));
-
-// difference???
-//const DIST_PATH = path.join(__dirname, './dist' )
-//server.use(express.static(DIST_PATH))
-
-// not sure what this does???
-// make a route for each front end page
-["create"].forEach((route) => {
-  server.get(`/${route}`, (req, res) => {
-    res.sendFile(path.join(__dirname, "build", "index.html"));
-  });
-});
+const DIST_PATH = path.join(__dirname, './dist' )
+server.use(express.static(DIST_PATH))
 
 // check health of server:
 server.get('/health', (req, res, next)=>{

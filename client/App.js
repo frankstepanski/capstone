@@ -1,7 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { Route, Redirect, Switch } from "react-router-dom";
-
-import { Jumbotron } from "react-bootstrap";
+import { Route, Switch } from "react-router-dom";
+import { Home } from './pages/Home';
+import { Shop } from './pages/Shop';
+import { Blog } from './pages/Blog';
+import { Contact } from './pages/Contact';
+import { About } from './pages/About';
 
 const App = () => {
     // useState
@@ -12,7 +15,6 @@ const App = () => {
     
     return (
       <>
-        <Header />
         <Switch>
            <Route exact path = "/" component ={Home} />
            <Route path = "/shop" component ={Shop} />
