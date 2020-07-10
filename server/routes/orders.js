@@ -45,10 +45,10 @@ ordersRouter.post('/', requireUser, async function( req, res, next ){
 });
 
 // add product to order route
-ordersRouter.patch('/:productId', async function ( req, res, next ){
+//ordersRouter.patch('/:productId', async function ( req, res, next ){
    
 
-});
+//});
 
 
 module.exports = ordersRouter
