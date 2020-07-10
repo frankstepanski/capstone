@@ -1,7 +1,5 @@
 const { client } = require('./client');
 
-// const { addReviewToProduct, removeReviewFromProduct, getProductReviewByReviewId } = require("./product_reviews");
-
 const createReview = async ({
     productId,
     userId,

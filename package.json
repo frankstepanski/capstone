@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "seed-dev": "nodemon ./server/db/seed.js",
-    "start:server": "nodemon ./server/index.js"
+    "server-dev": "nodemon ./server/index.js"
   },
   "repository": {
     "type": "git",
@@ -20,6 +20,7 @@
   "homepage": "https://github.com/CPE-2001-Grace-Shopper-AFC/capstone#readme",
   "dependencies": {
     "axios": "^0.19.2",
+    "base64-img": "^1.0.4",
     "bcrypt": "^5.0.0",
     "body-parser": "^1.19.0",
     "dotenv": "^8.2.0",
@@ -28,6 +29,6 @@
     "morgan": "^1.10.0",
     "node": "^14.5.0",
     "nodemon": "^2.0.4",
-    "pg": "^8.2.1"
+    "pg": "^8.2.2"
   }
 }

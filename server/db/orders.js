@@ -7,7 +7,6 @@ const createOrder = async ({
        
        // under construction
        
-        return order;
     } catch(error){
         throw error;
     }

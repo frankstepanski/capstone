@@ -1,8 +1,11 @@
 const client = require("./client");
 
-const sync = async (force = false) => {
+const sync = async (FORCE = false) => {
 
-  if (force) {
+try {
+
+  if (FORCE) {
+
     await client.query(`
         DROP TABLE IF EXISTS posts;
         DROP TABLE IF EXISTS product_reviews;
@@ -11,6 +14,7 @@ const sync = async (force = false) => {
         DROP TABLE IF EXISTS orders;
         DROP TABLE IF EXISTS cart_products;
         DROP TABLE IF EXISTS carts;
+        DROP TABLE IF EXISTS product_images;
         DROP TABLE IF EXISTS products;
         DROP TABLE IF EXISTS categories;
         DROP TABLE IF EXISTS users;
@@ -25,13 +29,15 @@ const sync = async (force = false) => {
            "firstName" VARCHAR(255) NOT NULL,
            "lastName" VARCHAR(255) NOT NULL,
            email VARCHAR(255) NOT NULL,
-           addresses TEXT [],
-           "paymentInfo" TEXT [],
+           street VARCHAR(255) NOT NULL,
+           city TEXT NOT NULL,
+           state TEXT NOT NULL,
+           zip VARCHAR(12) NOT NULL,
            admin BOOLEAN DEFAULT false,
            active BOOLEAN DEFAULT true
         ); `
     );
-
+ 
     // each product belongs to only one category (1:1)
     // lookup table
     await client.query(
@@ -53,6 +59,15 @@ const sync = async (force = false) => {
             "categoryId" INTEGER REFERENCES categories(id) NOT NULL
         );`
     );
+  
+    await client.query(
+        `CREATE TABLE IF NOT EXISTS product_images (
+            id SERIAL PRIMARY KEY,
+            name VARCHAR(255) NOT NULL,
+            base64data BYTEA,
+            "productId" INTEGER REFERENCES products(id) NOT NULL
+        );`
+    );
 
     await client.query(
         `CREATE TABLE IF NOT EXISTS reviews (
@@ -64,7 +79,7 @@ const sync = async (force = false) => {
             comment TEXT NOT NULL
         );`
     );
-
+    
     // product has many reviews (1:M)
     // join table
     await client.query(`
@@ -74,7 +89,7 @@ const sync = async (force = false) => {
             "reviewId" INTEGER REFERENCES reviews(id) NOT NULL
         );`
     );
-
+   
     // note: cart availabe only if user created; otherwise will in localstate
     // need another column???
     await client.query(
@@ -84,7 +99,7 @@ const sync = async (force = false) => {
             quantity INTEGER NOT NULL
         );`
     );
-
+  
     // cart has many products (1:M)
     // join table
     await client.query(`
@@ -94,7 +109,7 @@ const sync = async (force = false) => {
         "productId" INTEGER REFERENCES products(id) NOT NULL
         );`
     );
-
+  
     // an order will have many products (1:M)
     // products column will have multiple productIDs
     // join table
@@ -109,7 +124,7 @@ const sync = async (force = false) => {
             "shippingAddress" VARCHAR(255) NOT NULL            
         );`
     );
-
+  
     // user has many orders (1:M)
     // join table
     await client.query(
@@ -119,16 +134,21 @@ const sync = async (force = false) => {
             "orderId" INTEGER REFERENCES orders(id) NOT NULL
         );`
     );
-
+  
     // blog posts:
     await client.query(`
         CREATE TABLE IF NOT EXISTS posts(
             id SERIAL PRIMARY KEY,
             title VARCHAR(50),
-            "postBody" TEXT,
-            comments INTEGER []
+            "blogText" TEXT
         );`
     );
+    
 }
 
+ catch (error) {
+    throw error;
+ }
+
+ }
 module.exports = sync;
