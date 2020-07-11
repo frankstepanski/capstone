@@ -50,10 +50,10 @@ categoriesRouter.patch('/update/:id', async function ( req, res, next ){
 });
 
 // add category to product route
-categoriesRouter.patch('/:productId', async function( req, res, next){
+//categoriesRouter.patch('/:productId', async function( req, res, next){
     
 
-})
+//})
 
 
 module.exports = categoriesRouter

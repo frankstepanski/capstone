@@ -18,13 +18,14 @@ usersRouter.get('/', async (req, res, next) => {
         })
         res.send({users})
     } catch (e) {
-        console.log(e);
-        next(e)
+        console.error(error)
+        const{ name, message } = error
+        next({ name, message })
     }
 })
 
 usersRouter.post('/register', async (req, res, next) => {
-    const { username, password, firstName, lastName, email,  } = req.body;
+    const { username, password, firstName, lastName, email, } = req.body;
     console.log(`> UN: ${username}`)
 
     if (!username || !password) {
@@ -100,5 +101,15 @@ usersRouter.post('/login', async (req, res, next) => {
     }
 });
 
+usersRouter.get('/', async function  (req, res, next){
+    try{
+        const users = await getAllUsers();
+        res.send({ users })
+    }catch(error){
+        console.error(error)
+        const{ name, message } = error
+        next({ name, message })
+    }
+  });
 
 module.exports = usersRouter;
