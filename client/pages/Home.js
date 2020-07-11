@@ -5,10 +5,10 @@ import Carousel from "../components/Carousel"
 
 const Home = () => {
     return (
-      <>
+      <div class="home">
         <Jumbotron />
         <Carousel />
-      </>
+      </div>
     );
   };
 

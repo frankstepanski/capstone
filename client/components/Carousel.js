@@ -1,15 +1,9 @@
 import React from 'react';
 import { Carousel as Caro} from 'react-bootstrap';
 
-//import Slider1 from '../assets/carousel_img1.jpeg';
-//import Slider2 from '../assets/carousel_img2.jpeg';
-//import Slider3 from '../assets/carousel_img3.jpeg';
-//import Slider4 from '../assets/carousel_img4.jpeg';
-
 const Carousel = () => (
 
     <>
-
     <Caro>
     <Caro.Item>
       <img
