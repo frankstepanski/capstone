@@ -139,6 +139,7 @@ try {
     await client.query(`
         CREATE TABLE IF NOT EXISTS posts(
             id SERIAL PRIMARY KEY,
+            date DATE DEFAULT CURRENT_DATE,
             title VARCHAR(50),
             "blogText" TEXT
         );`
