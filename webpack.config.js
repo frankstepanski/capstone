@@ -1,67 +1,33 @@
 const path = require('path');
-//const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-
 module.exports = {
-  entry: path.join(__dirname, './client/index.js'),
-  output: {
-    filename: 'main.js',
-    path: path.join(__dirname, './dist'),
-  },
-  devtool: 'source-map',
-  mode: 'development',
-  /*
-  mode: 'development',
-  optimization: {
-    splitChunks: {
-      cacheGroups: {
-        styles: {
-          name: 'styles',
-          test: /\.css$/,
-          chunks: 'all',
-          enforce: true,
-        },
-      },
+    entry: path.join(__dirname, './client/index.js'),
+    output: {
+        filename: 'main.js',
+        path: path.join(__dirname, './dist'),
     },
-  },
-  /*
-  plugins: [
-    new MiniCssExtractPlugin({
-      filename: '[name].css',
-    }),
-  ],
-  */
-  module: {
-    rules: [
-        /*
-        {
-            test: /\.css$/,
-            use: [MiniCssExtractPlugin.loader, 'css-loader'],
-        },
-        */
-        {
-            test: /\.css$/,
-            use: [
-              'style-loader',
-              'css-loader'
-            ],
-        },
-        /*
-        {
-            test: /\.(png|svg|jpg|jpeg|gif)$/,
-            use: [
-              'file-loader',
-            ],
-        },
-        */
-        {
-        use: {
-          loader: 'babel-loader',
-          query: {
-            presets: ['@babel/preset-react']
-          }
-        },
-        exclude: /node_modules/,
-      }
-    ]
-  },
+    node: {
+        fs: "empty"
+     },
+    devtool: 'source-map',
+    module: {
+        rules: [
+            {
+            use: {
+                loader: 'babel-loader'
+            },
+            exclude: /node_nodules/,
+            },
+            {
+                test: /\.css/i,
+                use: [
+                // Creates `style` nodes from JS strings
+                'style-loader',
+                // Translates CSS into CommonJS
+                'css-loader',
+                // Compiles Sass to CSS
+                'sass-loader',
+                ],
+            },
+        ]
+    }
 };
