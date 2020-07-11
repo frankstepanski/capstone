@@ -8,6 +8,7 @@ module.exports = {
     path: path.join(__dirname, './dist'),
   },
   devtool: 'source-map',
+  mode: 'development',
   /*
   mode: 'development',
   optimization: {
@@ -36,19 +37,28 @@ module.exports = {
             test: /\.css$/,
             use: [MiniCssExtractPlugin.loader, 'css-loader'],
         },
+        */
         {
-            test: /\.s[ac]ss$/i,
+            test: /\.css$/,
             use: [
-            // Creates `style` nodes from JS strings
-            'style-loader',
-            // Translates CSS into CommonJS
-            'css-loader'
+              'style-loader',
+              'css-loader'
+            ],
+        },
+        /*
+        {
+            test: /\.(png|svg|jpg|jpeg|gif)$/,
+            use: [
+              'file-loader',
             ],
         },
         */
         {
         use: {
           loader: 'babel-loader',
+          query: {
+            presets: ['@babel/preset-react']
+          }
         },
         exclude: /node_modules/,
       }

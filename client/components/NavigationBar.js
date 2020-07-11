@@ -10,29 +10,19 @@ const NavigationBar= () => (
       <Navbar.Collapse id="basic-navbar-nav">
         <Nav className="ml-auto">
           <Nav.Item>
-            <Nav.Link>
-              <Link to="/">Home</Link>
-            </Nav.Link>
+            <Nav.Link as = {Link} to="/">Home</Nav.Link>
           </Nav.Item>
           <Nav.Item>
-            <Nav.Link>
-              <Link to="/shop">Shop</Link>
-            </Nav.Link>
+            <Nav.Link as = {Link} to="/shop">Shop</Nav.Link>
           </Nav.Item>
           <Nav.Item>
-            <Nav.Link>
-              <Link to="/blog">Blog</Link>
-            </Nav.Link>
+             <Nav.Link as = {Link} to="/blog">Blog</Nav.Link>
           </Nav.Item>
           <Nav.Item>
-            <Nav.Link>
-              <Link to="/about">About</Link>
-            </Nav.Link>
+             <Nav.Link as = {Link} to="/about">About</Nav.Link>
           </Nav.Item>
           <Nav.Item>
-            <Nav.Link>
-              <Link to="/contact">Contact</Link>
-            </Nav.Link>
+            <Nav.Link as = {Link} to="/contact">Contact</Nav.Link>
           </Nav.Item>
         </Nav>
       </Navbar.Collapse>
@@ -40,4 +30,3 @@ const NavigationBar= () => (
 );
 
 export default NavigationBar;
-

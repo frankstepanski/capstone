@@ -6,11 +6,9 @@ const Jumbotron = () => (
       <Jumbo fluid className="jumbo">
         <div className="overlay"></div>
         <Container>
-          <h1>afc Skate</h1>
-          <p>Say something flashy!!!</p>
+          <p>Skate or die!</p>
         </Container>
       </Jumbo>
-   
-  )
+);
 
 export default Jumbotron;

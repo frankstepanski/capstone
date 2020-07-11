@@ -1,46 +1,48 @@
 import React from 'react';
-import { Carousel } from 'react-bootstrap';
+import { Carousel as Caro} from 'react-bootstrap';
+
+//import Slider1 from '../assets/carousel_img1.jpeg';
+//import Slider2 from '../assets/carousel_img2.jpeg';
+//import Slider3 from '../assets/carousel_img3.jpeg';
+//import Slider4 from '../assets/carousel_img4.jpeg';
 
 const Carousel = () => (
-   
-    <Carousel>
-    <Carousel.Item>
+
+    <>
+    </>
+    
+   /*
+    <Caro>
+    <Caro.Item>
       <img
         className="d-block w-100"
-        src="holder.js/800x400?text=First slide&bg=373940"
+        src={Slider3}
         alt="First slide"
       />
-      <Carousel.Caption>
-        <h3>First slide label</h3>
-        <p>Nulla vitae elit libero, a pharetra augue mollis interdum.</p>
-      </Carousel.Caption>
-    </Carousel.Item>
-    <Carousel.Item>
+    </Caro.Item>
+    <Caro.Item>
       <img
         className="d-block w-100"
-        src="holder.js/800x400?text=Second slide&bg=282c34"
+        src={Slider4}
         alt="Third slide"
       />
-  
-      <Carousel.Caption>
-        <h3>Second slide label</h3>
-        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-      </Carousel.Caption>
-    </Carousel.Item>
-    <Carousel.Item>
+    </Caro.Item>
+    <Caro.Item>
       <img
         className="d-block w-100"
-        src="holder.js/800x400?text=Third slide&bg=20232a"
+        src={Slider1}
         alt="Third slide"
       />
-  
-      <Carousel.Caption>
-        <h3>Third slide label</h3>
-        <p>Praesent commodo cursus magna, vel scelerisque nisl consectetur.</p>
-      </Carousel.Caption>
-    </Carousel.Item>
-  </Carousel>
-   
+    </Caro.Item>
+    <Caro.Item>
+      <img
+        className="d-block w-100"
+        src={Slider2}
+        alt="Fourth slide"
+      />
+    </Caro.Item>
+  </Caro>
+   */
   )
 
 export default Carousel;
