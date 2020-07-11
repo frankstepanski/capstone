@@ -47,9 +47,12 @@ server.get('/health', (req, res, next)=>{
 const DIST_PATH = path.join(__dirname, '../dist' );
 server.use(express.static(DIST_PATH));
 
+// images
+server.use('/assets',express.static(path.join(__dirname,'../assets')));
+
 // 404?
 server.get('*', function(req, res, next) {
-  res.status(404).sendFile(path.resolve('dist', 'index.html'));
+  res.status(404).sendFile(path.join(__dirname, '../dist', 'index.html'));
 });
 
 // make a route for each front end page
