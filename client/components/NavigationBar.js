@@ -2,7 +2,7 @@ import React from "react";
 import { Link } from 'react-router-dom';
 import { Nav, Navbar } from 'react-bootstrap';
 
-const NavigationBar = () => (
+const NavigationBar= () => (
 
     <Navbar expand="lg">
       <Navbar.Brand href="/">afc Skate</Navbar.Brand>
