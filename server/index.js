@@ -47,6 +47,20 @@ server.get('/health', (req, res, next)=>{
 const DIST_PATH = path.join(__dirname, '../dist' );
 server.use(express.static(DIST_PATH));
 
+// 404?
+server.get('*', function(req, res, next) {
+  res.status(404).sendFile(path.resolve('dist', 'index.html'));
+});
+
+// make a route for each front end page
+/*
+["create"].forEach((route) => {
+  server.get(`/${route}`, (req, res) => {
+    res.sendFile(path.join(__dirname, "../dist", "index.html"));
+  });
+});
+*/
+
 const startServer = new Promise((resolve) => {
   server.listen(PORT, () => {
     console.log(`Server is listening on port: ${PORT}`);
