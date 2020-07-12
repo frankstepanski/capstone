@@ -1,8 +1,9 @@
 const express = require('express');
 const usersRouter = express.Router();
-const { authenticate, getUserByUsername, createUser, getAllUsers } = require('../db');
+const { authenticate, getUserByUsername, createUser, getAllUsers, updateUser } = require('../db');
 const jwt = require('jsonwebtoken');
-const { JWT_SECRET } = process.env;
+const { SECRET } = process.env;
+const { requireUser } = require('./utils')
 
 usersRouter.use((req, res, next) => {
     console.log('> A request has been made to the /users endpoint');
@@ -16,7 +17,7 @@ usersRouter.get('/', async (req, res, next) => {
             delete user.password;
             return user;
         })
-        res.send({users})
+        res.send({ users })
     } catch (e) {
         console.error(error)
         const{ name, message } = error
@@ -25,13 +26,22 @@ usersRouter.get('/', async (req, res, next) => {
 })
 
 usersRouter.post('/register', async (req, res, next) => {
-    const { username, password, firstName, lastName, email, } = req.body;
+    const { 
+        username, 
+        password, 
+        firstName, 
+        lastName, 
+        email,
+        address,
+        admin,
+        active 
+    } = req.body;
     console.log(`> UN: ${username}`)
 
-    if (!username || !password) {
+    if (!username || !password || !firstName || !lastName || !email || !address){
         next({
-            name: `usernameAndPassowrdRequired`,
-            message: `A username and password are required to create an account`
+            name: `MissingRequiredFields`,
+            message: `Complete all required fields to create and account.`
         })
     } else if (password.length < 8) {
         next({
@@ -41,26 +51,34 @@ usersRouter.post('/register', async (req, res, next) => {
     }
 
     try {
-        const _user = await getUserByUsername(username);
-        console.log("User: ",_user)
+        const _user = await getUserByUsername({username});
+        console.log(_user)
 
         if (_user) {
+            // If a user by that username already exists, the request is redirected to the /login route where it will attempt to authenticate the user with the parameters provided
             console.log(`User already exists. Logging in instead`)
             return res.redirect(308, './login');
         } else {
             const user = await createUser({
                 username,
                 password,
+                firstName, 
+                lastName, 
+                email,
+                address,
+                admin,
+                active 
             });
     
             const token = jwt.sign({
                 id: user.id,
                 username
-            }, JWT_SECRET, {
+            }, SECRET, {
                 expiresIn: '1w'
             })
     
             res.send({
+                status: "Success",
                 message: 'Thank you for creating an account',
                 token
             })
@@ -71,7 +89,6 @@ usersRouter.post('/register', async (req, res, next) => {
 });
 
 usersRouter.post('/login', async (req, res, next) => {
-    console.log('login request received')
     const {username, password} = req.body;
 
     if (!username || !password) {
@@ -81,13 +98,13 @@ usersRouter.post('/login', async (req, res, next) => {
         })
     }
     try {
-        const user = await getUser({username, password});
+        const user = await authenticate({username, password});
         console.log(`>>> User: `, user)
         const { id, username: un } = user;
 
         if (user) {
-            const token = jwt.sign({id, un}, JWT_SECRET);
-            res.send({ message: "you're logged in!", token });
+            const token = jwt.sign({id, un}, SECRET);
+            res.send({ status: "success", message: "you're logged in!", token });
         } else {
             console.log('user could not be logged in')
             next({ 
@@ -101,15 +118,28 @@ usersRouter.post('/login', async (req, res, next) => {
     }
 });
 
-usersRouter.get('/', async function  (req, res, next){
-    try{
-        const users = await getAllUsers();
-        res.send({ users })
-    }catch(error){
-        console.error(error)
-        const{ name, message } = error
-        next({ name, message })
+// Update non-read-only user informaiton:
+usersRouter.patch('/update', requireUser, async (req, res, next) => {
+    const { password, firstName, lastName, email, address } = req.body;
+    const user = req.user;
+
+    // This block of code returns an array of only the object entries with !null values
+    const filteredObj = {}
+    Object.keys(req.body).forEach((key) => {
+            if (req.body[key]) {
+                filteredObj[key] = req.body[key];
+            }
+    })
+
+    try {
+        const { id } = req.user;
+        const updatedUser = await updateUser(id, fields = filteredObj);
+        console.log(updatedUser)
+        return res.send({status: "success", message: "User updated", user: updatedUser});
+        
+    } catch (e) {
+        next(e);
     }
-  });
+})
 
 module.exports = usersRouter;

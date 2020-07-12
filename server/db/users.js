@@ -22,12 +22,12 @@ const createUser = async ({
   
     try {
         const pw = await hashStr(password)
-        const { rows: [ users ] } = await client.query(
-            `INSERT INTO users(username, password, "firstName", "lastName", email, address, admin, active)
+        const { rows: [ users ] } = await client.query(`
+            INSERT INTO users(username, password, "firstName", "lastName", email, address, admin, active)
             VALUES ($1,$2,$3,$4,$5,$6,$7,$8)
             ON CONFLICT (username) DO NOTHING
             RETURNING *;
-            `, [username, pw, firstName, lastName, email, addresses, admin, active]
+            `, [username, pw, firstName, lastName, email, address, admin, active]
         );
 
         return users;
@@ -66,16 +66,16 @@ const getAllUsers = async () => {
                 name: "UserNotFoundError",
                 message: "Cannot find user with that userId"
             };   
-        }
+        };
 
-        return user
+        return user;
 
     } catch(error){
         throw error;
     }
 }
 
-const getUserByUsername = async (username) => {
+async function getUserByUsername ({username}) {
     try {
         const { rows: [user] } = await client.query(`
             SELECT * FROM users
@@ -92,20 +92,20 @@ const getUserByUsername = async (username) => {
 // used to authenticate a user by UN and PW using bcrypt - necessary for login process
 const authenticate = async ({username, password}) => {
     try {
-        const user = await getUserByUsername(username);
+        const user = await getUserByUsername({username});
         const authenticated = await bcrypt.compare(password, user.password)
         if (!authenticated) {
             throw new Error('invalid password');
         }
         return user;
     } catch (e) {
-        console.log(`Could not authenticate user`)
-        throw e;
+        console.log(e, `Could not authenticate user`);
     }    
 }
 
 const updateUser = async (id, fields = {} ) => {
 
+    //Builds a setString based off the fields parameter
     const setString = Object.keys(fields).map(
         (key, index) => `"${ key }"=$${ index + 1 }`
       ).join(', ');

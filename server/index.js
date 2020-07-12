@@ -13,6 +13,8 @@ const FORCE = process.env.FORCE || true;
 
 const server = express();
 
+require('dotenv').config();
+
 server.use(morgan('dev'));
 server.use(bodyParser.json());
 server.use(bodyParser.urlencoded({extended: true}));
@@ -72,8 +74,8 @@ const startServer = new Promise((resolve) => {
 });
 
 sync(FORCE)
-  .then(seed)
+  .then(() => seed(FORCE))
   .then(startServer)
   .catch((error) => {
     console.error(`SERVER FAILED TO START: ${error.toString()}`);
-  });
+});
