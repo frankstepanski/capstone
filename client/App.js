@@ -10,6 +10,7 @@ import  Contact from './pages/Contact';
 import  About from './pages/About';
 import  NotFoundPage  from './pages/NotFoundPage';
 import  Header  from './pages/layouts/Header'
+import  Home from './pages/Home'
 
 const App = () => {
     // useState
