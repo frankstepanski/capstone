@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Route, Switch } from "react-router-dom";
 
 //import  { Home, Account, Shop, Blog, Contact, About, NotFoundPage }  from './pages';
+import  Home from './pages/Home';
 import  Account from './pages/Account';
 import  Shop  from './pages/Shop';
 import  Blog  from './pages/Blog';
