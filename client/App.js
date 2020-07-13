@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { Route, Switch } from "react-router-dom";
 
-import  Home  from './pages/Home';
-import  Login from './pages/Account';
+//import  { Home, Account, Shop, Blog, Contact, About, NotFoundPage }  from './pages';
+import  Account from './pages/Account';
 import  Shop  from './pages/Shop';
 import  Blog  from './pages/Blog';
 import  Contact from './pages/Contact';
@@ -22,7 +22,7 @@ const App = () => {
           <Header />
            <Switch>
               <Route exact path = "/" component ={Home} />
-              <Route path = "/login" component ={Login} />
+              <Route path = "/account" component ={Account} />
               <Route path = "/shop" component ={Shop} />
               <Route path = "/blog" component ={Blog} />
               <Route path = "/about" component ={About} />

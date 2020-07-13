@@ -5,6 +5,7 @@ module.exports = {
         filename: 'main.js',
         path: path.join(__dirname, './dist'),
     },
+    mode: "development",
     node: {
         fs: "empty"
      },
