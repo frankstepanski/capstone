@@ -1,5 +1,8 @@
+const sync = require("./sync");
+
+// note: ./index.js (connection) will not be exported
 module.exports = {
-    ...require('./client'),
+    sync,
     ...require('./users'),
     ...require('./carts'),
     ...require('./categories'),

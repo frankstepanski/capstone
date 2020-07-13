@@ -2,7 +2,7 @@ const express = require('express');
 const apiRouter = express.Router();
 
 const morgan = require('morgan');
-server.use(morgan('dev'));
+apiRouter.use(morgan('dev'));
 
 const bodyParser = require('body-parser')
 apiRouter.use(bodyParser.json());
