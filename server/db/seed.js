@@ -17,7 +17,7 @@ async function createInitialUsers() {
             "firstName": 'Frank',
             "lastName": 'Stepanski',
             email: 'frank.stepanski@gamil.com',
-            addresses: [],
+            address: "125 E Fake St Apt B San Luis Obispo CA 93405",
             admin: false,
             active: true
         });
@@ -28,7 +28,7 @@ async function createInitialUsers() {
             "firstName": 'Aidan',
             "lastName": 'Weber',
             email: 'aidanweber37@gmail.com',
-            addresses: [],
+            address: "123 E Fake St Apt C San Luis Obispo CA 93405",
             admin: true,
             active: true
         });
@@ -218,9 +218,9 @@ async function createInitialOrders() {
 
 }
 
-const seed = async (force = false) => {
+const seed = async (FORCE = false) => {
     
-    if (force) {
+    if (FORCE) {
 
         try {
         
@@ -238,4 +238,4 @@ const seed = async (force = false) => {
     }
 }
 
-module.exports = seed;
+module.exports = { seed };
