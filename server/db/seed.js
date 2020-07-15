@@ -127,7 +127,9 @@ async function createInitialProducts() {
               price: 549.99,
               stock: 10,
               rating: 4.7,
+              featured: true,
               "categoryId": 2
+              
         });
 
         const shirt1 = await createProduct({
@@ -137,6 +139,7 @@ async function createInitialProducts() {
             stock: 5,
             rating: 4.4,
             "categoryId": 1
+
         });
 
         const wheels1 = await createProduct({
@@ -145,8 +148,8 @@ async function createInitialProducts() {
             price: 89.99,
             stock: 16,
             rating: 4.0,
-            "categoryId": 3
-
+            featured:true,
+            "categoryId": 3,
         });
 
 

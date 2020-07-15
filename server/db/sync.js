@@ -54,9 +54,15 @@ const sync = async (FORCE = false) => {
                 stock INTEGER NOT NULL,
                 rating FLOAT(1) DEFAULT 0,
                 active BOOLEAN DEFAULT TRUE,
+                featured BOOLEAN DEFAULT FALSE,
                 "categoryId" INTEGER REFERENCES categories(id) NOT NULL
             );`
         );
+
+        // await client.query(`
+        //     ALTER TABLE products
+        //     ADD COLUMN featured BOOLEAN DEFAULT FALSE`
+        // )
     
         await client.query(
             `CREATE TABLE IF NOT EXISTS product_images (

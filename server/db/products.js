@@ -8,25 +8,28 @@ const createProduct = async ({
     description,
     price,
     stock,
+    featured,
     categoryId
 
 }) => {
     
-
+    
     try{
     const { rows: [ product ] } = await client.query(
-        `INSERT INTO products (name, description, price, stock, "categoryId")
-        VALUES($1,$2,$3,$4,$5)
+        `INSERT INTO products (name, description, price, stock,featured, "categoryId")
+        VALUES($1,$2,$3,$4,$5,$6)
         RETURNING *;
-        `, [name,description,price,stock,categoryId]
+        `, [name,description,price,stock,featured,categoryId]
     );
-
+    console.log('>>>>>>>', name)
         return product;
-
+       
     } catch (error) {
     throw error;
   }
 }
+
+
 
 const updateProduct = async (id, fields = {} ) => {
 
@@ -104,6 +107,21 @@ const getProductByName = async({ name }) => {
     }
 }
 
+const getFeaturedProducts = async({featured}) => {
+    try{
+        const { rows: [product] } = await client.query(`
+        SELECT * FROM products
+        WHERE featured = TRUE
+        `, [featured]);
+
+        return product;
+    } catch(error){
+        throw error;
+    }
+}
+
+
+
 // products will only be deactivated (not deleted)
 const deactivateProduct = async (product) => {
     try {
@@ -121,6 +139,22 @@ const deactivateProduct = async (product) => {
      }
 }
 
+const activateFeaturedProduct = async (product) => {
+    try {
+
+        const { rows } = await client.query(`
+        UPDATE products
+        SET featured = NOT featured 
+        WHERE id = $1
+        RETURNING * ;
+        `, [product]);
+        
+       return rows
+     }catch(error){
+         console.error("Failed to deactivate product", error)
+     }
+}
+
 module.exports = {
     createProduct,
     getAllProducts,
@@ -128,4 +162,6 @@ module.exports = {
     getProductByName,
     updateProduct,
     deactivateProduct,
+    activateFeaturedProduct,
+    getFeaturedProducts
 }

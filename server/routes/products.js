@@ -1,7 +1,7 @@
 const express = require('express');
 const productsRouter = express.Router();
 
-const { getAllProducts, createProduct, getProductById, updateProduct, getProductByName , deactivateProduct} = require('../db/products.js')
+const { getAllProducts, createProduct, getProductById, updateProduct, getProductByName , deactivateProduct, activateFeaturedProduct, getFeaturedProducts} = require('../db/products.js')
 const { requireUser } = require('./utils')
 
 productsRouter.use((req, res, next) => {
@@ -17,25 +17,32 @@ productsRouter.get('/', async ( req, res, next ) => {
 });
 
 // get featured products route
+productsRouter.get('/', async (req, res, next) => {
+    const featuredProducts = await getFeaturedProducts()
+        res.send({ featuredProducts })
+        next()
+})
 
 // create product route
-productsRouter.post('/create', requireUser, async ( req, res, next ) => {
+productsRouter.post('/create', async ( req, res, next ) => {
         const {
             name,
             description,
             price,
             stock,
+            featured,
             categoryId,
         } = req.body;
 
         console.log('Product Post:' )
 
-        if (!name || !description || !price || !stock || !categoryId) {
+        if (!name || !description || !price || !stock || !featured||!categoryId) {
             next ({
                 name: 'Missing Item Name',
                 description: 'Missing Item Description',
                 price: 'Missing Item Price',
                 stock: 'Missing if Item is in Stock',
+                featured:'Missing if Item is Featured',
                 categoryId: 'Missing the Category Id Number'
             })
         }
@@ -54,6 +61,7 @@ productsRouter.post('/create', requireUser, async ( req, res, next ) => {
                     description,
                     price,
                     stock,
+                    featured,
                     categoryId, 
                 }) 
 
@@ -136,4 +144,32 @@ productsRouter.patch('/deactivate',  async ( req, res, next ) => {
 
 })
 
+productsRouter.patch('/featured',  async ( req, res, next ) => {
+    const { 
+        id,
+        featured
+    } = req.body;
+
+    const user = req.user
+
+const filteredObj = {}
+Object.keys(req.body).forEach((key) => {
+        if (req.body[key]) {
+            filteredObj[key] = req.body[key];
+        }
+})
+
+try {
+    const featuredProduct = await activateFeaturedProduct(id, featured,fields =  filteredObj);
+    console.log("updated activate obj:",featuredProduct)
+    
+    return res.send({status: "Success",
+    message: "Featured Product Updated!", product: featuredProduct})
+
+} catch (error) {
+    console.error("Failed to feature Product", error)
+    next(error)
+}   
+
+})
 module.exports = productsRouter;
