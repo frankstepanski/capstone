@@ -1,4 +1,5 @@
 import React from "react";
+import { productQuantity, clearProduct } from '../actions/productQuantity';
 
 const Cart = ({basketProps, productQuantity, clearProduct}) => {
 

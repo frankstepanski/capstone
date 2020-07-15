@@ -4,9 +4,7 @@ import "./ShoppingCart.css";
 
 const ShoppingCart = () => {
     return (
-      <div class="cart">
       <Cart />
-      </div>
     );
   };
 
