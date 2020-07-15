@@ -32,6 +32,7 @@ const {
 const {
     getAllOrders,
     getOrderById,
+    createOrder
 } = require('./orders')
 
 
@@ -46,7 +47,7 @@ async function createInitialUsers() {
             "firstName": 'Frank',
             "lastName": 'Stepanski',
             email: 'frank.stepanski@gamil.com',
-            addresses: [],
+            address: "125 E Fake St Apt B San Luis Obispo CA 93405",
             admin: false,
             active: true
         });
@@ -57,7 +58,18 @@ async function createInitialUsers() {
             "firstName": 'Aidan',
             "lastName": 'Weber',
             email: 'aidanweber37@gmail.com',
-            addresses: [],
+            address: "123 E Fake St Apt C San Luis Obispo CA 93405",
+            admin: true,
+            active: true
+        });
+
+        const user3 = await createUser({
+            username: 'chrisfyi', 
+            password: 'password1',
+            "firstName": 'Chris',
+            "lastName": 'Jones',
+            email: 'chrisfyi@hotmail.com',
+            address: "123 E Fake St Apt C San Luis Obispo CA 93405",
             admin: true,
             active: true
         });
@@ -252,9 +264,9 @@ async function createInitialOrders() {
 
 }
 
-const seed = async (force = false) => {
+const seed = async (FORCE = false) => {
     
-    if (force) {
+    if (FORCE) {
 
         try {
         
@@ -272,85 +284,4 @@ const seed = async (force = false) => {
     }
 }
 
-async function rebuildDB() {
-    try {
-        client.connect();
-        
-        await dropTables();
-        await createTables();
-        await seed();
-    } catch(error) {
-        console.error('Failed to rebuild DB', error)
-    }
-}
-    
-
-async function testDB() {
-        try {
-          console.log("Starting to test database...");
-    
-          console.log("getAllUsers called: Initial Users Created!:");
-          const users = await getAllUsers();
-          console.log("Result:", users);
-
-          console.log("getUserById called: Initial Users Created!:");
-          const userById = await getUserById(1);
-          console.log("Result:", userById);
-
-          console.log("getUserByUsername called: Initial Users Created!:");
-          const userByUsername = await getUserByUsername('fsjay');
-          console.log("Result:", userByUsername);
-    
-          console.log("getAllCategories called: Initial Categories created!");  const categories = await getAllCategories();
-          console.log("Result:", categories);
-
-          console.log("getCategoryById called: Initial Categories created!");  const categoryById = await getCategoryById(2);
-          console.log("Result:", categoryById);
-          
-          console.log("getAllProducts called: Initial products created!:")
-          const products = await getAllProducts();
-          console.log("Result:", products)
-
-          console.log("getProductById called: Initial products created!:")
-          const productById = await getProductById(2);
-          console.log("Result:", productById)
-
-        //   console.log("getProductByName called: Initial products created!:")
-        //   const productByName = await getProductByName(name);
-        //   console.log("Result:", productByName)
-    
-          console.log("getReviewsById called: Initial reviews created!:")
-          const reviewById = await getReviewById(2);
-          console.log("Result:", reviewById)
-
-          console.log("getReviewsByProductId called: Initial reviews created!:")
-          const reviewsByProductId = await getReviewsByProductId(3);
-          console.log("Result:", reviewsByProductId)
-
-          console.log("getReviewsByUserId called: Initial reviews created!:")
-          const reviewsByUserId = await getReviewsByUserId(1);
-          console.log("Result:", reviewsByUserId)
-
-          console.log("getAllOrders called: Initial orders created!:")
-          const allOrders = await getAllOrders();
-          console.log("Result:", allOrders)
-
-          console.log("getOrderById called: Initial orders created!")
-          const orderById = await getOrderById();
-          console.log("Result:", orderById)
-
-          
-    
-          console.log("Finished database tests!");
-        } catch (error) {
-          console.error("Error testing database!");
-          throw error;
-        }
-    }
-
-rebuildDB()
-    .then(testDB)
-    .catch(console.error)
-    .finally(() => client.end())
-
-module.exports = seed;
+module.exports = { seed };

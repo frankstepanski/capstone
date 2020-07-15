@@ -1,23 +1,24 @@
 const { client } = require('./client');
 
 const { addProductToCart, removeProductFromCart, getCartProductsByProductId } = require('./cart_products');
+const { POINT_CONVERSION_UNCOMPRESSED } = require('constants');
 
 const createProduct = async ({
     name,
     description,
     price,
     stock,
-    rating,
     categoryId
 
 }) => {
     
+
     try{
     const { rows: [ product ] } = await client.query(
-        `INSERT INTO products (name, description, price, stock, rating, "categoryId")
-        VALUES($1,$2,$3,$4,$5,$6)
+        `INSERT INTO products (name, description, price, stock, "categoryId")
+        VALUES($1,$2,$3,$4,$5)
         RETURNING *;
-        `, [name,description,price,stock,rating,categoryId]
+        `, [name,description,price,stock,categoryId]
     );
 
         return product;
@@ -88,19 +89,14 @@ const getProductById = async(productId) => {
     }
 }
 
-const getProductByName = async(productName) => {
+const getProductByName = async({ name }) => {
     try{ 
         const { rows: [product] } = await client.query(`
         SELECT * FROM products 
-        WHERE name=${ productName }
-        `);
+        WHERE name=$1
+        `,[name]);
 
-     if (!product) {
-         throw { 
-             name: "ProductNotFoundError",
-             message: "Cannot find product with that product Name"
-         };
-     }
+
 
      return product;
     } catch(error){
@@ -109,15 +105,20 @@ const getProductByName = async(productName) => {
 }
 
 // products will only be deactivated (not deleted)
-const deactivateProduct = async (productId) => {
+const deactivateProduct = async (product) => {
     try {
 
+        const { rows } = await client.query(`
+        UPDATE products
+        SET active = NOT active 
+        WHERE id = $1
+        RETURNING * ;
+        `, [product]);
         
-
-    
-    } catch(error) {
-        throw error;
-    }
+       return rows
+     }catch(error){
+         console.error("Failed to deactivate product", error)
+     }
 }
 
 module.exports = {
