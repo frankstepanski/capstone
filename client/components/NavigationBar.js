@@ -10,10 +10,10 @@ const NavigationBar= () => (
       <Navbar.Collapse id="basic-navbar-nav">
         <Nav className="ml-auto">
           <Nav.Item>
-            <Nav.Link as = {Link} to="/">Home</Nav.Link>
+            <Nav.Link as = {Link} to="/account">Account</Nav.Link>
           </Nav.Item>
           <Nav.Item>
-            <Nav.Link as = {Link} to="/account">Account</Nav.Link>
+            <Nav.Link as = {Link} to="/cart">Cart</Nav.Link>
           </Nav.Item>
           <Nav.Item>
             <Nav.Link as = {Link} to="/shop">Shop</Nav.Link>
