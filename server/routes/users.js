@@ -69,19 +69,18 @@ usersRouter.post('/register', async (req, res, next) => {
                 admin,
                 active 
             });
-    
-            const token = jwt.sign({
+            
+            //redundant code since we're forwarding req to ./login below
+/*             const token = jwt.sign({
                 id: user.id,
                 username
             }, SECRET, {
                 expiresIn: '1w'
-            })
-    
-            res.send({
-                status: "Success",
-                message: 'Thank you for creating an account',
-                token
-            })
+            }) */
+            
+            //Once the new user is create, forward the request ./login to improve UX flow
+            console.log(`User successfully created. Logging in.`)
+            return res.redirect(308, './login');
         }
     } catch (e) {
         next(e);
@@ -100,11 +99,11 @@ usersRouter.post('/login', async (req, res, next) => {
     try {
         const user = await authenticate({username, password});
         console.log(`>>> User: `, user)
-        const { id, username: un } = user;
+        const { id, username: un, admin } = user;
 
         if (user) {
-            const token = jwt.sign({id, un}, SECRET);
-            res.send({ status: "success", message: "you're logged in!", token });
+            const token = jwt.sign({id, un}, SECRET, {expiresIn: '1w'});
+            res.send({ status: "success", message: "you're logged in!", token, admin});
         } else {
             console.log('user could not be logged in')
             next({ 
@@ -132,7 +131,7 @@ usersRouter.patch('/update', requireUser, async (req, res, next) => {
     })
 
     try {
-        const { id } = req.user;
+        const { id } = user;
         const updatedUser = await updateUser(id, fields = filteredObj);
         console.log(updatedUser)
         return res.send({status: "success", message: "User updated", user: updatedUser});

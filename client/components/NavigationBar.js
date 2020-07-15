@@ -13,6 +13,9 @@ const NavigationBar= () => (
             <Nav.Link as = {Link} to="/">Home</Nav.Link>
           </Nav.Item>
           <Nav.Item>
+            <Nav.Link as = {Link} to="/account">Account</Nav.Link>
+          </Nav.Item>
+          <Nav.Item>
             <Nav.Link as = {Link} to="/shop">Shop</Nav.Link>
           </Nav.Item>
           <Nav.Item>
