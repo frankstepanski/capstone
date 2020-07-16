@@ -1,16 +1,16 @@
 import React, { useEffect, useState } from "react";
 import { Route, Switch } from "react-router-dom";
 
-//import  { Home, Account, Shop, Blog, Contact, About, NotFoundPage }  from './pages';
 import  Home from './pages/Home';
 import  Account from './pages/Account';
 import  Shop  from './pages/Shop';
-import  ShoppingCart from './components/ShoppingCart';
+import  ShoppingCart from './pages/ShoppingCart';
 import  Blog  from './pages/Blog';
 import  Contact from './pages/Contact';
 import  About from './pages/About';
 import  NotFoundPage  from './pages/NotFoundPage';
-import  Header  from './pages/layouts/Header'
+import  Header  from './pages/layouts/Header';
+import  Footer  from './pages/layouts/Footer';
 
 const App = () => {
     // useState
@@ -32,6 +32,7 @@ const App = () => {
               <Route path = "/contact" component ={Contact} />
               <Route path="*" component={NotFoundPage} />
           </Switch>
+          <Footer />
         </div>
     );
   };

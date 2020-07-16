@@ -143,6 +143,16 @@ const sync = async (FORCE = false) => {
             );`
         );
 
+         // messages from contact form:
+         await client.query(`
+         CREATE TABLE IF NOT EXISTS email (
+             id SERIAL PRIMARY KEY,
+             name VARCHAR(255) NOT NULL,
+             email VARCHAR(255) NOT NULL,
+             message TEXT
+         );`
+     );
+
         console.log(`Tables successfully created`)
     }
 
