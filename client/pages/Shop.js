@@ -1,15 +1,13 @@
 import React from "react";
-
-
+import Carousel from "../components/Carousel"
 
 import "./Shop.css";
 
 const Shop = () => {
     return (
-       <h1>Shop</h1>
+      <Carousel />
      
     );
   };
-
 
 export default Shop;

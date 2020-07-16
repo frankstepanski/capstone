@@ -8,6 +8,7 @@ import  ShoppingCart from './pages/ShoppingCart';
 import  Blog  from './pages/Blog';
 import  Contact from './pages/Contact';
 import  About from './pages/About';
+import  SearchResults from './pages/SearchResults';
 import  NotFoundPage  from './pages/NotFoundPage';
 import  Header  from './pages/layouts/Header';
 import  Footer  from './pages/layouts/Footer';
@@ -30,6 +31,7 @@ const App = () => {
               <Route path = "/blog" component ={Blog} />
               <Route path = "/about" component ={About} />
               <Route path = "/contact" component ={Contact} />
+              <Route path = "/search" component ={SearchResults} />
               <Route path="*" component={NotFoundPage} />
           </Switch>
           <Footer />
