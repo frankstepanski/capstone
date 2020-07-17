@@ -12,7 +12,14 @@ const NavigationBar = ({ results, setResults, setSearchTerm }) => {
       searchData.value=searchValue;
     
       setSearchTerm(searchData);
-  }
+    }
+
+    handleSubmit = (event) => {
+      event.preventDefault();
+      
+      // axios call here or other  component?    
+    
+    }
 
   return (
 
@@ -28,7 +35,7 @@ const NavigationBar = ({ results, setResults, setSearchTerm }) => {
             <Nav.Link as = {Link} to="/about">About</Nav.Link>
             <Nav.Link as = {Link} to="/contact">Contact</Nav.Link>
           </Nav>
-          <Form inline>
+          <Form inline onSubmit={handleSubmit}>
             <FormControl type="text" placeholder="Search" className="mr-sm-2" onChange={handleInputChange}/>
               <Button variant="outline-primary">Search</Button>
           </Form>

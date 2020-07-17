@@ -1,9 +1,14 @@
 import React from "react";
 import NavigationBar from "../../components/NavigationBar";
 
-const Header = () => (
+const Header = () => {
     
-    <NavigationBar />
-);
+    const [searchTerm, setSearchTerm] = useState({value:''});
+
+    return (
+
+        <NavigationBar setSearchTerm={setSearchTerm} />
+    );
+}
 
 export default Header;
