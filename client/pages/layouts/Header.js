@@ -1,13 +1,13 @@
 import React from "react";
 import NavigationBar from "../../components/NavigationBar";
 
-const Header = () => {
+const Header = ( {setResults} ) => {
     
-    const [searchTerm, setSearchTerm] = useState({value:''});
+    //const [searchTerm, setSearchTerm] = useState({value:''});
 
     return (
 
-        <NavigationBar setSearchTerm={setSearchTerm} />
+        <NavigationBar setResults = {setResults} />
     );
 }
 

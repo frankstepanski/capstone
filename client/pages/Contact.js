@@ -6,11 +6,11 @@ import "./Contact.css";
 
 const Contact = () => {
  
-  handleSubmit = (event) => {
+  const handleSubmit = (event) => {
 
     event.preventDefault();
 
-    // axios call
+    // axios call for insert
 
   }
 

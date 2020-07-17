@@ -8,30 +8,32 @@ import  ShoppingCart from './pages/ShoppingCart';
 import  Blog  from './pages/Blog';
 import  Contact from './pages/Contact';
 import  About from './pages/About';
-import  Search from './pages/Search';
+import  SearchResults from './pages/SearchResults';
 import  NotFoundPage  from './pages/NotFoundPage';
 import  Header  from './pages/layouts/Header';
 import  Footer  from './pages/layouts/Footer';
 
 const App = () => {
-    // useState
-    // useQueryParams
-    
-    // other functions
-    // useEffect
-    
+  const [user, setUser] = useState({});
+  const [results, setResults] = useState([]);
+  const [cart, setCart] = useState({}); // keys: products: [{product, quantity},{product, quantity}], grandTotal: float 
+  const [products, setProducts] = useState([{}]); // array of products
+  const [show, setShow] = useState(false); // show or not show modal
+  const [orders, setOrder] = useState([{}]) // array of orders (for logged in users)
+
     return (
         <div className ="container">
-          <Header />
+          <Header setResults = {setResults} />
+          {/* modal for user login??? */}
            <Switch>
               <Route exact path = "/" component ={Home} />
-              <Route path = "/account" component ={Account} />
-              <Route path = "/cart" component ={ShoppingCart} />
-              <Route path = "/shop" component ={Shop} />
+              <Route path = "/account" render = {() => ( <Account isLogin={isLoggedIn}  setIsLoggedIn={setIsLoggedIn} /> )} />
+              <Route path = "/cart" render ={() => ( <ShoppingCart cart={cart}  setCart={setCart} user={user} /> )} />
+              <Route path = "/shop" render ={() => ( <Shop cart={cart}  setCart={setCart} user={user} products={products} /> )} />
               <Route path = "/blog" component ={Blog} />
               <Route path = "/about" component ={About} />
               <Route path = "/contact" component ={Contact} />
-              <Route path = "/search" component ={Search} />
+              <Route path = "/search" render ={() => ( <SearchResults results = {results} /> )} />
               <Route path="*" component={NotFoundPage} />
           </Switch>
           <Footer />

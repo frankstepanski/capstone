@@ -55,19 +55,12 @@ const sync = async (FORCE = false) => {
                 stock INTEGER NOT NULL,
                 rating FLOAT(1),
                 active BOOLEAN DEFAULT TRUE,
+                thumbnail VARCHAR(255) NOT NULL,
+                image VARCHAR(255) NOT NULL,
                 "categoryId" INTEGER REFERENCES categories(id) NOT NULL
             );`
         );
     
-        await client.query(
-            `CREATE TABLE IF NOT EXISTS product_images (
-                id SERIAL PRIMARY KEY,
-                name VARCHAR(255) NOT NULL,
-                base64data BYTEA,
-                "productId" INTEGER REFERENCES products(id) NOT NULL
-            );`
-        );
-
         await client.query(
             `CREATE TABLE IF NOT EXISTS reviews (
                 id SERIAL PRIMARY KEY,
@@ -116,8 +109,7 @@ const sync = async (FORCE = false) => {
             `CREATE TABLE IF NOT EXISTS orders (
                 id serial PRIMARY KEY,
                 "userId" INTEGER REFERENCES users(id),
-                products INTEGER [] NOT NULL,
-                quantity INTEGER NOT NULL,
+                products ARRAY [] NOT NULL,
                 "orderDate" DATE NOT NULL,
                 "orderTotal" FLOAT(2) NOT NULL,
                 "shippingAddress" VARCHAR(255) NOT NULL            

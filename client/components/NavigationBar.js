@@ -2,7 +2,7 @@ import React from "react";
 import { Link } from 'react-router-dom';
 import { Nav, Navbar, Form, FormControl, Button } from 'react-bootstrap';
 
-const NavigationBar = ({ results, setResults, setSearchTerm }) => {
+const NavigationBar = ({ setResults }) => {
 
     const handleInputChange= async(e)=>{
 
@@ -14,10 +14,11 @@ const NavigationBar = ({ results, setResults, setSearchTerm }) => {
       setSearchTerm(searchData);
     }
 
-    handleSubmit = (event) => {
+    const handleSubmit = (event) => {
       event.preventDefault();
       
-      // axios call here or other  component?    
+      // const searchResult = axios call   
+      // setResults(searchResult) <-- array of products (App level gets it!!!)
     
     }
 

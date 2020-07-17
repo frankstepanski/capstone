@@ -105,7 +105,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _pages_Blog__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./pages/Blog */ "./client/pages/Blog.js");
 /* harmony import */ var _pages_Contact__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./pages/Contact */ "./client/pages/Contact.js");
 /* harmony import */ var _pages_About__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./pages/About */ "./client/pages/About.js");
-/* harmony import */ var _pages_Search__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./pages/Search */ "./client/pages/Search.js");
+/* harmony import */ var _pages_SearchResults__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./pages/SearchResults */ "./client/pages/SearchResults.js");
 /* harmony import */ var _pages_NotFoundPage__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./pages/NotFoundPage */ "./client/pages/NotFoundPage.js");
 /* harmony import */ var _pages_layouts_Header__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./pages/layouts/Header */ "./client/pages/layouts/Header.js");
 /* harmony import */ var _pages_layouts_Footer__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./pages/layouts/Footer */ "./client/pages/layouts/Footer.js");
@@ -124,25 +124,45 @@ __webpack_require__.r(__webpack_exports__);
 
 
 const App = () => {
-  // useState
-  // useQueryParams
-  // other functions
-  // useEffect
+  const [user, setUser] = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])({});
+  const [results, setResults] = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])([]);
+  const [cart, setCart] = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])({}); // keys: products: [{product, quantity},{product, quantity}], grandTotal: float 
+
+  const [products, setProducts] = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])([{}]); // array of products
+
+  const [show, setShow] = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(false); // show or not show modal
+
+  const [orders, setOrder] = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])([{}]); // array of orders (for logged in users)
+
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
     className: "container"
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_pages_layouts_Header__WEBPACK_IMPORTED_MODULE_11__["default"], null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_1__["Switch"], null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_1__["Route"], {
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_pages_layouts_Header__WEBPACK_IMPORTED_MODULE_11__["default"], {
+    setResults: setResults
+  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_1__["Switch"], null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_1__["Route"], {
     exact: true,
     path: "/",
     component: _pages_Home__WEBPACK_IMPORTED_MODULE_2__["default"]
   }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_1__["Route"], {
     path: "/account",
-    component: _pages_Account__WEBPACK_IMPORTED_MODULE_3__["default"]
+    render: () => /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_pages_Account__WEBPACK_IMPORTED_MODULE_3__["default"], {
+      isLogin: isLoggedIn,
+      setIsLoggedIn: setIsLoggedIn
+    })
   }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_1__["Route"], {
     path: "/cart",
-    component: _pages_ShoppingCart__WEBPACK_IMPORTED_MODULE_5__["default"]
+    render: () => /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_pages_ShoppingCart__WEBPACK_IMPORTED_MODULE_5__["default"], {
+      cart: cart,
+      setCart: setCart,
+      user: user
+    })
   }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_1__["Route"], {
     path: "/shop",
-    component: _pages_Shop__WEBPACK_IMPORTED_MODULE_4__["default"]
+    render: () => /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_pages_Shop__WEBPACK_IMPORTED_MODULE_4__["default"], {
+      cart: cart,
+      setCart: setCart,
+      user: user,
+      products: products
+    })
   }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_1__["Route"], {
     path: "/blog",
     component: _pages_Blog__WEBPACK_IMPORTED_MODULE_6__["default"]
@@ -154,7 +174,9 @@ const App = () => {
     component: _pages_Contact__WEBPACK_IMPORTED_MODULE_7__["default"]
   }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_1__["Route"], {
     path: "/search",
-    component: _pages_Search__WEBPACK_IMPORTED_MODULE_9__["default"]
+    render: () => /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_pages_SearchResults__WEBPACK_IMPORTED_MODULE_9__["default"], {
+      results: results
+    })
   }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_1__["Route"], {
     path: "*",
     component: _pages_NotFoundPage__WEBPACK_IMPORTED_MODULE_10__["default"]
@@ -256,9 +278,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 const NavigationBar = ({
-  results,
-  setResults,
-  setSearchTerm
+  setResults
 }) => {
   const handleInputChange = async e => {
     const searchValue = e.target.value;
@@ -267,8 +287,9 @@ const NavigationBar = ({
     setSearchTerm(searchData);
   };
 
-  handleSubmit = event => {
-    event.preventDefault(); // axios call here or other  component?    
+  const handleSubmit = event => {
+    event.preventDefault(); // const searchResult = axios call   
+    // setResults(searchResult) <-- array of products (App level gets it!!!)
   };
 
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_2__["Navbar"], {
@@ -405,7 +426,10 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-const Account = () => {
+const Account = ({
+  user,
+  orders
+}) => {
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
     className: "account"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h2", null, "Account"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, "Forms to view/edit users, categories, products and orders."));
@@ -457,6 +481,9 @@ __webpack_require__.r(__webpack_exports__);
 
 
 const Blog = () => {
+  const [posts, setPosts] = useState([{}, {}, {}]); // array of posts
+  // axios call t oset posts
+
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
     className: "blog"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h2", null, "Blog"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, "Simple blog (ordered by date) and no comment functonality."));
@@ -512,8 +539,8 @@ __webpack_require__.r(__webpack_exports__);
 
 
 const Contact = () => {
-  handleSubmit = event => {
-    event.preventDefault(); // axios call
+  const handleSubmit = event => {
+    event.preventDefault(); // axios call for insert
   };
 
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
@@ -642,16 +669,16 @@ const NotFoundPage = () => {
 
 /***/ }),
 
-/***/ "./client/pages/Search.css":
-/*!*********************************!*\
-  !*** ./client/pages/Search.css ***!
-  \*********************************/
+/***/ "./client/pages/SearchResults.css":
+/*!****************************************!*\
+  !*** ./client/pages/SearchResults.css ***!
+  \****************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 var api = __webpack_require__(/*! ../../node_modules/style-loader/dist/runtime/injectStylesIntoStyleTag.js */ "./node_modules/style-loader/dist/runtime/injectStylesIntoStyleTag.js");
 
-var content = __webpack_require__(/*! !../../node_modules/css-loader/dist/cjs.js!../../node_modules/sass-loader/dist/cjs.js!./Search.css */ "./node_modules/css-loader/dist/cjs.js!./node_modules/sass-loader/dist/cjs.js!./client/pages/Search.css");
+var content = __webpack_require__(/*! !../../node_modules/css-loader/dist/cjs.js!../../node_modules/sass-loader/dist/cjs.js!./SearchResults.css */ "./node_modules/css-loader/dist/cjs.js!./node_modules/sass-loader/dist/cjs.js!./client/pages/SearchResults.css");
 
 content = content.__esModule ? content.default : content;
 
@@ -667,10 +694,10 @@ module.exports = content.locals || {};
 
 /***/ }),
 
-/***/ "./client/pages/Search.js":
-/*!********************************!*\
-  !*** ./client/pages/Search.js ***!
-  \********************************/
+/***/ "./client/pages/SearchResults.js":
+/*!***************************************!*\
+  !*** ./client/pages/SearchResults.js ***!
+  \***************************************/
 /*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -678,18 +705,22 @@ module.exports = content.locals || {};
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-!(function webpackMissingModule() { var e = new Error("Cannot find module '../../components/Results'"); e.code = 'MODULE_NOT_FOUND'; throw e; }());
-/* harmony import */ var _Search_css__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Search.css */ "./client/pages/Search.css");
-/* harmony import */ var _Search_css__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_Search_css__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _SearchResults_css__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./SearchResults.css */ "./client/pages/SearchResults.css");
+/* harmony import */ var _SearchResults_css__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_SearchResults_css__WEBPACK_IMPORTED_MODULE_1__);
 
 
 
-
-const Search = () => {
-  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(!(function webpackMissingModule() { var e = new Error("Cannot find module '../../components/Results'"); e.code = 'MODULE_NOT_FOUND'; throw e; }()), null);
+const SearchResults = ({
+  results
+}) => {
+  return (
+    /*#__PURE__*/
+    // map the array and display the products (in cards?)
+    react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h2", null, " Search Results")
+  );
 };
 
-/* harmony default export */ __webpack_exports__["default"] = (Search);
+/* harmony default export */ __webpack_exports__["default"] = (SearchResults);
 
 /***/ }),
 
@@ -836,12 +867,12 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-const Header = () => {
-  const [searchTerm, setSearchTerm] = useState({
-    value: ''
-  });
+const Header = ({
+  setResults
+}) => {
+  //const [searchTerm, setSearchTerm] = useState({value:''});
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_components_NavigationBar__WEBPACK_IMPORTED_MODULE_1__["default"], {
-    setSearchTerm: setSearchTerm
+    setResults: setResults
   });
 };
 
@@ -4328,10 +4359,10 @@ module.exports = exports;
 
 /***/ }),
 
-/***/ "./node_modules/css-loader/dist/cjs.js!./node_modules/sass-loader/dist/cjs.js!./client/pages/Search.css":
-/*!**************************************************************************************************************!*\
-  !*** ./node_modules/css-loader/dist/cjs.js!./node_modules/sass-loader/dist/cjs.js!./client/pages/Search.css ***!
-  \**************************************************************************************************************/
+/***/ "./node_modules/css-loader/dist/cjs.js!./node_modules/sass-loader/dist/cjs.js!./client/pages/SearchResults.css":
+/*!*********************************************************************************************************************!*\
+  !*** ./node_modules/css-loader/dist/cjs.js!./node_modules/sass-loader/dist/cjs.js!./client/pages/SearchResults.css ***!
+  \*********************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
