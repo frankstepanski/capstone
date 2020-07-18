@@ -1,6 +1,9 @@
 //Server
 const express = require ('express');
 const path = require('path');
+const stripe = require("stripe")(
+  "sk_test_51H5aWNICjx0urQmckVFOscQzfNC0UDZhM3ObJRQOTeSniYpdRdwJhoMScUKz4vnbXkRRAjhFWXUyTatpYOzHuGoe000oj5UQyG"
+);
 
 const morgan = require('morgan');
 const bodyParser = require('body-parser');
@@ -31,6 +34,10 @@ server.use((req, res, next) => {
 // here's our API:
 //const apiRouter = require('./routes');
 //server.use('/api', apiRouter);
+
+// stripe API (checkout):
+
+
 
 server.use((error, req, res, next) => {
   console.error(error);

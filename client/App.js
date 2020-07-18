@@ -31,7 +31,7 @@ const App = () => {
               <Route path = "/account" render = {() => ( <Account isLogin={isLoggedIn}  setIsLoggedIn={setIsLoggedIn} /> )} />
               <Route path = "/shop" render ={() => ( <Shop cart={cart}  setCart={setCart} user={user} products={products} /> )} />
               <Route path = "/cart" render ={() => ( <ShoppingCart cart={cart}  setCart={setCart} user={user} /> )} />
-              <Route path = "/checkout" render ={() => ( <Checkout cart={cart} /> )} />
+              <Route path = "/payment" render ={() => ( <Checkout cart={cart} /> )} />
               <Route path = "/blog" component ={Blog} />
               <Route path = "/about" component ={About} />
               <Route path = "/contact" component ={Contact} />
