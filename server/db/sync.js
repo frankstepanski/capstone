@@ -8,6 +8,7 @@ const sync = async (FORCE = false) => {
         console.log('Dropping tables')
         await client.query(`
             DROP TABLE IF EXISTS posts;
+            DROP TABLE IF EXISTS messages;
             DROP TABLE IF EXISTS product_reviews;
             DROP TABLE IF EXISTS reviews;
             DROP TABLE IF EXISTS user_orders;
@@ -62,6 +63,7 @@ const sync = async (FORCE = false) => {
         );
 
 
+    
         await client.query(
             `CREATE TABLE IF NOT EXISTS reviews (
                 id SERIAL PRIMARY KEY,
@@ -137,6 +139,16 @@ const sync = async (FORCE = false) => {
                 "blogText" TEXT
             );`
         );
+
+         // messages from contact form:
+         await client.query(`
+         CREATE TABLE IF NOT EXISTS messages (
+             id SERIAL PRIMARY KEY,
+             name VARCHAR(255) NOT NULL,
+             email VARCHAR(255) NOT NULL,
+             message TEXT
+         );`
+     );
 
         console.log(`Tables successfully created`)
     }

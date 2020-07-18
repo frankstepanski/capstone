@@ -1,8 +1,8 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Modal as Mod} from 'react-bootstrap';
 
 
-const Modal = () => (
+const LoginModal = () => (
     <>
 
     </>
