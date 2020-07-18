@@ -6,7 +6,7 @@ import  Account from './pages/Account';
 import  Shop  from './pages/Shop';
 import  ShoppingCart from './pages/ShoppingCart';
 import  Blog  from './pages/Blog';
-import  Contact from './pages/Contact';
+//import  Contact from './pages/Contact';
 import  About from './pages/About';
 import  SearchResults from './pages/SearchResults';
 import  NotFoundPage  from './pages/NotFoundPage';

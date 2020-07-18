@@ -1,4 +1,5 @@
 const { client } = require("./client");
+//const { getProductById } = require("./products");
 
 const getCart = async ({userId}) => {
     try {
@@ -7,6 +8,17 @@ const getCart = async ({userId}) => {
             FROM cart_products
             WHERE "userId"=$1;
         `, [userId])
+
+        const prodArr = cartRaw.map(async (product) => {
+            const prodDetails = await client.query(`
+                SELECT * FROM products
+                WHERE id = $1;
+            `, [product.id]);
+            return prodDetails;
+        })
+
+        const cart = {userId, products: prodArr};
+        return cart;
     } catch (e) {
         console.error(`getCart error. ${ e }`)
         throw e;
@@ -117,7 +129,6 @@ module.exports = {
     addProductToCart,
     removeProductFromCart,
     getCartProductById,
-    getProductsByCartId,
     getCartProductsByProductId,
     updateCartProductQuantity,
     getCart

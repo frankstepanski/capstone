@@ -88,6 +88,8 @@ async function createInitialProducts() {
               price: 549.99,
               stock: 10,
               rating: 4.7,
+              thumbnail: 'testpath',
+              image: 'testpath',
               "categoryId": 2
         });
 
@@ -97,6 +99,8 @@ async function createInitialProducts() {
             price: 29.99,
             stock: 5,
             rating: 4.4,
+            thumbnail: 'testpath',
+            image: 'testpath',
             "categoryId": 1
         });
 
@@ -106,6 +110,8 @@ async function createInitialProducts() {
             price: 89.99,
             stock: 16,
             rating: 4.0,
+            thumbnail: 'testpath',
+            image: 'testpath',
             "categoryId": 3
 
         });

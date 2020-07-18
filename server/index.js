@@ -1,18 +1,18 @@
 //Server
 const express = require ('express');
 const path = require('path');
-const stripe = require("stripe")(
+/* const stripe = require("stripe")(
   "sk_test_51H5aWNICjx0urQmckVFOscQzfNC0UDZhM3ObJRQOTeSniYpdRdwJhoMScUKz4vnbXkRRAjhFWXUyTatpYOzHuGoe000oj5UQyG"
-);
+); */
 
 const morgan = require('morgan');
 const bodyParser = require('body-parser');
 
-//const { sync } = require("./db/index");
-//const { seed } = require("./db/seed");
+const { sync } = require("./db/index");
+const { seed } = require("./db/seed");
 
 const PORT = process.env.PORT || 3001;
-const FORCE = process.env.FORCE || false;
+const FORCE = process.env.FORCE || true;
 
 const server = express();
 
@@ -30,10 +30,10 @@ server.use((req, res, next) => {
 
   next();
 });
-
-// here's our API:
-//const apiRouter = require('./routes');
-//server.use('/api', apiRouter);
+ 
+//here's our API:
+const apiRouter = require('./routes');
+server.use('/api', apiRouter);
 
 // stripe API (checkout):
 
@@ -57,12 +57,7 @@ const DIST_PATH = path.join(__dirname, '../dist' );
 server.use(express.static(DIST_PATH));
 
 // images
-server.use('/assets',express.static(path.join(__dirname,'../assets')));
-
-// 404?
-server.get('*', function(req, res, next) {
-  res.status(404).sendFile(path.join(__dirname, '../dist', 'index.html'));
-});
+server.use('/assets', express.static(path.join(__dirname,'../assets')));
 
 // make a route for each front end page
 /*
@@ -80,9 +75,9 @@ const startServer = new Promise((resolve) => {
   });
 });
 
-//sync(FORCE)
- // .then(() => seed(FORCE))
-//  .then(startServer)
- // .catch((error) => {
-//    console.error(`SERVER FAILED TO START: ${error.toString()}`);
-//});
+sync(FORCE)
+  .then(() => seed(FORCE))
+  .then(startServer)
+  .catch((error) => {
+    console.error(`SERVER FAILED TO START: ${error.toString()}`);
+});

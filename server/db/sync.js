@@ -100,7 +100,7 @@ const sync = async (FORCE = false) => {
             `CREATE TABLE IF NOT EXISTS orders (
                 id serial PRIMARY KEY,
                 "userId" INTEGER REFERENCES users(id),
-                products ARRAY [] NOT NULL,
+                products  VARCHAR(255)[] NOT NULL,
                 "orderDate" DATE NOT NULL,
                 "orderTotal" FLOAT(2) NOT NULL,
                 "shippingAddress" VARCHAR(255) NOT NULL            

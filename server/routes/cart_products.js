@@ -1,25 +1,24 @@
 const express = require('express');
 const cartsRouter = express.Router();
 
-const { addProductToCart, updateCartProductQuantity, getCart, removeProductFromCart, getCartProductById } = require('../db');
+const { addProductToCart, updateCartProductQuantity, getCart, removeProductFromCart, getCartProductById } = require('../db/cart_products');
 
 const { requireUser } = require('./utils');
 
 // add poduct to cart route
-const { getProductById } = require('../db')
 
 cartsRouter.use((req, res, next) => {
-    console.log('> A request has been made to the /carts endpoint');
+    console.log('> A request has been made to the /carts_products endpoint');
     next();
 })
 
 //get cart (by userId)
 cartsRouter.get('/', requireUser, async (req,res, next) => {
     const { id: userId} = req.user;
-    
+
     try {
         const cart = await getCart({userId})
-        
+        res.send({status: "success", cart})
     } catch (e) {
         console.error(e)
     }
