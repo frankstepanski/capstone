@@ -8,6 +8,7 @@ const sync = async (FORCE = false) => {
         console.log('Dropping tables')
         await client.query(`
             DROP TABLE IF EXISTS posts;
+            DROP TABLE IF EXISTS messages;
             DROP TABLE IF EXISTS product_reviews;
             DROP TABLE IF EXISTS reviews;
             DROP TABLE IF EXISTS user_orders;
@@ -54,19 +55,12 @@ const sync = async (FORCE = false) => {
                 stock INTEGER NOT NULL,
                 rating FLOAT(1),
                 active BOOLEAN DEFAULT TRUE,
+                thumbnail VARCHAR(255) NOT NULL,
+                image VARCHAR(255) NOT NULL,
                 "categoryId" INTEGER REFERENCES categories(id) NOT NULL
             );`
         );
     
-        await client.query(
-            `CREATE TABLE IF NOT EXISTS product_images (
-                id SERIAL PRIMARY KEY,
-                name VARCHAR(255) NOT NULL,
-                base64data BYTEA,
-                "productId" INTEGER REFERENCES products(id) NOT NULL
-            );`
-        );
-
         await client.query(
             `CREATE TABLE IF NOT EXISTS reviews (
                 id SERIAL PRIMARY KEY,
@@ -106,8 +100,7 @@ const sync = async (FORCE = false) => {
             `CREATE TABLE IF NOT EXISTS orders (
                 id serial PRIMARY KEY,
                 "userId" INTEGER REFERENCES users(id),
-                products INTEGER [] NOT NULL,
-                quantity INTEGER NOT NULL,
+                products ARRAY [] NOT NULL,
                 "orderDate" DATE NOT NULL,
                 "orderTotal" FLOAT(2) NOT NULL,
                 "shippingAddress" VARCHAR(255) NOT NULL            
@@ -133,6 +126,16 @@ const sync = async (FORCE = false) => {
                 "blogText" TEXT
             );`
         );
+
+         // messages from contact form:
+         await client.query(`
+         CREATE TABLE IF NOT EXISTS messages (
+             id SERIAL PRIMARY KEY,
+             name VARCHAR(255) NOT NULL,
+             email VARCHAR(255) NOT NULL,
+             message TEXT
+         );`
+     );
 
         console.log(`Tables successfully created`)
     }
