@@ -53,13 +53,16 @@ const sync = async (FORCE = false) => {
                 description TEXT NOT NULL,
                 price FLOAT(2) NOT NULL,
                 stock INTEGER NOT NULL,
-                rating FLOAT(1),
+                rating FLOAT(1) DEFAULT 0,
                 active BOOLEAN DEFAULT TRUE,
+                featured BOOLEAN DEFAULT FALSE,
                 thumbnail VARCHAR(255) NOT NULL,
                 image VARCHAR(255) NOT NULL,
                 "categoryId" INTEGER REFERENCES categories(id) NOT NULL
             );`
         );
+
+
     
         await client.query(
             `CREATE TABLE IF NOT EXISTS reviews (
@@ -97,18 +100,18 @@ const sync = async (FORCE = false) => {
         // products column will have multiple productIDs
         // join table
         await client.query(
-            `CREATE TABLE IF NOT EXISTS orders (
-                id serial PRIMARY KEY,
-                "userId" INTEGER REFERENCES users(id),
-                products  VARCHAR(255)[] NOT NULL,
-                "orderDate" DATE NOT NULL,
-                "orderTotal" FLOAT(2) NOT NULL,
-                "shippingAddress" VARCHAR(255) NOT NULL            
-            );`
+          `CREATE TABLE IF NOT EXISTS orders (
+            id serial PRIMARY KEY,
+            "userId" INTEGER REFERENCES users(id),
+            products INTEGER REFERENCES products(name),
+            "orderDate" DATE NOT NULL,
+            "orderTotal" FLOAT(2) REFERENCES orders(total),
+            "shippingAddress" VARCHAR(255) NOT NULL            
+          );`
         );
-    
-        // user has many orders (1:M)
-        // join table
+        // carts(total) NOT NULL <--- needs to be added when carts is complete
+           
+        
         await client.query(
             `CREATE TABLE IF NOT EXISTS user_orders (
                 id serial PRIMARY KEY,

@@ -3,8 +3,12 @@ const {
     createCategory,
     createProduct,
     createReview,
+    createOrder
 
-} = require('./index');
+        } = require('./index');
+
+
+
 
 //Creates seed data of initial users
 async function createInitialUsers() {
@@ -33,11 +37,21 @@ async function createInitialUsers() {
             active: true
         });
 
+        const user3 = await createUser({
+            username: 'chrisfyi', 
+            password: 'password1',
+            "firstName": 'Chris',
+            "lastName": 'Jones',
+            email: 'chrisfyi@hotmail.com',
+            address: "123 E Fake St Apt C San Luis Obispo CA 93405",
+            admin: true,
+            active: true
+        });
+
         // create a few more:
 
-        console.log(">>>>>Finished creating initial users");
-
-     } catch(error) {
+       
+    } catch(error) {
             console.error("Error creating initial. Error: ", error);
             throw error;
         }
@@ -54,7 +68,6 @@ async function createInitialCategories() {
         const boards = await createCategory({name: 'boards'});
         const accessories = await createCategory({name: 'accessories'});
 
-        console.log(">>>>>Finished creating initial categories!");
 
     }
     catch(error) {
@@ -90,7 +103,9 @@ async function createInitialProducts() {
               rating: 4.7,
               thumbnail: 'testpath',
               image: 'testpath',
+              featured: true,
               "categoryId": 2
+              
         });
 
         const shirt1 = await createProduct({
@@ -101,7 +116,9 @@ async function createInitialProducts() {
             rating: 4.4,
             thumbnail: 'testpath',
             image: 'testpath',
+            featured: true,
             "categoryId": 1
+
         });
 
         const wheels1 = await createProduct({
@@ -112,11 +129,10 @@ async function createInitialProducts() {
             rating: 4.0,
             thumbnail: 'testpath',
             image: 'testpath',
-            "categoryId": 3
-
+            featured:true,
+            "categoryId": 3,
         });
 
-        console.log(">>>>>Finished creating initial products");
 
     }
 
@@ -142,8 +158,6 @@ async function createInitialReviews() {
 
     try {
 
-        // create more initial reviews:
-
         const review1 = await createReview({
             "productId": 1,
             "userId": 1,
@@ -160,7 +174,15 @@ async function createInitialReviews() {
             comment: "I got his t-shirt for my younger brother. He loves the fit and the colors look great!"
         });
 
-        console.log(">>>>> Finished creating initial reviews!");
+        const review3 = await createReview({
+            "productId": 3,
+            "userId": 1,
+            title: "Love my wheels!",
+            rating: 5,
+            comment: "I love the wheels from your store! They look great and ride smooth!"
+        })
+
+
     }
     catch(error) {
         console.error("Error creating initial reviews @ db/seed.js createInitialReviews()! Error: ", error);
@@ -201,21 +223,22 @@ async function createInitialOrders() {
 
         const order1 = await createOrder({
             "userId": 1,
-            products: '{1,2}',
+            products: [1, 2],
             "orderDate": '2020-07-01',
             "orderTotal": 580.56,
             "shippingAddress": '12345 Street., City, ST, 12345'
         });
-
+            
         const order2 = await createOrder({
             "userId": 2,
-            products: '{2, 3}',
+            products: [2, 3],
+
             "orderDate": '2020-06-25',
             "orderTotal": 120.87,
             "shippingAddress": '12345 Street., City, ST, 12345'
         });
 
-        console.log(">>>>>Finished creating initial orders!");
+        console.log('>>>>>>>',createOrder())
     }
     catch(error) {
         console.error("Error creating initial orders. Error: ", error);
@@ -235,7 +258,7 @@ const seed = async (FORCE = false) => {
         await createInitialProducts();
         await createInitialReviews();
         //await createInitialCarts();
-        //await createInitialOrders();
+        await createInitialOrders();
         
         } catch(error) {
             console.error("Error seeding. Error: ", error);

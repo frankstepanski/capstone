@@ -1,8 +1,8 @@
 const express = require('express');
 const productsRouter = express.Router();
 
-const { getAllProducts, createProduct, getProductById, updateProduct } = require('../db/products.js')
-const { requireUser } = require('../db/users.js')
+const { getAllProducts, createProduct, getProductById, updateProduct, getProductByName , deactivateProduct, activateFeaturedProduct, getFeaturedProducts} = require('../db/products.js')
+const { requireUser } = require('./utils')
 
 productsRouter.use((req, res, next) => {
     console.log('> A request has been made to the /products endpoint');
@@ -10,22 +10,117 @@ productsRouter.use((req, res, next) => {
 })
 
 //get all products route
-productsRouter.get('/', async function( req, res, next ){
+productsRouter.get('/', async ( req, res, next ) => {
     const products = await getAllProducts()
         res.send({ products })
         next()
 });
 
-//create product route
-//productsRouter.post('/', requireUser, async function( req, res, next ){
-    
+// get featured products route
+productsRouter.get('/featured', async (req, res, next) => {
+    const featuredProducts = await getFeaturedProducts()
+        res.send({ featuredProducts })
+        next()
+})
 
-//});
+// create product route
+productsRouter.post('/create', requireUser, async ( req, res, next ) => {
+        const {
+            name,
+            description,
+            price,
+            stock,
+            active,
+            featured,
+            thumbnail,
+            image,
+            categoryId,
+        } = req.body;
+
+        console.log('Product Post:' )
+
+        if (!name || !description || !price || !stock || !active|| !featured|| !categoryId) {
+            next ({
+                name: 'Missing Item Name',
+                description: 'Missing Item Description',
+                price: 'Missing Item Price',
+                stock: 'Missing if Item is in Stock',
+                active:'Missing if the Item is active',
+                featured:'Missing if Item is Featured',
+                categoryId: 'Missing the Category Id Number'
+            })
+        }
+
+        try {
+            const productItems = await getProductByName({ name });
+
+            if (productItems) {
+                
+                console.log('Item already exist')
+
+                return;
+            } else { 
+                const newItem = await createProduct({
+                    name,
+                    description,
+                    price,
+                    stock,
+                    featured,
+                    categoryId, 
+                }) 
+
+                // return newItem
+                // next(newItem)
+                
+                return res.send ({ 
+                    status: "Success!",
+                    message: "Item was created!"
+
+                }); 
+             } }catch (error){
+                 console.error('Error creating item!', error)
+                 next(error)
+
+                }
+        });
+
 
 //edit product route
-//productsRouter.patch('/:productId', requireUser, async function( req, res, next ){
-   
-//});
+productsRouter.patch('/edit', requireUser, async ( req, res, next ) => {
+
+    const {
+        id,
+        name,
+        description,
+        price,
+        stock,
+        active,
+        featured,
+        categoryId
+    } = req.body;
+    const user = req.user
+    
+    const filteredObj = {}
+    Object.keys(req.body).forEach((key) => {
+            if (req.body[key]) {
+                filteredObj[key] = req.body[key];
+            }
+    })
+
+
+    try {
+        const updatedProduct = await updateProduct(id, fields =  filteredObj);
+
+        console.log("<<<<<<<<< updated obj:",updatedProduct)
+        
+        return res.send({status: "Success",
+        message: "Product Updated!", product: updatedProduct})
+    
+    } catch (error) {
+        console.error("Failed to update product", error)
+        next(error)
+    }   
+});
 
 
 module.exports = productsRouter;

@@ -13,7 +13,7 @@ ordersRouter.get('/', async function( req, res, next ){
     try{
         const orders = await getAllOrders()
         if(orders){
-            res.send({ allOrders })
+            res.send({ orders })
         }
     }catch(error){
     console.error(error)
@@ -22,20 +22,20 @@ ordersRouter.get('/', async function( req, res, next ){
 });
 
 // Create order route
-ordersRouter.post('/', requireUser, async function( req, res, next ){
+ordersRouter.post('/create', async function( req, res, next ){
 
-    const { userId, products, orderDate, orderTotal, shippingAddress } = req.body
+    const { userId, products, orderDate, orderTotal,  shippingAddress } = req.body
     const orderData = {}
     orderData.userId = userId
     orderData.products = products
     orderData.orderDate = orderDate
     orderData.orderTotal = orderTotal
     orderData.shippingAddress = shippingAddress
-
+    // orderTotal,
     try {
         const newOrder = await createOrder(orderData)
         if(newOrder){
-            res.send({ message:'Order created: ', order:orderData} )
+            res.send({ message:'Order created: ', orderData} )
         }
     } catch(error) {
         console.error(error)
