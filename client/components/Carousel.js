@@ -7,7 +7,7 @@ const Carousel = () => (
       <Card>
         <Card.Img variant="top" src="/assets/images/board2.jpg" />
           <Card.Body>
-          <Card.Title>Product Name and Price</Card.Title>
+          <Card.Title>Deathwish Skateboard</Card.Title>
             <Card.Text>
               Short desciption
             </Card.Text>
