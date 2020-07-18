@@ -88,23 +88,14 @@ const sync = async (FORCE = false) => {
             );`
         );
     
-        // note: cart availabe only if user created; otherwise will in localstate
-        // need another column???
-        await client.query(
-            `CREATE TABLE IF NOT EXISTS carts (
-                id serial PRIMARY KEY,
-                "userId" INTEGER REFERENCES users(id),
-                quantity INTEGER NOT NULL
-            );`
-        );
     
-        // cart has many products (1:M)
-        // join table
+        // Carts will be accessible by the userId
         await client.query(`
         CREATE TABLE IF NOT EXISTS cart_products(
             id SERIAL PRIMARY KEY,
-            "cartId" INTEGER REFERENCES carts(id) NOT NULL,
-            "productId" INTEGER REFERENCES products(id) NOT NULL
+            "userId" INTEGER REFERENCES users(id) NOT NULL,
+            "productId" INTEGER REFERENCES products(id) NOT NULL,
+            quantity INTEGER NOT NULL
             );`
         );
     

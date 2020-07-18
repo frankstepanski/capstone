@@ -69,7 +69,6 @@ const getAllUsers = async () => {
         };
 
         return user;
-
     } catch(error){
         throw error;
     }
@@ -96,7 +95,8 @@ const authenticate = async ({username, password}) => {
         const authenticated = await bcrypt.compare(password, user.password)
         if (!authenticated) {
             throw new Error('invalid password');
-        }
+        };
+        
         return user;
     } catch (e) {
         console.log(e, `Could not authenticate user`);
