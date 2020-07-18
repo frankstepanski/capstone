@@ -4,19 +4,22 @@ const apiRouter = express.Router();
 const morgan = require('morgan');
 apiRouter.use(morgan('dev'));
 
-const bodyParser = require('body-parser')
+const bodyParser = require('body-parser');
+// shouldn't need json parsing middleware
+// already done in main server file
 apiRouter.use(bodyParser.json());
 
 
 // Function to verify tokens when a request is made to the API:
 const { getUserById } = require('../db');
-const jwt = require('jsonwebtoken')
+const jwt = require('jsonwebtoken');
 const { SECRET } = process.env;
 
+// great place to introduce caching
 apiRouter.use(async (req, res, next) => {
     const prefix = 'Bearer ';
     const auth = req.header('Authorization');
-    
+
     if (!auth) {
         next();
     } else if (auth.startsWith(prefix)) {
@@ -25,9 +28,10 @@ apiRouter.use(async (req, res, next) => {
         try {
             const {id} = jwt.verify(token, SECRET);
 
+            // add an else incase there is no id in decoded token
             if (id) {
                 req.user = await getUserById(id);
-                console.log(`req.user: `, req.user)
+                console.log(`req.user: `, req.user);
                 next();
             }
         } catch ({name, message}) {

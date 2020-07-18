@@ -15,11 +15,18 @@ import  Footer  from './pages/layouts/Footer';
 
 const App = () => {
   const [user, setUser] = useState({});
+  // maybe give `results` a more clear name; not sure what it's being used for
   const [results, setResults] = useState([]);
-  const [cart, setCart] = useState({}); // keys: products: [{product, quantity},{product, quantity}], grandTotal: float 
+  const [cart, setCart] = useState({}); // keys: products: [{product, quantity},{product, quantity}], grandTotal: float
   const [products, setProducts] = useState([{}]); // array of products
   const [show, setShow] = useState(false); // show or not show modal
-  const [orders, setOrder] = useState([{}]) // array of orders (for logged in users)
+  const [orders, setOrder] = useState([{}]); // array of orders (for logged in users)
+
+
+  // make search and filtering a part / child of the Shop component
+  // especially if you're not paginating the data
+  // store the search term(s) and use them to filter products before rendering
+  // no need for results
 
     return (
         <div className ="container">

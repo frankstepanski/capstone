@@ -19,6 +19,7 @@ const server = express();
 require('dotenv').config();
 
 server.use(morgan('dev'));
+// only need one json parsing middleware
 server.use(bodyParser.json());
 server.use(bodyParser.urlencoded({extended: true}));
 server.use(express.json());
@@ -50,7 +51,7 @@ server.use((error, req, res, next) => {
 // check health of server:
 server.get('/health', (req, res, next)=>{
   res.send('Server is active');
-})
+});
 
 // static files:
 const DIST_PATH = path.join(__dirname, '../dist' );

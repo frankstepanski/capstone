@@ -11,7 +11,7 @@ export async function loginUser(username, password) {
         password,
       });
       console.log(data);
-      return data;coeeco
+      return data;
     } catch (error) {
       throw error;
     }

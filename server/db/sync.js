@@ -5,7 +5,7 @@ const sync = async (FORCE = false) => {
     try {
 
     if (FORCE) {
-        console.log('Dropping tables')
+        console.log('Dropping tables');
         await client.query(`
             DROP TABLE IF EXISTS posts;
             DROP TABLE IF EXISTS messages;
@@ -20,9 +20,10 @@ const sync = async (FORCE = false) => {
             DROP TABLE IF EXISTS categories;
             DROP TABLE IF EXISTS users;
         `);
-        console.log(`Tables Dropped`)
+        console.log(`Tables Dropped`);
     }
 
+        // make email unique
         await client.query(
         `CREATE TABLE IF NOT EXISTS users (
             id SERIAL PRIMARY KEY,
@@ -36,7 +37,7 @@ const sync = async (FORCE = false) => {
             active BOOLEAN DEFAULT true
             ); `
         );
-    
+
         // each product belongs to only one category (1:1)
         // lookup table
         await client.query(
@@ -63,7 +64,10 @@ const sync = async (FORCE = false) => {
         );
 
 
-    
+
+        // add a default value for title
+        // add min - max constraits for rating; 0-5 ?
+        // add length constraint to comment ?
         await client.query(
             `CREATE TABLE IF NOT EXISTS reviews (
                 id SERIAL PRIMARY KEY,
@@ -74,7 +78,7 @@ const sync = async (FORCE = false) => {
                 comment TEXT NOT NULL
             );`
         );
-        
+
         // product has many reviews (1:M)
         // join table
         await client.query(`
@@ -84,27 +88,33 @@ const sync = async (FORCE = false) => {
                 "reviewId" INTEGER REFERENCES reviews(id) NOT NULL
             );`
         );
-    
-    
+
+         // Cart
+         // purchased: true / false
+         // userId: belongs to fkey
+         // orderDate: nullable
+         // shippingAddress: nullable
+
+
         // Carts will be accessible by the userId
+
+        // add column: pricePurchasedAt
+        // remove userId
+        // add cartId / orderId
         await client.query(`
         CREATE TABLE IF NOT EXISTS cart_products(
             id SERIAL PRIMARY KEY,
-<<<<<<< HEAD
-            "cartId" INTEGER REFERENCES carts(id) NOT NULL,
-            "productId" INTEGER REFERENCES products(id) NOT NULL,
-            total FLOAT(2) NOT NULL
-=======
             "userId" INTEGER REFERENCES users(id) NOT NULL,
             "productId" INTEGER REFERENCES products(id) NOT NULL,
             quantity INTEGER NOT NULL
->>>>>>> de43b5ef710d377b7938c5b4a6ac32ce61f5b30d
             );`
         );
-    
+
         // an order will have many products (1:M)
         // products column will have multiple productIDs
         // join table
+
+        // will be able to remove orders
         await client.query(
           `CREATE TABLE IF NOT EXISTS orders (
             id serial PRIMARY KEY,
@@ -112,12 +122,12 @@ const sync = async (FORCE = false) => {
             products INTEGER REFERENCES products(name),
             "orderDate" DATE NOT NULL,
             "orderTotal" FLOAT(2) REFERENCES orders(total),
-            "shippingAddress" VARCHAR(255) NOT NULL            
+            "shippingAddress" VARCHAR(255) NOT NULL
           );`
         );
         // carts(total) NOT NULL <--- needs to be added when carts is complete
-           
-        
+
+
         await client.query(
             `CREATE TABLE IF NOT EXISTS user_orders (
                 id serial PRIMARY KEY,
@@ -125,8 +135,9 @@ const sync = async (FORCE = false) => {
                 "orderId" INTEGER REFERENCES orders(id) NOT NULL
             );`
         );
-    
+
         // blog posts:
+        // require title and blogText
         await client.query(`
             CREATE TABLE IF NOT EXISTS posts(
                 id SERIAL PRIMARY KEY,
@@ -137,6 +148,7 @@ const sync = async (FORCE = false) => {
         );
 
          // messages from contact form:
+         // require text
          await client.query(`
          CREATE TABLE IF NOT EXISTS messages (
              id SERIAL PRIMARY KEY,
@@ -146,7 +158,7 @@ const sync = async (FORCE = false) => {
          );`
      );
 
-        console.log(`Tables successfully created`)
+        console.log(`Tables successfully created`);
     }
 
     catch (error) {
