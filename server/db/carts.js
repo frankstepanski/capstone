@@ -91,6 +91,7 @@ const deleteCart = async (cartId) => {
 const getCartById = async (cartId) => {
 
     try {
+
         const { rows: [cart] } = await client.query(`
             SELECT * FROM carts
             WHERE id=$1;
@@ -117,7 +118,7 @@ const getCartByUserId = async (userId) => {
         return cart;
     }
     catch(error){
-        console.error(`getCartByUserId error. ${ error }`)
+        console.error(`getCartByUserId error. ${ error }`)  
         throw error;
     }
 }
