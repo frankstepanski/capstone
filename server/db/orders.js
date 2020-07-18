@@ -7,14 +7,15 @@ const createOrder = async ({
         products,
         orderDate,
         orderTotal,
-        shippingAddress
+        shippingAddress,
+        cart
 }) => {
     try {
        const { rows: [ order ] } = await client.query(
-        `INSERT INTO orders ("userId", products, "orderDate", "orderTotal", "shippingAddress")
-        VALUES($1,$2,$3,$4,$5)
+        `INSERT INTO orders ("userId", products, "orderDate", "orderTotal", "shippingAddress, cart")
+        VALUES($1,$2,$3,$4,$5,$6)
         RETURNING * ;
-        `, [userId,products,orderDate,orderTotal,shippingAddress]
+        `, [userId,products,orderDate,orderTotal,shippingAddress,cart]
        );
        
        return order;

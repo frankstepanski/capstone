@@ -1,48 +1,53 @@
 const express = require('express');
 const cartsRouter = express.Router();
 
-const { createCart, updateCart, deleteCart, getCartById } = require('../db/carts.js')
+const { addProductToCart, updateCartProductQuantity, getCart, removeProductFromCart, getCartProductById } = require('../db');
+
+const { requireUser } = require('./utils');
 
 // add poduct to cart route
-const { getProductById } = require('../db/products.js')
+const { getProductById } = require('../db')
 
 cartsRouter.use((req, res, next) => {
     console.log('> A request has been made to the /carts endpoint');
     next();
 })
 
-// new cart route:
-cartsRouter.post('/', requireUser, async function (req, res, next){
-    const { userId, products } = req.body
-    const cartData = {}
-
-    cartData.userId = userId 
-    cartData.products = products 
+//get cart (by userId)
+cartsRouter.get('/', requireUser, async (req,res, next) => {
+    const { id: userId} = req.user;
     
     try {
-        const newCart = await createCart(cartData)
-        res.send({ message:'Cart items are: ', cart: newCart })
+        const cart = await getCart({userId})
+        
+    } catch (e) {
+        console.error(e)
+    }
+})
+// add item to cart:
+cartsRouter.post('/', requireUser, async function (req, res, next){
+    const { product: { id: productId }, quantity } = req.body;
+    const { id: userId } = req.user;
+    
+    try {
+        const newCartItem = await addProductToCart({userId, productId, quantity})
+        res.send({ message:'Cart item is: ', newCartItem })
         
     } catch(error) {
         console.error(error)
-        next()       
+        next();
     }
 });
 
-// update cart route:
+// update cart_product (quantity):
 cartsRouter.patch('/:id', async function (req, res, next){
-    const { id } = req.params
-    const cart = await getCartById(id)
-    const { fields } = cart
-
-    const cartData = {}
-    cartData.id = id
-    cartData.fields = fields
+    const { id: cartProductId } = req.params
+    const { quantity } = req.body
     
     try{
-        const updatedCart = await updateCart( cartData.id, cartData.fields )
-        if(updatedCart){
-            res.send({ message:'Updated cart: ', cart:updatedCart })
+        const updatedCartProduct = await updateCartProductQuantity({cartProductId, quantity})
+        if(updatedCartProduct){
+            res.send({ message:'Updated cart: ',  })
             }
     }catch(error){
         console.error(error)
