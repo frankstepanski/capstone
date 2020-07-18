@@ -5,8 +5,8 @@ const path = require('path');
 const morgan = require('morgan');
 const bodyParser = require('body-parser');
 
-const { sync } = require("./db/index");
-const { seed } = require("./db/seed");
+//const { sync } = require("./db/index");
+//const { seed } = require("./db/seed");
 
 const PORT = process.env.PORT || 3001;
 const FORCE = process.env.FORCE || false;
@@ -29,8 +29,8 @@ server.use((req, res, next) => {
 });
 
 // here's our API:
-const apiRouter = require('./routes');
-server.use('/api', apiRouter);
+//const apiRouter = require('./routes');
+//server.use('/api', apiRouter);
 
 server.use((error, req, res, next) => {
   console.error(error);
@@ -73,9 +73,9 @@ const startServer = new Promise((resolve) => {
   });
 });
 
-sync(FORCE)
-  .then(() => seed(FORCE))
-  .then(startServer)
-  .catch((error) => {
-    console.error(`SERVER FAILED TO START: ${error.toString()}`);
-});
+//sync(FORCE)
+ // .then(() => seed(FORCE))
+//  .then(startServer)
+ // .catch((error) => {
+//    console.error(`SERVER FAILED TO START: ${error.toString()}`);
+//});
