@@ -3,37 +3,11 @@ const {
     createCategory,
     createProduct,
     createReview,
+    createOrder
 
         } = require('./index');
 
-const { 
-    getAllUsers,
-    getUserById,
-    getUserByUsername,
-      } = require('./users')
 
-const {
-    getAllCategories,
-    getCategoryById,
-}     = require('./categories')
-
-const {
-    getAllProducts,
-    getProductById,
-    getProductByName,
-} = require('./products')
-
-const {
-    getReviewById,
-    getReviewsByProductId,
-    getReviewsByUserId,
-} = require('./reviews')
-
-const {
-    getAllOrders,
-    getOrderById,
-    createOrder
-} = require('./orders')
 
 
 //Creates seed data of initial users
@@ -177,8 +151,6 @@ async function createInitialReviews() {
 
     try {
 
-        // create more initial reviews:
-
         const review1 = await createReview({
             "productId": 1,
             "userId": 1,
@@ -244,21 +216,22 @@ async function createInitialOrders() {
 
         const order1 = await createOrder({
             "userId": 1,
-            products: '{1,2}',
+            products: [1, 2],
             "orderDate": '2020-07-01',
             "orderTotal": 580.56,
             "shippingAddress": '12345 Street., City, ST, 12345'
         });
-
+            
         const order2 = await createOrder({
             "userId": 2,
-            products: '{2, 3}',
+            products: [2, 3],
+
             "orderDate": '2020-06-25',
             "orderTotal": 120.87,
             "shippingAddress": '12345 Street., City, ST, 12345'
         });
 
-        
+        console.log('>>>>>>>',createOrder())
     }
     catch(error) {
         console.error("Error creating initial orders. Error: ", error);

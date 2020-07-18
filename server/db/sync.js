@@ -55,23 +55,12 @@ const sync = async (FORCE = false) => {
                 rating FLOAT(1) DEFAULT 0,
                 active BOOLEAN DEFAULT TRUE,
                 featured BOOLEAN DEFAULT FALSE,
+                thumbnail VARCHAR(255) NOT NULL,
+                image VARCHAR(255) NOT NULL,
                 "categoryId" INTEGER REFERENCES categories(id) NOT NULL
             );`
         );
 
-        // await client.query(`
-        //     ALTER TABLE products
-        //     ADD COLUMN featured BOOLEAN DEFAULT FALSE`
-        // )
-    
-        await client.query(
-            `CREATE TABLE IF NOT EXISTS product_images (
-                id SERIAL PRIMARY KEY,
-                name VARCHAR(255) NOT NULL,
-                base64data BYTEA,
-                "productId" INTEGER REFERENCES products(id) NOT NULL
-            );`
-        );
 
         await client.query(
             `CREATE TABLE IF NOT EXISTS reviews (
@@ -110,7 +99,8 @@ const sync = async (FORCE = false) => {
         CREATE TABLE IF NOT EXISTS cart_products(
             id SERIAL PRIMARY KEY,
             "cartId" INTEGER REFERENCES carts(id) NOT NULL,
-            "productId" INTEGER REFERENCES products(id) NOT NULL
+            "productId" INTEGER REFERENCES products(id) NOT NULL,
+            total FLOAT(2) NOT NULL
             );`
         );
     
@@ -118,19 +108,18 @@ const sync = async (FORCE = false) => {
         // products column will have multiple productIDs
         // join table
         await client.query(
-            `CREATE TABLE IF NOT EXISTS orders (
-                id serial PRIMARY KEY,
-                "userId" INTEGER REFERENCES users(id),
-                products INTEGER [] NOT NULL,
-                quantity INTEGER NOT NULL,
-                "orderDate" DATE NOT NULL,
-                "orderTotal" FLOAT(2) NOT NULL,
-                "shippingAddress" VARCHAR(255) NOT NULL            
-            );`
+          `CREATE TABLE IF NOT EXISTS orders (
+            id serial PRIMARY KEY,
+            "userId" INTEGER REFERENCES users(id),
+            products INTEGER REFERENCES products(name),
+            "orderDate" DATE NOT NULL,
+            "orderTotal" FLOAT(2) REFERENCES orders(total),
+            "shippingAddress" VARCHAR(255) NOT NULL            
+          );`
         );
-    
-        // user has many orders (1:M)
-        // join table
+        // carts(total) NOT NULL <--- needs to be added when carts is complete
+           
+        
         await client.query(
             `CREATE TABLE IF NOT EXISTS user_orders (
                 id serial PRIMARY KEY,

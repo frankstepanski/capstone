@@ -1,16 +1,30 @@
 const { client } = require('./client');
 
-const createOrder = async ({
+// get require user from utils
 
+const createOrder = async ({
+        userId,
+        products,
+        orderDate,
+        orderTotal,
+        shippingAddress
 }) => {
     try {
+       const { rows: [ order ] } = await client.query(
+        `INSERT INTO orders ("userId", products, "orderDate", "orderTotal", "shippingAddress")
+        VALUES($1,$2,$3,$4,$5)
+        RETURNING * ;
+        `, [userId,products,orderDate,orderTotal,shippingAddress]
+       );
        
-       // under construction
+       return order;
        
     } catch(error){
         throw error;
     }
 }
+
+
 
 const getAllOrders = async () => {
     try{

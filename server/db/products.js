@@ -9,19 +9,20 @@ const createProduct = async ({
     price,
     stock,
     featured,
+    thumbnail,
+    image,
     categoryId
 
 }) => {
     
-    
     try{
     const { rows: [ product ] } = await client.query(
-        `INSERT INTO products (name, description, price, stock,featured, "categoryId")
-        VALUES($1,$2,$3,$4,$5,$6)
+        `INSERT INTO products (name, description, price, stock,featured,thumbnail, image, "categoryId")
+        VALUES($1,$2,$3,$4,$5 $6, $7, $8)
         RETURNING *;
         `, [name,description,price,stock,featured,categoryId]
     );
-    console.log('>>>>>>>', name)
+    
         return product;
        
     } catch (error) {
@@ -112,13 +113,17 @@ const getFeaturedProducts = async({featured}) => {
         const { rows: [product] } = await client.query(`
         SELECT * FROM products
         WHERE featured = TRUE
+        ORDER BY RANDOM()
+        LIMIT 3
         `, [featured]);
-
+        
         return product;
     } catch(error){
         throw error;
     }
 }
+
+
 
 
 
