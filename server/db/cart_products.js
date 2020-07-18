@@ -1,15 +1,28 @@
 const { client } = require("./client");
 
-const addProductToCart = async (productId, cartId) => {
+const getCart = async ({userId}) => {
+    try {
+        const {rows: [cartRaw]} = await client.query(`
+            SELECT * 
+            FROM cart_products
+            WHERE "userId"=$1;
+        `, [userId])
+    } catch (e) {
+        console.error(`getCart error. ${ e }`)
+        throw e;
+    }
+}
+
+const addProductToCart = async ({productId, userId, quantity}) => {
 
     try{
 
         const { rows: [ newCartProduct ] } = await client.query(`
             INSERT INTO cart_products
-            ("productId", "cartId")
-            VALUES ($1, $2)
+            ("productId", "userId", quantity)
+            VALUES ($1, $2, $3)
             RETURNING *
-        `, [productId, cartId])
+        `, [productId, userId, quantity])
 
         return newCartProduct;
     }
@@ -18,6 +31,22 @@ const addProductToCart = async (productId, cartId) => {
         throw error;
     }
 
+}
+
+const updateCartProductQuantity = async ({cartProductId, quantity}) => {
+    try {
+        const { rows: [ updatedItem ] } = await client.query(`
+            UPDATE cart_products
+            SET quantity = $1
+            WHERE id = $2
+            RETURNING *;
+        `, [quantity, cartProductId])
+
+        return updatedItem;
+    } catch (e) {
+        console.error(`updateCartProductQuantity error: ${e}`)
+        throw e;
+    }
 }
 
 const removeProductFromCart = async (cartProductId) => {
@@ -65,25 +94,6 @@ const getCartProductById = async (cartProductId) => {
     }
 }
 
-const getProductsByCartId = async (cartId) => {
-
-    try{
-        
-        const {rows: cartProducts } = await client.query(`
-            SELECT * FROM cart_products
-            WHERE "cartId"=($1);
-        `, [cartId]);
-
-        return cartProducts;
-        
-    }
-    catch(error){
-        console.error(`getProductsByCartId error. ${ error }`)
-        throw error;
-    }
-
-}
-
 const getCartProductsByProductId = async(productId) => {
 
     try{
@@ -108,5 +118,7 @@ module.exports = {
     removeProductFromCart,
     getCartProductById,
     getProductsByCartId,
-    getCartProductsByProductId
+    getCartProductsByProductId,
+    updateCartProductQuantity,
+    getCart
 }
