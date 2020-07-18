@@ -2,7 +2,7 @@ const { client } = require("./client");
 
 const getCart = async ({userId}) => {
     try {
-        const {rows: [cart]} = await client.query(`
+        const {rows: [cartRaw]} = await client.query(`
             SELECT * 
             FROM cart_products
             WHERE "userId"=$1;
