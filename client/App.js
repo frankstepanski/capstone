@@ -27,13 +27,14 @@ const App = () => {
           {/* modal for user login??? */}
            <Switch>
               <Route exact path = "/" component ={Home} />
+              <Route path = "/search" render ={() => ( <SearchResults results = {results} /> )} />
               <Route path = "/account" render = {() => ( <Account isLogin={isLoggedIn}  setIsLoggedIn={setIsLoggedIn} /> )} />
-              <Route path = "/cart" render ={() => ( <ShoppingCart cart={cart}  setCart={setCart} user={user} /> )} />
               <Route path = "/shop" render ={() => ( <Shop cart={cart}  setCart={setCart} user={user} products={products} /> )} />
+              <Route path = "/cart" render ={() => ( <ShoppingCart cart={cart}  setCart={setCart} user={user} /> )} />
+              <Route path = "/checkout" render ={() => ( <Checkout cart={cart} /> )} />
               <Route path = "/blog" component ={Blog} />
               <Route path = "/about" component ={About} />
               <Route path = "/contact" component ={Contact} />
-              <Route path = "/search" render ={() => ( <SearchResults results = {results} /> )} />
               <Route path="*" component={NotFoundPage} />
           </Switch>
           <Footer />
