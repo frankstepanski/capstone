@@ -35,8 +35,8 @@ cartProductsRouter.post('/add', requireUser, async function (req, res, next){
 });
 
 // update cart_product (quantity):
-cartProductsRouter.patch('/:id', async function (req, res, next){
-    const { id: cartProductId } = req.params
+cartProductsRouter.patch('/:cartProductId', async function (req, res, next){
+    const { cartProductId } = req.params
     const { quantity } = req.body
     
     try{
