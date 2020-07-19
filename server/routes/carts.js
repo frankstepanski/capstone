@@ -1,81 +1,106 @@
 const express = require('express');
 const cartsRouter = express.Router();
+const {requireUser} = require('./utils')
 
-const { createCart, updateCart, deleteCart, getCartById } = require('../db/carts.js')
+const { 
+    getCartsByUserID, // comes from db/carts
+    getOpenCartByUserId, // comes from db/carts
+    createCart, // comes from db/carts
+    closeCart, // comes from db/carts
+    getGrandTotal, //comes from db/products
+} = require('../db');
 
-// add poduct to cart route
-const { getProductById } = require('../db/products.js')
-
-cartsRouter.use((req, res, next) => {
-    console.log('> A request has been made to the /carts endpoint');
+cartsRouter.use(function( req, res, next){
+    console.log("A request has been made to the /carts endpoint.");
     next();
 })
 
-// new cart route:
-cartsRouter.post('/', requireUser, async function (req, res, next){
-    const { userId, products } = req.body
-    const cartData = {}
+// get all carts for current user
+cartsRouter.get('/', requireUser, async function( req, res, next ){
+    const { id: userId} = req.user;
 
-    cartData.userId = userId 
-    cartData.products = products 
-    
+    try{
+        const carts = await getCartsByUserID({userId})
+        if(carts){
+            res.send({ carts });
+        } else {
+            res.send({message: 'user has no carts'})
+        }
+    }catch(error){
+    console.error(error)
+    next()
+    }
+});
+
+//Get open cart:
+cartsRouter.get('/open', requireUser, async function( req, res, next ){
+    const { id: userId} = req.user;
+
     try {
-        const newCart = await createCart(cartData)
-        res.send({ message:'Cart items are: ', cart: newCart })
-        
+        const cart = await getOpenCartByUserId({userId})
+        if(cart){
+            res.send({ cart })
+        } else {
+            res.send({status: 'failed', message: 'User has no open carts'})
+        }
+    } catch(e){
+    console.error(e)
+    next(e)
+    }
+});
+
+// Create new cart (will not have shippingAddress or orderDate)
+// Should always occur if the user does not already have an open cart
+cartsRouter.post('/create', requireUser, async function( req, res, next ){
+    const { id: userId } = req.user;
+
+    try {
+        const newCart = await createCart({userId})
+        if (newCart) {
+            res.send({ message:'New cart created: ', cart: newCart} )
+        }
     } catch(error) {
         console.error(error)
-        next()       
-    }
+        next(error)    
+    };
 });
 
-// update cart route:
-cartsRouter.patch('/:id', async function (req, res, next){
-    const { id } = req.params
-    const cart = await getCartById(id)
-    const { fields } = cart
+//CHECKOUT:
+// actions:
+// - Check if items are in stock? (Front-end job)              [ ]
+// - Update shippingAddress (based of field data)              [x]
+// - Calculate and return grand total (how?)                   [x]
+// - Set Purchased to TRUE (Completed in DB method)            [x]
+// - Update orderDate to current date (Completed in DB method) [x]
+// - Update stock (Completed in DB Method)                     [x]
 
-    const cartData = {}
-    cartData.id = id
-    cartData.fields = fields
-    
-    try{
-        const updatedCart = await updateCart( cartData.id, cartData.fields )
-        if(updatedCart){
-            res.send({ message:'Updated cart: ', cart:updatedCart })
-            }
-    }catch(error){
-        console.error(error)
-        next()
-    }
-});
+cartsRouter.patch('/checkout', requireUser, async (req, res, next) => {
+    const { id: userId } = req.user;
+    const { shippingAddress, cartId } = req.body
+    try {
+        const userCart = await getOpenCartByUserId({userId});
 
-// delete cart route
-cartsRouter.delete('/:id', async function ( req, res, next ){
-    const { id } = req.params
-    const cart = await getCartById(id)
-
-    try{
-        const deletedCart = await deleteCart(cart)
-        if(deletedCart){
-            res.send({ message:'Cart deleted.', cart:deletedCart })
+        if (userCart.id === cartId) {
+            const closedCart = await closeCart({cartId, shippingAddress, userId});
+            const total = await getGrandTotal({cartId})
+            res.send({
+                status: "success", 
+                message: "Checkout successful", 
+                order: closedCart,
+                total
+            });
+        } else {
+            console.log('Database is out of sync or user is hacking');
+            res.send({
+                status: 'failed', 
+                message: `The cart with the id of '${cartId}' is not your cart.`
+            });
         }
-    } catch(error){
-        console.error(error)
-        next()
+    } catch (e) {
+        console.error(e);
+        next(e);
     }
-});
+})
 
-// add poduct to cart route:
-//cartsRouter.put('/:productId', async function ( req, res, next ){
-   
 
-//});
-
-// delete product from cart route
-//cartsRouter.delete('/:productId', async function ( req, res, next){
-    
-
-//});
-
-module.exports = cartsRouter;
+module.exports = cartsRouter

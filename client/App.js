@@ -7,11 +7,12 @@ import  Account from './pages/Account';
 import  Shop  from './pages/Shop';
 import  ShoppingCart from './pages/ShoppingCart';
 import  Blog  from './pages/Blog';
-import  Contact from './pages/Contact';
+//import  Contact from './pages/Contact';
 import  About from './pages/About';
 import  NotFoundPage  from './pages/NotFoundPage';
 import  NavBar  from './components/NavigationBar';
 import  Footer  from './pages/layouts/Footer';
+import  Product from './pages/productForm';
 
 const App = () => {
   const [show, setShow] = useState(false); 
@@ -65,7 +66,9 @@ const App = () => {
               <Route path = "/blog" component ={Blog} />
               <Route path = "/about" component ={About} />rr
               <Route path = "/contact" component ={Contact} />
+              <Route path = "/product" component ={Product} />
               <Route path="*" component={NotFoundPage} />
+              
           </Switch>
           <Footer />
         </div>
