@@ -12,6 +12,7 @@ import  SearchResults from './pages/SearchResults';
 import  NotFoundPage  from './pages/NotFoundPage';
 import  Header  from './pages/layouts/Header';
 import  Footer  from './pages/layouts/Footer';
+import  Product from './pages/productForm';
 
 const App = () => {
   const [user, setUser] = useState({});
@@ -19,7 +20,7 @@ const App = () => {
   const [cart, setCart] = useState({}); // keys: products: [{product, quantity},{product, quantity}], grandTotal: float 
   const [products, setProducts] = useState([{}]); // array of products
   const [show, setShow] = useState(false); // show or not show modal
-  const [orders, setOrder] = useState([{}]) // array of orders (for logged in users)
+  // const [orders, setOrder] = useState([{}]) // array of orders (for logged in users)
 
     return (
         <div className ="container">
@@ -35,7 +36,9 @@ const App = () => {
               <Route path = "/blog" component ={Blog} />
               <Route path = "/about" component ={About} />
               <Route path = "/contact" component ={Contact} />
+              <Route path = "/product" component ={Product} />
               <Route path="*" component={NotFoundPage} />
+              
           </Switch>
           <Footer />
         </div>

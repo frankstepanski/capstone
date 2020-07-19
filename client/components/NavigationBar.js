@@ -35,6 +35,7 @@ const NavigationBar = ({ setResults }) => {
             <Nav.Link as = {Link} to="/blog">Blog</Nav.Link>
             <Nav.Link as = {Link} to="/about">About</Nav.Link>
             <Nav.Link as = {Link} to="/contact">Contact</Nav.Link>
+            <Nav.Link as = {Link} to="/product">Product Form</Nav.Link>
           </Nav>
           <Form inline onSubmit={handleSubmit}>
             <FormControl type="text" placeholder="Search" className="mr-sm-2" onChange={handleInputChange}/>

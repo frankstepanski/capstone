@@ -52,6 +52,11 @@ apiRouter.use('/carts', cartsRouter);
 
 const cartProductsRouter = require('./cart_products');
 apiRouter.use('/cart_products', cartProductsRouter);
+const postsRouter = require('./posts');
+apiRouter.use('/posts', postsRouter)
+
+const messagesRouter = require('./messages');
+apiRouter.use('/messages', messagesRouter)
 
 apiRouter.use((error, req, res, next) => {
     res.send(error);

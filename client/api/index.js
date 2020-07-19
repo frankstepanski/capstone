@@ -55,6 +55,37 @@ export async function searchProducts(searchTerm) {
   }
 }
 
+export async function createProducts(
+    name, 
+    description,
+    price,
+    stock,
+    active,
+    featured,
+    thumbnail,
+    image,
+    categoryId ){
+
+        try {
+        const { data } = await axios.post('/api/products/create',{
+          name, 
+          description,
+          price,
+          stock,
+          active,
+          featured,
+          thumbnail,
+          image,
+          categoryId
+        });
+        console.log(data);
+        return data;
+    }   catch (error) {
+      throw error;
+    }
+
+    //authorization/ bearer token needed... pull from state
+}
 /* ******** cart ******** */
 
 // userId maybe null, productId will get us product info, and quantity (will UI only add one at a time?)
