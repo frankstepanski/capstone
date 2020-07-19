@@ -9,7 +9,7 @@ import '../api';
 import { loginUser } from '../api';
 const token = localStorage.getItem('token');
 
-const UserModal = ({ show, setShow }) => {
+const UserModal = ({ show, setShow, setIsUserLoggedIn }) => {
 
     const handleClose = () => setShow(false);
     const [username, setUsername] = useState("")
@@ -18,15 +18,26 @@ const UserModal = ({ show, setShow }) => {
     const handleUsernameChange = event => setUsername(event.target.value)
     const handlePasswordChange = event => setPassword(event.target.value)
 
-    const handleSubmit = () => {
-        console.log(`logging user`);
+    // POST API for login:
+    const handleSubmit = (event) => {
         
+        event.preventDefault();
+        
+        console.log(`logging user`);
+        /*
+
         const headers = {
             "Content-Type":"application/json",
             "Authorization":`Bearer ${token}`}
 
-        const data = loginUser(username, password, headers);    
+        const data = loginUser(username, password, headers);  
         console.log(data);
+        */
+        const data = true;
+        if (data) {
+            setIsUserLoggedIn(true); // set global state for isUserLoggedIn
+            setShow(false); // hide modal
+        }
     }
 
     return (

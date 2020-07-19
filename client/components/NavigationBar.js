@@ -1,13 +1,21 @@
 import React, { useState } from "react";
 import { Link } from 'react-router-dom';
-import { Nav, Navbar, Button } from 'react-bootstrap';
+import { Nav, Navbar, Form, Button } from 'react-bootstrap';
 
-const NavigationBar = ({ setShow }) => {
+const NavigationBar = ({ setShow, isUserLoggedIn, setIsUserLoggedIn, setUser }) => {
 
   const handleShow = (event) => {
-  
+    
     event.preventDefault();
-    setShow(true);
+
+    if (isUserLoggedIn) {
+      // logout user, not showing modal
+         setIsUserLoggedIn(false);
+      // set user object to {}?
+      // setUser({});
+    } else {
+      setShow(true);
+    }
   }
 
   return (
@@ -17,14 +25,24 @@ const NavigationBar = ({ setShow }) => {
     <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="mr-auto">
-            <Nav.Link onClick={ handleShow } >Account</Nav.Link>
+            { isUserLoggedIn             
+            ? <Nav.Link as = {Link} to="/account">Account</Nav.Link>
+            : ''
+            }
             <Nav.Link as = {Link} to="/cart">Cart</Nav.Link>
             <Nav.Link as = {Link} to="/shop">Shop</Nav.Link>
             <Nav.Link as = {Link} to="/blog">Blog</Nav.Link>
             <Nav.Link as = {Link} to="/about">About</Nav.Link>
             <Nav.Link as = {Link} to="/contact">Contact</Nav.Link>
-            <Button variant="primary" onClick={handleShow}>Login</Button>
           </Nav>
+            <Form inline>
+              <Button variant="outline-success" onClick={handleShow}>
+                { isUserLoggedIn
+                ? 'Logout'
+                : 'Login'
+                }
+                </Button>
+              </Form>
         </Navbar.Collapse>
     </Navbar>
 

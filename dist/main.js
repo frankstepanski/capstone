@@ -124,32 +124,32 @@ __webpack_require__.r(__webpack_exports__);
 
 
 const App = () => {
-  const [show, setShow] = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(false); // show or not show modal
-
+  const [show, setShow] = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(false);
   const [user, setUser] = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])({});
-  const [cart, setCart] = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])({}); // keys: products: [{product, quantity},{product, quantity}], grandTotal: float 
-
-  const [products, setProducts] = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])([{}]); // array of products
-
-  const [orders, setOrder] = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])([{}]); // array of orders (for logged in users)
-
-  const [isLoggedIn, setIsLoggedIn] = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])('');
+  const [cart, setCart] = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])({});
+  const [products, setProducts] = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])([{}]);
+  const [orders, setOrder] = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])([{}]);
+  const [isUserLoggedIn, setIsUserLoggedIn] = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(false);
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
     className: "container"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_components_UserModal__WEBPACK_IMPORTED_MODULE_3__["default"], {
     show: show,
-    setShow: setShow
-  }), " ", /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_components_NavigationBar__WEBPACK_IMPORTED_MODULE_11__["default"], {
-    setShow: setShow
-  }), " ", /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_1__["Switch"], null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_1__["Route"], {
+    setShow: setShow,
+    setIsUserLoggedIn: setIsUserLoggedIn,
+    setUser: setUser
+  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_components_NavigationBar__WEBPACK_IMPORTED_MODULE_11__["default"], {
+    setShow: setShow,
+    isUserLoggedIn: isUserLoggedIn,
+    setIsUserLoggedIn: setIsUserLoggedIn,
+    setUser: setUser
+  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_1__["Switch"], null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_1__["Route"], {
     exact: true,
     path: "/",
     component: _pages_Home__WEBPACK_IMPORTED_MODULE_2__["default"]
   }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_1__["Route"], {
     path: "/account",
     render: () => /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_pages_Account__WEBPACK_IMPORTED_MODULE_4__["default"], {
-      isLogin: isLoggedIn,
-      setIsLoggedIn: setIsLoggedIn
+      user: user
     })
   }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_1__["Route"], {
     path: "/shop",
@@ -177,7 +177,7 @@ const App = () => {
   }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_1__["Route"], {
     path: "/about",
     component: _pages_About__WEBPACK_IMPORTED_MODULE_9__["default"]
-  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_1__["Route"], {
+  }), "rr", /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_1__["Route"], {
     path: "/contact",
     component: _pages_Contact__WEBPACK_IMPORTED_MODULE_8__["default"]
   }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_1__["Route"], {
@@ -438,11 +438,21 @@ __webpack_require__.r(__webpack_exports__);
 
 
 const NavigationBar = ({
-  setShow
+  setShow,
+  isUserLoggedIn,
+  setIsUserLoggedIn,
+  setUser
 }) => {
   const handleShow = event => {
     event.preventDefault();
-    setShow(true);
+
+    if (isUserLoggedIn) {
+      // logout user, not showing modal
+      setIsUserLoggedIn(false); // set user object to {}?
+      // setUser({});
+    } else {
+      setShow(true);
+    }
   };
 
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_2__["Navbar"], {
@@ -457,9 +467,10 @@ const NavigationBar = ({
     id: "basic-navbar-nav"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_2__["Nav"], {
     className: "mr-auto"
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_2__["Nav"].Link, {
-    onClick: handleShow
-  }, "Account"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_2__["Nav"].Link, {
+  }, isUserLoggedIn ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_2__["Nav"].Link, {
+    as: react_router_dom__WEBPACK_IMPORTED_MODULE_1__["Link"],
+    to: "/account"
+  }, "Account") : '', /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_2__["Nav"].Link, {
     as: react_router_dom__WEBPACK_IMPORTED_MODULE_1__["Link"],
     to: "/cart"
   }, "Cart"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_2__["Nav"].Link, {
@@ -474,10 +485,12 @@ const NavigationBar = ({
   }, "About"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_2__["Nav"].Link, {
     as: react_router_dom__WEBPACK_IMPORTED_MODULE_1__["Link"],
     to: "/contact"
-  }, "Contact"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_2__["Button"], {
-    variant: "primary",
+  }, "Contact")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_2__["Form"], {
+    inline: true
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_2__["Button"], {
+    variant: "outline-success",
     onClick: handleShow
-  }, "Login")))));
+  }, isUserLoggedIn ? 'Logout' : 'Login')))));
 };
 
 /* harmony default export */ __webpack_exports__["default"] = (NavigationBar);
@@ -535,7 +548,8 @@ const token = localStorage.getItem('token');
 
 const UserModal = ({
   show,
-  setShow
+  setShow,
+  setIsUserLoggedIn
 }) => {
   const handleClose = () => setShow(false);
 
@@ -544,16 +558,27 @@ const UserModal = ({
 
   const handleUsernameChange = event => setUsername(event.target.value);
 
-  const handlePasswordChange = event => setPassword(event.target.value);
+  const handlePasswordChange = event => setPassword(event.target.value); // POST API for login:
 
-  const handleSubmit = () => {
+
+  const handleSubmit = event => {
+    event.preventDefault();
     console.log(`logging user`);
-    const headers = {
-      "Content-Type": "application/json",
-      "Authorization": `Bearer ${token}`
-    };
-    const data = Object(_api__WEBPACK_IMPORTED_MODULE_2__["loginUser"])(username, password, headers);
+    /*
+     const headers = {
+        "Content-Type":"application/json",
+        "Authorization":`Bearer ${token}`}
+     const data = loginUser(username, password, headers);  
     console.log(data);
+    */
+
+    const data = true;
+
+    if (data) {
+      setIsUserLoggedIn(true); // set global state for isUserLoggedIn
+
+      setShow(false); // hide modal
+    }
   };
 
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_1__["Modal"], {
@@ -671,10 +696,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 const Account = ({
-  isLoggenIn,
-  setIsLoggedIn,
-  user,
-  orders
+  user
 }) => {
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
     className: "account"

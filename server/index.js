@@ -1,15 +1,17 @@
 //Server
 const express = require ('express');
 const path = require('path');
+/*
 const stripe = require("stripe")(
   "sk_test_51H5aWNICjx0urQmckVFOscQzfNC0UDZhM3ObJRQOTeSniYpdRdwJhoMScUKz4vnbXkRRAjhFWXUyTatpYOzHuGoe000oj5UQyG"
 );
+*/
 
 const morgan = require('morgan');
 const bodyParser = require('body-parser');
 
-//const { sync } = require("./db/index");
-//const { seed } = require("./db/seed");
+const { sync } = require("./db/index");
+const { seed } = require("./db/seed");
 
 const PORT = process.env.PORT || 3001;
 const FORCE = process.env.FORCE || false;
@@ -32,8 +34,8 @@ server.use((req, res, next) => {
 });
 
 // here's our API:
-//const apiRouter = require('./routes');
-//server.use('/api', apiRouter);
+const apiRouter = require('./routes');
+server.use('/api', apiRouter);
 
 // stripe API (separate from our own API):
 
@@ -92,9 +94,9 @@ const startServer = new Promise((resolve) => {
   });
 });
 
-//sync(FORCE)
- // .then(() => seed(FORCE))
-//  .then(startServer)
- // .catch((error) => {
-//    console.error(`SERVER FAILED TO START: ${error.toString()}`);
-//});
+sync(FORCE)
+  .then(() => seed(FORCE))
+  .then(startServer)
+  .catch((error) => {
+    console.error(`SERVER FAILED TO START: ${error.toString()}`);
+});
