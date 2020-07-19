@@ -1,7 +1,7 @@
 const express = require('express');
 const productsRouter = express.Router();
 
-const { getAllProducts, createProduct, getProductById, updateProduct, getProductByName , deactivateProduct, activateFeaturedProduct, getFeaturedProducts} = require('../db/products.js')
+const { getAllProducts, createProduct, getProductById, updateProduct, getProductByName , deactivateProduct, activateFeaturedProduct, getFeaturedProducts, getProductStock} = require('../db/products.js')
 const { requireUser } = require('./utils')
 
 productsRouter.use((req, res, next) => {
@@ -73,9 +73,9 @@ productsRouter.post('/create', requireUser, async ( req, res, next ) => {
                 // next(newItem)
                 
                 return res.send ({ 
-                    status: "Success!",
-                    message: "Item was created!"
-
+                    status: "success",
+                    message: "Item was created!",
+                    product: newItem
                 }); 
              } }catch (error){
                  console.error('Error creating item!', error)
@@ -113,7 +113,7 @@ productsRouter.patch('/edit', requireUser, async ( req, res, next ) => {
 
         console.log("<<<<<<<<< updated obj:",updatedProduct)
         
-        return res.send({status: "Success",
+        return res.send({status: "success",
         message: "Product Updated!", product: updatedProduct})
     
     } catch (error) {
@@ -122,5 +122,16 @@ productsRouter.patch('/edit', requireUser, async ( req, res, next ) => {
     }   
 });
 
+//route to get existing stock of a product based off productId:
+productsRouter.post('/stock', async (req, res, next) => {
+    const { productId } = req.body
+    try {
+        const stock = await getProductStock({productId});
+        res.send({status: 'success', stock})
+    } catch (e) {
+        console.error("Failed to get product stock", e)
+        next(e)
+    }
+})
 
 module.exports = productsRouter;

@@ -57,12 +57,7 @@ const DIST_PATH = path.join(__dirname, '../dist' );
 server.use(express.static(DIST_PATH));
 
 // images
-server.use('/assets',express.static(path.join(__dirname,'../assets')));
-
-// 404?
-server.get('*', function(req, res, next) {
-  res.status(404).sendFile(path.join(__dirname, '../dist', 'index.html'));
-});
+server.use('/assets', express.static(path.join(__dirname,'../assets')));
 
 // make a route for each front end page
 /*
@@ -81,8 +76,8 @@ const startServer = new Promise((resolve) => {
 });
 
 sync(FORCE)
- .then(() => seed(FORCE))
- .then(startServer)
- .catch((error) => {
-   console.error(`SERVER FAILED TO START: ${error.toString()}`);
+  .then(() => seed(FORCE))
+  .then(startServer)
+  .catch((error) => {
+    console.error(`SERVER FAILED TO START: ${error.toString()}`);
 });

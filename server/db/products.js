@@ -1,6 +1,5 @@
 const { client } = require('./client');
 
-const { addProductToCart, removeProductFromCart, getCartProductsByProductId } = require('./cart_products');
 const { POINT_CONVERSION_UNCOMPRESSED } = require('constants');
 
 const createProduct = async ({
@@ -18,9 +17,9 @@ const createProduct = async ({
     try{
     const { rows: [ product ] } = await client.query(
         `INSERT INTO products (name, description, price, stock,featured,thumbnail, image, "categoryId")
-        VALUES($1,$2,$3,$4,$5 $6, $7, $8)
+        VALUES($1,$2,$3,$4,$5, $6, $7, $8)
         RETURNING *;
-        `, [name,description,price,stock,featured,categoryId]
+        `, [name,description,price,stock,featured,thumbnail, image, categoryId]
     );
     
         return product;
@@ -80,14 +79,14 @@ const getProductById = async(productId) => {
         WHERE products.id =$1
         `);
 
-     if (!product) {
-         throw { 
-             name: "ProductNotFoundError",
-             message: "Cannot find product with that productId"
-         };
-     }
+        if (!product) {
+            throw { 
+                name: "ProductNotFoundError",
+                message: "Cannot find product with that productId"
+            };
+        }
 
-     return product;
+        return product;
     } catch(error){
         throw error;
     }
@@ -123,8 +122,35 @@ const getFeaturedProducts = async({featured}) => {
     }
 }
 
+const getProductStock = async ({productId}) => {
+    try {
+        const {rows: [productStock]} = await client.query(`
+            SELECT stock
+            FROM products
+            WHERE id=$1;
+        `, [productId])
+        console.log(`rows: `, productStock.stock)
+        return productStock.stock;
+    } catch (e) {
+        throw (e)
+    }
+}
 
+const updateProductQuantity = async ({productId, quantity}) => {
+    try {
+        const currStock = await getProductStock({productId});
+        const newStock = currStock - quantity
+        const {rows: [updatedProduct]} = await client.query(`
+            UPDATE products
+            SET stock=$1
+            RETURNING *;
+        `, [newStock]);
 
+        return updatedProduct;
+    } catch (e) {
+        throw (e)
+    }
+}
 
 
 // products will only be deactivated (not deleted)
@@ -168,5 +194,7 @@ module.exports = {
     updateProduct,
     deactivateProduct,
     activateFeaturedProduct,
-    getFeaturedProducts
+    getFeaturedProducts,
+    updateProductQuantity,
+    getProductStock,
 }

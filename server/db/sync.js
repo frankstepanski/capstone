@@ -11,8 +11,6 @@ const sync = async (FORCE = false) => {
             DROP TABLE IF EXISTS messages;
             DROP TABLE IF EXISTS product_reviews;
             DROP TABLE IF EXISTS reviews;
-            DROP TABLE IF EXISTS user_orders;
-            DROP TABLE IF EXISTS orders;
             DROP TABLE IF EXISTS cart_products;
             DROP TABLE IF EXISTS carts;
             DROP TABLE IF EXISTS product_images;
@@ -20,7 +18,7 @@ const sync = async (FORCE = false) => {
             DROP TABLE IF EXISTS categories;
             DROP TABLE IF EXISTS users;
         `);
-        console.log(`Tables Dropped`)
+        console.log(`Tables Dropped`);
     }
 
         await client.query(
@@ -30,7 +28,7 @@ const sync = async (FORCE = false) => {
             password VARCHAR(255) UNIQUE NOT NULL,
             "firstName" VARCHAR(255) NOT NULL,
             "lastName" VARCHAR(255) NOT NULL,
-            email VARCHAR(255) NOT NULL,
+            email VARCHAR(255) UNIQUE NOT NULL,
             address VARCHAR(255) NOT NULL,
             admin BOOLEAN DEFAULT false,
             active BOOLEAN DEFAULT true
@@ -53,7 +51,9 @@ const sync = async (FORCE = false) => {
                 description TEXT NOT NULL,
                 price FLOAT(2) NOT NULL,
                 stock INTEGER NOT NULL,
-                rating FLOAT(1) DEFAULT 0,
+                rating NUMERIC DEFAULT 1 
+                CHECK (rating>0)
+                CHECK (rating<=5),
                 active BOOLEAN DEFAULT TRUE,
                 featured BOOLEAN DEFAULT FALSE,
                 thumbnail VARCHAR(255) NOT NULL,
@@ -62,16 +62,18 @@ const sync = async (FORCE = false) => {
             );`
         );
 
-
+        
     
         await client.query(
             `CREATE TABLE IF NOT EXISTS reviews (
                 id SERIAL PRIMARY KEY,
                 "productId" INTEGER REFERENCES products(id) NOT NULL,
                 "userId" INTEGER REFERENCES users(id) NOT NULL,
-                title VARCHAR(255),
-                rating INTEGER NOT NULL,
-                comment TEXT NOT NULL
+                title VARCHAR(255) NOT NULL,
+                rating INTEGER NOT NULL
+                CHECK (rating>0)
+                CHECK (rating<=5),
+                comment VARCHAR(255) NOT NULL
             );`
         );
         
@@ -85,40 +87,29 @@ const sync = async (FORCE = false) => {
             );`
         );
     
+        
+        await client.query(`
+            CREATE TABLE IF NOT EXISTS carts (
+                id serial PRIMARY KEY,
+                "userId" INTEGER REFERENCES users(id),
+                "orderDate" DATE,
+                "shippingAddress" VARCHAR(255),
+                purchased BOOLEAN DEFAULT false
+            );
+        `)
+
     
         // Carts will be accessible by the userId
         await client.query(`
-        CREATE TABLE IF NOT EXISTS cart_products(
-            id SERIAL PRIMARY KEY,
-            "userId" INTEGER REFERENCES users(id) NOT NULL,
-            "productId" INTEGER REFERENCES products(id) NOT NULL,
-            quantity INTEGER NOT NULL
+            CREATE TABLE IF NOT EXISTS cart_products(
+                id SERIAL PRIMARY KEY,
+                "cartId" INTEGER REFERENCES carts(id) NOT NULL,
+                "productId" INTEGER REFERENCES products(id) NOT NULL,
+                "purchasePrice" FLOAT(2) NOT NULL,
+                quantity INTEGER NOT NULL
             );`
         );
     
-        // an order will have many products (1:M)
-        // products column will have multiple productIDs
-        // join table
-        await client.query(
-          `CREATE TABLE IF NOT EXISTS orders (
-            id serial PRIMARY KEY,
-            "userId" INTEGER REFERENCES users(id),
-            products VARCHAR(255) [],
-            "orderDate" DATE NOT NULL,
-            "orderTotal" FLOAT(2) REFERENCES orders(total),
-            "shippingAddress" VARCHAR(255) NOT NULL            
-          );`
-        );
-        // carts(total) NOT NULL <--- needs to be added when carts is complete
-           
-        
-        await client.query(
-            `CREATE TABLE IF NOT EXISTS user_orders (
-                id serial PRIMARY KEY,
-                "userId" INTEGER REFERENCES users(id) NOT NULL,
-                "orderId" INTEGER REFERENCES orders(id) NOT NULL
-            );`
-        );
     
         // blog posts:
         await client.query(`

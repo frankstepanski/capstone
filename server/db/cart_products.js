@@ -1,28 +1,31 @@
 const { client } = require("./client");
+const { getProductStock } = require('./products');
 
-const getCart = async ({userId}) => {
+const getCartProductsByCartId = async ({cartId}) => {
     try {
-        const {rows: [cartRaw]} = await client.query(`
+        const { rows: cartProducts } = await client.query(`
             SELECT * 
             FROM cart_products
-            WHERE "userId"=$1;
-        `, [userId])
+            WHERE "cartId" = $1;
+        `, [cartId])
+
+        return cartProducts;
     } catch (e) {
-        console.error(`getCart error. ${ e }`)
+        console.error(`Unable to get cartProductsByCartId: ${ e }`)
         throw e;
     }
 }
 
-const addProductToCart = async ({productId, userId, quantity}) => {
+
+const addProductToCart = async ({productId, cartId, purchasePrice, quantity}) => {
 
     try{
-
         const { rows: [ newCartProduct ] } = await client.query(`
             INSERT INTO cart_products
-            ("productId", "userId", quantity)
-            VALUES ($1, $2, $3)
+            ("cartId", "productId", "purchasePrice", quantity)
+            VALUES ($1, $2, $3, $4)
             RETURNING *
-        `, [productId, userId, quantity])
+        `, [cartId, productId, purchasePrice, quantity])
 
         return newCartProduct;
     }
@@ -35,25 +38,40 @@ const addProductToCart = async ({productId, userId, quantity}) => {
 
 const updateCartProductQuantity = async ({cartProductId, quantity}) => {
     try {
-        const { rows: [ updatedItem ] } = await client.query(`
-            UPDATE cart_products
-            SET quantity = $1
-            WHERE id = $2
-            RETURNING *;
-        `, [quantity, cartProductId])
+        //Get amount currently in stock
+        const { productId } = await getCartProductById(cartProductId)
+        const productStock = await getProductStock({productId})
 
-        return updatedItem;
+        console.log(`
+            productId: ${productId}, 
+            productStock: ${productId}
+        `)
+
+        //if item has enough stock, update cartProduct, if not, return null
+        if (quantity <= productStock) {
+            const { rows: [ updatedItem ] } = await client.query(`
+                UPDATE cart_products
+                SET quantity = $1
+                WHERE id = $2
+                RETURNING *;
+            `, [quantity, cartProductId]);
+
+            return updatedItem;
+        } else if (quantity > productStock){
+            console.log(`Exceeds product stock`)
+            return {code: `stockExceeded`};
+        } else {
+            throw new Error('Unknown error updating product stock');
+        }
     } catch (e) {
         console.error(`updateCartProductQuantity error: ${e}`)
         throw e;
     }
 }
 
-const removeProductFromCart = async (cartProductId) => {
-
+const removeProductFromCart = async ({cartProductId}) => {
     try{
-
-        // const cartProduct = await getCartProductById(cartProductId);
+        const cartProduct = await getCartProductById(cartProductId);
 
         if(cartProduct){
             const { rows: [ deletedCartProduct ] } = await client.query(`
@@ -63,8 +81,7 @@ const removeProductFromCart = async (cartProductId) => {
             `, [cartProductId]);
 
             return deletedCartProduct;
-        }
-        else{
+        } else{
             throw({
                 name: "CartProductNotFoundError",
                 message: "Cannot find Product with that ProductId in Cart"
@@ -77,9 +94,26 @@ const removeProductFromCart = async (cartProductId) => {
     }
 }
 
+// remove all products from cart
+const clearCart = async ({cartId}) => {
+    try {
+        const { rows: removedItems } = await client.query(`
+            DELETE FROM cart_products
+            WHERE "cartId"=$1
+            RETURNING *;
+        `, [cartId]);
+
+        return removedItems;
+    } catch(error) {
+        console.error(`Could not clear cart: ${ error }`)
+        throw error;
+    }
+}
+
+// only used in removeProductFromCart function at this time. Not exporting.
 const getCartProductById = async (cartProductId) => {
     
-    try{
+    try {
         
         const { rows: [ cartProduct ] } = await client.query(`
             SELECT * FROM cart_products
@@ -94,31 +128,28 @@ const getCartProductById = async (cartProductId) => {
     }
 }
 
-const getCartProductsByProductId = async(productId) => {
+const getGrandTotal = async ({cartId}) => {
+    try {
+        const { rows: items} = await client.query(`
+            SELECT *
+            FROM cart_products
+            WHERE "cartId" = $1;
+        `, [cartId])
 
-    try{
-        
-        const { rows: productsArr } = await client.query(`
-            SELECT * FROM cart_products
-            WHERE "productId"=$1;
-        `, [productId])
+        const grandTotal = Object.values(items).reduce((a, b) => a + b, 0);
 
-        return productsArr;
-
+        return grandTotal;
+    } catch (e) {
+        console.error(`Could not calculate grand total`, e);
+        throw e;
     }
-    catch(error){
-        console.error(`getcartProductsByProductID error. ${ error }`)
-        throw error;
-    }
-
 }
 
 module.exports = {
+    getCartProductsByCartId,
     addProductToCart,
-    removeProductFromCart,
-    getCartProductById,
-    // getProductsByCartId,
-    getCartProductsByProductId,
     updateCartProductQuantity,
-    getCart
+    removeProductFromCart,
+    getGrandTotal,
+    clearCart
 }
