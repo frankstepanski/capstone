@@ -527,6 +527,36 @@ const NavigationBar = ({
 
 /***/ }),
 
+/***/ "./client/components/ProductCard.js":
+/*!******************************************!*\
+  !*** ./client/components/ProductCard.js ***!
+  \******************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+
+
+/***/ }),
+
+/***/ "./client/components/ProductView.js":
+/*!******************************************!*\
+  !*** ./client/components/ProductView.js ***!
+  \******************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+
+
+const ProductView = () => /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null);
+
+/* harmony default export */ __webpack_exports__["default"] = (ProductView);
+
+/***/ }),
+
 /***/ "./client/components/UserModal.js":
 /*!****************************************!*\
   !*** ./client/components/UserModal.js ***!
@@ -840,14 +870,78 @@ const NotFoundPage = () => {
 
 /***/ }),
 
+/***/ "./client/pages/Shop.css":
+/*!*******************************!*\
+  !*** ./client/pages/Shop.css ***!
+  \*******************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+var api = __webpack_require__(/*! ../../node_modules/style-loader/dist/runtime/injectStylesIntoStyleTag.js */ "./node_modules/style-loader/dist/runtime/injectStylesIntoStyleTag.js");
+
+var content = __webpack_require__(/*! !../../node_modules/css-loader/dist/cjs.js!../../node_modules/sass-loader/dist/cjs.js!./Shop.css */ "./node_modules/css-loader/dist/cjs.js!./node_modules/sass-loader/dist/cjs.js!./client/pages/Shop.css");
+
+content = content.__esModule ? content.default : content;
+
+if (typeof content === 'string') {
+  content = [[module.i, content, '']];
+}
+
+var options = {};
+options.insert = "head";
+options.singleton = false;
+var update = api(content, options);
+module.exports = content.locals || {};
+
+/***/ }),
+
 /***/ "./client/pages/Shop.js":
 /*!******************************!*\
   !*** ./client/pages/Shop.js ***!
   \******************************/
 /*! exports provided: default */
-/***/ (function(module, exports) {
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
 
-throw new Error("Module build failed (from ./node_modules/babel-loader/lib/index.js):\nSyntaxError: /Users/frankstepanski/Desktop/desktop/CalPoly-pt2/capstone/client/pages/Shop.js: Unexpected token (14:1)\n\n\u001b[0m \u001b[90m 12 | \u001b[39m\u001b[0m\n\u001b[0m \u001b[90m 13 | \u001b[39m    \u001b[36mreturn\u001b[39m (\u001b[0m\n\u001b[0m\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 14 | \u001b[39m\u001b[33m<<\u001b[39m\u001b[33m<<\u001b[39m\u001b[33m<<\u001b[39m\u001b[33m<\u001b[39m \u001b[33mHEAD\u001b[39m\u001b[0m\n\u001b[0m \u001b[90m    | \u001b[39m \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\u001b[0m\n\u001b[0m \u001b[90m 15 | \u001b[39m      \u001b[33m<\u001b[39m\u001b[33m>\u001b[39m\u001b[0m\n\u001b[0m \u001b[90m 16 | \u001b[39m      \u001b[33m<\u001b[39m\u001b[33mForm\u001b[39m inline onSubmit\u001b[33m=\u001b[39m{handleSubmit}\u001b[33m>\u001b[39m\u001b[0m\n\u001b[0m \u001b[90m 17 | \u001b[39m            \u001b[33m<\u001b[39m\u001b[33mFormControl\u001b[39m type\u001b[33m=\u001b[39m\u001b[32m\"text\"\u001b[39m placeholder\u001b[33m=\u001b[39m\u001b[32m\"Search\"\u001b[39m className\u001b[33m=\u001b[39m\u001b[32m\"mr-sm-2\"\u001b[39m onChange\u001b[33m=\u001b[39m{handleInputChange}\u001b[33m/\u001b[39m\u001b[33m>\u001b[39m\u001b[0m\n    at Object._raise (/Users/frankstepanski/Desktop/desktop/CalPoly-pt2/capstone/node_modules/@babel/parser/lib/index.js:757:17)\n    at Object.raiseWithData (/Users/frankstepanski/Desktop/desktop/CalPoly-pt2/capstone/node_modules/@babel/parser/lib/index.js:750:17)\n    at Object.raise (/Users/frankstepanski/Desktop/desktop/CalPoly-pt2/capstone/node_modules/@babel/parser/lib/index.js:744:17)\n    at Object.unexpected (/Users/frankstepanski/Desktop/desktop/CalPoly-pt2/capstone/node_modules/@babel/parser/lib/index.js:8834:16)\n    at Object.jsxParseIdentifier (/Users/frankstepanski/Desktop/desktop/CalPoly-pt2/capstone/node_modules/@babel/parser/lib/index.js:4422:12)\n    at Object.jsxParseNamespacedName (/Users/frankstepanski/Desktop/desktop/CalPoly-pt2/capstone/node_modules/@babel/parser/lib/index.js:4432:23)\n    at Object.jsxParseElementName (/Users/frankstepanski/Desktop/desktop/CalPoly-pt2/capstone/node_modules/@babel/parser/lib/index.js:4443:21)\n    at Object.jsxParseOpeningElementAt (/Users/frankstepanski/Desktop/desktop/CalPoly-pt2/capstone/node_modules/@babel/parser/lib/index.js:4529:22)\n    at Object.jsxParseElementAt (/Users/frankstepanski/Desktop/desktop/CalPoly-pt2/capstone/node_modules/@babel/parser/lib/index.js:4562:33)\n    at Object.jsxParseElement (/Users/frankstepanski/Desktop/desktop/CalPoly-pt2/capstone/node_modules/@babel/parser/lib/index.js:4636:17)\n    at Object.parseExprAtom (/Users/frankstepanski/Desktop/desktop/CalPoly-pt2/capstone/node_modules/@babel/parser/lib/index.js:4643:19)\n    at Object.parseExprSubscripts (/Users/frankstepanski/Desktop/desktop/CalPoly-pt2/capstone/node_modules/@babel/parser/lib/index.js:9688:23)\n    at Object.parseMaybeUnary (/Users/frankstepanski/Desktop/desktop/CalPoly-pt2/capstone/node_modules/@babel/parser/lib/index.js:9668:21)\n    at Object.parseExprOps (/Users/frankstepanski/Desktop/desktop/CalPoly-pt2/capstone/node_modules/@babel/parser/lib/index.js:9538:23)\n    at Object.parseMaybeConditional (/Users/frankstepanski/Desktop/desktop/CalPoly-pt2/capstone/node_modules/@babel/parser/lib/index.js:9511:23)\n    at Object.parseMaybeAssign (/Users/frankstepanski/Desktop/desktop/CalPoly-pt2/capstone/node_modules/@babel/parser/lib/index.js:9466:21)\n    at Object.parseParenAndDistinguishExpression (/Users/frankstepanski/Desktop/desktop/CalPoly-pt2/capstone/node_modules/@babel/parser/lib/index.js:10306:28)\n    at Object.parseExprAtom (/Users/frankstepanski/Desktop/desktop/CalPoly-pt2/capstone/node_modules/@babel/parser/lib/index.js:10039:21)\n    at Object.parseExprAtom (/Users/frankstepanski/Desktop/desktop/CalPoly-pt2/capstone/node_modules/@babel/parser/lib/index.js:4648:20)\n    at Object.parseExprSubscripts (/Users/frankstepanski/Desktop/desktop/CalPoly-pt2/capstone/node_modules/@babel/parser/lib/index.js:9688:23)\n    at Object.parseMaybeUnary (/Users/frankstepanski/Desktop/desktop/CalPoly-pt2/capstone/node_modules/@babel/parser/lib/index.js:9668:21)\n    at Object.parseExprOps (/Users/frankstepanski/Desktop/desktop/CalPoly-pt2/capstone/node_modules/@babel/parser/lib/index.js:9538:23)\n    at Object.parseMaybeConditional (/Users/frankstepanski/Desktop/desktop/CalPoly-pt2/capstone/node_modules/@babel/parser/lib/index.js:9511:23)\n    at Object.parseMaybeAssign (/Users/frankstepanski/Desktop/desktop/CalPoly-pt2/capstone/node_modules/@babel/parser/lib/index.js:9466:21)\n    at Object.parseExpression (/Users/frankstepanski/Desktop/desktop/CalPoly-pt2/capstone/node_modules/@babel/parser/lib/index.js:9418:23)\n    at Object.parseReturnStatement (/Users/frankstepanski/Desktop/desktop/CalPoly-pt2/capstone/node_modules/@babel/parser/lib/index.js:11570:28)\n    at Object.parseStatementContent (/Users/frankstepanski/Desktop/desktop/CalPoly-pt2/capstone/node_modules/@babel/parser/lib/index.js:11251:21)\n    at Object.parseStatement (/Users/frankstepanski/Desktop/desktop/CalPoly-pt2/capstone/node_modules/@babel/parser/lib/index.js:11203:17)\n    at Object.parseBlockOrModuleBlockBody (/Users/frankstepanski/Desktop/desktop/CalPoly-pt2/capstone/node_modules/@babel/parser/lib/index.js:11778:25)\n    at Object.parseBlockBody (/Users/frankstepanski/Desktop/desktop/CalPoly-pt2/capstone/node_modules/@babel/parser/lib/index.js:11764:10)");
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var react_bootstrap__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-bootstrap */ "./node_modules/react-bootstrap/esm/index.js");
+/* harmony import */ var _components_ProductCard__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../components/ProductCard */ "./client/components/ProductCard.js");
+/* harmony import */ var _components_ProductCard__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_components_ProductCard__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _components_ProductView__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../components/ProductView */ "./client/components/ProductView.js");
+/* harmony import */ var _Shop_css__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./Shop.css */ "./client/pages/Shop.css");
+/* harmony import */ var _Shop_css__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_Shop_css__WEBPACK_IMPORTED_MODULE_4__);
+
+
+
+
+
+
+const Shop = () => {
+  const handleSubmit = () => {};
+
+  const handleInputChange = () => {};
+
+  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_1__["Form"], {
+    inline: true,
+    onSubmit: handleSubmit
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_1__["FormControl"], {
+    type: "text",
+    placeholder: "Search",
+    className: "mr-sm-2",
+    onChange: handleInputChange
+  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_1__["Button"], {
+    variant: "outline-primary"
+  }, "Search")));
+};
+
+const shopPage = () => {
+  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h5", null, "Welcome to AFC Skate!");
+};
+
+/* harmony default export */ __webpack_exports__["default"] = (Shop);
+shopPage;
 
 /***/ }),
 
@@ -6184,6 +6278,24 @@ var ___CSS_LOADER_API_IMPORT___ = __webpack_require__(/*! ../../node_modules/css
 exports = ___CSS_LOADER_API_IMPORT___(false);
 // Module
 exports.push([module.i, ".home {\n  margin: auto;\n}", ""]);
+// Exports
+module.exports = exports;
+
+
+/***/ }),
+
+/***/ "./node_modules/css-loader/dist/cjs.js!./node_modules/sass-loader/dist/cjs.js!./client/pages/Shop.css":
+/*!************************************************************************************************************!*\
+  !*** ./node_modules/css-loader/dist/cjs.js!./node_modules/sass-loader/dist/cjs.js!./client/pages/Shop.css ***!
+  \************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+// Imports
+var ___CSS_LOADER_API_IMPORT___ = __webpack_require__(/*! ../../node_modules/css-loader/dist/runtime/api.js */ "./node_modules/css-loader/dist/runtime/api.js");
+exports = ___CSS_LOADER_API_IMPORT___(false);
+// Module
+exports.push([module.i, "", ""]);
 // Exports
 module.exports = exports;
 

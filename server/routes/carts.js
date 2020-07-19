@@ -41,7 +41,7 @@ cartsRouter.get('/open', requireUser, async function( req, res, next ){
         if(cart){
             res.send({ cart })
         } else {
-            res.send({status: 'failed', message: 'User has no open carts'})
+            res.send({status: 'failed', message: 'User has no open carts, try opening a new one with the POST /create route'})
         }
     } catch(e){
     console.error(e)
@@ -80,14 +80,16 @@ cartsRouter.patch('/checkout', requireUser, async (req, res, next) => {
     try {
         const userCart = await getOpenCartByUserId({userId});
 
-        if (userCart.id === cartId) {
-            const closedCart = await closeCart({cartId, shippingAddress, userId});
+        if (userCart.userId === userId) {
+            const {closedCart, newCart, newProductStock} = await closeCart({cartId, shippingAddress, userId});
             const total = await getGrandTotal({cartId})
             res.send({
                 status: "success", 
                 message: "Checkout successful", 
                 order: closedCart,
-                total
+                total,
+                newCart,
+                newProductStock
             });
         } else {
             console.log('Database is out of sync or user is hacking');

@@ -30,7 +30,7 @@ const addProductToCart = async ({productId, cartId, purchasePrice, quantity}) =>
         return newCartProduct;
     }
     catch(error){
-        console.error(`addProdcutToCart error. ${ error }`)
+        console.error(`addProductToCart error. ${ error }`)
         throw error;
     }
 
@@ -130,14 +130,16 @@ const getCartProductById = async (cartProductId) => {
 
 const getGrandTotal = async ({cartId}) => {
     try {
-        const { rows: items} = await client.query(`
-            SELECT *
+        const { rows: prices} = await client.query(`
+            SELECT "purchasePrice"
             FROM cart_products
             WHERE "cartId" = $1;
         `, [cartId])
 
-        const grandTotal = Object.values(items).reduce((a, b) => a + b, 0);
-
+        const priceArr = prices.map((price) => price.purchasePrice)
+        console.log(`price array: `, priceArr)
+        const grandTotal = priceArr.reduce((a, b) => a + b, 0);
+        console.log(`total: `, grandTotal)
         return grandTotal;
     } catch (e) {
         console.error(`Could not calculate grand total`, e);

@@ -57,8 +57,8 @@ cartProductsRouter.patch('/:id', async function (req, res, next){
 });
 
 // remove item from cart
-cartProductsRouter.delete('/:id', async function ( req, res, next ){
-    const { id: cartProductId } = req.params;
+cartProductsRouter.delete('/:cartProductId', async function ( req, res, next ){
+    const { cartProductId } = req.params;
 
     try{
         const removedItem = await removeProductFromCart({cartProductId})
@@ -77,7 +77,7 @@ cartProductsRouter.delete('/:id', async function ( req, res, next ){
 
 //clear cart:
 cartProductsRouter.delete('/clear', async function ( req, res, next ){
-    const { cartId } = req.params;
+    const { cartId } = req.body;
 
     try{
         const removedItems = await clearCart({cartId})
