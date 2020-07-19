@@ -87,9 +87,8 @@ const sync = async (FORCE = false) => {
             );`
         );
     
-        
-        await client.query(`
-            CREATE TABLE IF NOT EXISTS carts (
+        await client.query(
+            `CREATE TABLE IF NOT EXISTS carts (
                 id serial PRIMARY KEY,
                 "userId" INTEGER REFERENCES users(id),
                 "orderDate" DATE,
@@ -101,12 +100,23 @@ const sync = async (FORCE = false) => {
     
         // Carts will be accessible by the userId
         await client.query(`
-            CREATE TABLE IF NOT EXISTS cart_products(
-                id SERIAL PRIMARY KEY,
-                "cartId" INTEGER REFERENCES carts(id) NOT NULL,
-                "productId" INTEGER REFERENCES products(id) NOT NULL,
-                "purchasePrice" FLOAT(2) NOT NULL,
-                quantity INTEGER NOT NULL
+        CREATE TABLE IF NOT EXISTS cart_products(
+            id SERIAL PRIMARY KEY,
+            "cartId" INTEGER REFERENCES carts(id) NOT NULL,
+            "productId" INTEGER REFERENCES products(id) NOT NULL
+            );`
+        );
+    
+        // an order will have many products (1:M)
+        // products column will have multiple productIDs
+        // join table
+        await client.query(
+            `CREATE TABLE IF NOT EXISTS orders (
+                id serial PRIMARY KEY,
+                "userId" INTEGER REFERENCES users(id),
+                "orderDate" DATE NOT NULL,
+                "orderTotal" FLOAT(2) NOT NULL,
+                "shippingAddress" VARCHAR(255) NOT NULL            
             );`
         );
     

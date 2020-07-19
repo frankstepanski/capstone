@@ -1,11 +1,10 @@
-import React from "react";
+import React, { useState } from "react";
 
 import "./Blog.css";
 
 const Blog = () => {
 
-  const [posts, setPosts] = useState([{}, {}, {}]); // array of posts
-  // axios call t oset posts
+  const [posts, setPosts] = useState([{}]); // array of posts
 
     return (
       <div className="blog">

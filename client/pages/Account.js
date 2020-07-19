@@ -2,7 +2,8 @@ import React from "react";
 
 import "./Account.css";
 
-const Account = ({user, orders}) => {
+const Account = ({ user }) => {
+
     return (
         <div className="account">
         <h2>Account</h2>
@@ -10,6 +11,5 @@ const Account = ({user, orders}) => {
       </div>
     );
   };
-
 
 export default Account;
