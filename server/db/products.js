@@ -77,7 +77,7 @@ const getProductById = async(productId) => {
         const { rows: [product] } = await client.query(`
         SELECT * FROM products 
         WHERE products.id =$1
-        `);
+        `, [productId]);
 
         if (!product) {
             throw { 
@@ -128,8 +128,8 @@ const getProductStock = async ({productId}) => {
             SELECT stock
             FROM products
             WHERE id=$1;
-        `, [productId])
-        console.log(`rows: `, productStock.stock)
+        `, [productId]);
+        
         return productStock.stock;
     } catch (e) {
         throw (e)

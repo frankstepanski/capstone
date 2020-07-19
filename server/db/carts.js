@@ -49,7 +49,8 @@ const getOpenCartByUserId = async ({userId}) => {
         `, [userId]);
 
         if (!openCart) {
-            console.log(`User has no open carts, creating a new one.`)
+            console.log(`User has no open carts, create a new one.`)
+            return null;
         };
 
         return openCart;
@@ -85,8 +86,6 @@ const createCart = async ({userId}) => {
 // Close Cart (on checkout. Adds shippingAddress, orderDate, and sets 'purchased' = true)
 
 const closeCart = async ({cartId, shippingAddress, userId}) => {
-    const now = new Date();
-    const orderDate = now.toLocaleDateString("en-US");
 
     try {
         // if the cart is still empty then the user should not be able to checkout
@@ -96,10 +95,12 @@ const closeCart = async ({cartId, shippingAddress, userId}) => {
         //Update and close cart
         const { rows: [closedCart] } = await client.query(`
             UPDATE carts
-            SET "orderDate"=$1, "shippingAddress"=$2, purchased=true
-            WHERE id=$3
+            SET "orderDate"=(SELECT CURRENT_DATE), 
+            "shippingAddress"=$1, 
+            purchased=true
+            WHERE id=$2
             RETURNING *;
-        `, [orderDate, shippingAddress, cartId])
+        `, [ shippingAddress, cartId])
 
         //Update stock:
         const cartProducts = await getCartProductsByCartId({cartId});
@@ -110,9 +111,11 @@ const closeCart = async ({cartId, shippingAddress, userId}) => {
         });
 
         const updatedProds = await Promise.all(prodPromises);
-        console.log(updatedProds);
-        return closedCart;
-        
+        console.log("updatedProds: ", updatedProds);
+
+        //Open new cart
+        const newCart = await createCart({userId});
+        return {closedCart, newCart, newProductStock: updatedProds};
     } catch (e) {
         console.error(`Error checking out`, e);
         throw e;

@@ -10,14 +10,19 @@ usersRouter.use((req, res, next) => {
     next();
 })
 
-usersRouter.get('/', async (req, res, next) => {
+usersRouter.get('/', requireUser, async (req, res, next) => {
+    const {admin} = req.user;
     try {
-        const data = await getAllUsers();
-        const users = data.map((user) => {
-            delete user.password;
-            return user;
-        })
-        res.send({ users })
+        if (admin) {
+            const data = await getAllUsers();
+            const users = data.map((user) => {
+                delete user.password;
+                return user;
+            })
+            res.send({ users })
+        } else {
+            res.send({status: 'failed', message: 'restricted'})
+        }
     } catch (e) {
         console.error(error)
         const{ name, message } = error
@@ -33,8 +38,7 @@ usersRouter.post('/register', async (req, res, next) => {
         lastName, 
         email,
         address,
-        admin,
-        active 
+        admin 
     } = req.body;
     console.log(`> UN: ${username}`)
 
@@ -66,19 +70,10 @@ usersRouter.post('/register', async (req, res, next) => {
                 lastName, 
                 email,
                 address,
-                admin,
-                active 
+                admin 
             });
             
-            //redundant code since we're forwarding req to ./login below
-/*             const token = jwt.sign({
-                id: user.id,
-                username
-            }, SECRET, {
-                expiresIn: '1w'
-            }) */
-            
-            //Once the new user is create, forward the request ./login to improve UX flow
+            //Once the new user is created, forward the request ./login to improve UX flow
             console.log(`User successfully created. Logging in.`)
             return res.redirect(308, './login');
         }
@@ -119,7 +114,6 @@ usersRouter.post('/login', async (req, res, next) => {
 
 // Update non-read-only user informaiton:
 usersRouter.patch('/update', requireUser, async (req, res, next) => {
-    const { password, firstName, lastName, email, address } = req.body;
     const user = req.user;
 
     // This block of code returns an array of only the object entries with !null values
