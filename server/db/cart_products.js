@@ -3,7 +3,7 @@ const { getProductStock } = require('./products');
 
 const getCartProductsByCartId = async ({cartId}) => {
     try {
-        const { rows: [cartProducts] } = await client.query(`
+        const { rows: cartProducts } = await client.query(`
             SELECT * 
             FROM cart_products
             WHERE "cartId" = $1;
@@ -70,9 +70,7 @@ const updateCartProductQuantity = async ({cartProductId, quantity}) => {
 }
 
 const removeProductFromCart = async ({cartProductId}) => {
-
     try{
-
         const cartProduct = await getCartProductById(cartProductId);
 
         if(cartProduct){
@@ -92,6 +90,22 @@ const removeProductFromCart = async ({cartProductId}) => {
     }
     catch(error){
         console.error(`removeProductFromCart error. ${ error }`)
+        throw error;
+    }
+}
+
+// remove all products from cart
+const clearCart = async ({cartId}) => {
+    try {
+        const { rows: removedItems } = await client.query(`
+            DELETE FROM cart_products
+            WHERE "cartId"=$1
+            RETURNING *;
+        `, [cartId]);
+
+        return removedItems;
+    } catch(error) {
+        console.error(`Could not clear cart: ${ error }`)
         throw error;
     }
 }
@@ -116,7 +130,7 @@ const getCartProductById = async (cartProductId) => {
 
 const getGrandTotal = async ({cartId}) => {
     try {
-        const { rows: [items]} = await client.query(`
+        const { rows: items} = await client.query(`
             SELECT *
             FROM cart_products
             WHERE "cartId" = $1;
@@ -136,5 +150,6 @@ module.exports = {
     addProductToCart,
     updateCartProductQuantity,
     removeProductFromCart,
-    getGrandTotal
+    getGrandTotal,
+    clearCart
 }

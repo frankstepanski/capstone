@@ -6,6 +6,7 @@ const {
     updateCartProductQuantity, // comes from db/cart_products 
     removeProductFromCart, // comes from db/cart_products
     getProductById, // comes from db/products
+    clearCart // from db/cart_products
 } = require('../db');
 
 cartProductsRouter.use((req, res, next) => {
@@ -60,13 +61,32 @@ cartProductsRouter.delete('/:id', async function ( req, res, next ){
     const { id: cartProductId } = req.params;
 
     try{
-        const removedItem = await removeProductFromCart({cartProductId: id})
+        const removedItem = await removeProductFromCart({cartProductId})
         if (removedItem){
             res.send({ status: 'success', message:'Item deleted.', removed: removedItem })
         } else {
             res.send({ 
                 status: 'failed', 
                 message: `could not remove item with cartProductId of ${cartProductId}`})
+        }
+    } catch(error){
+        console.error(error)
+        next(error)
+    }
+});
+
+//clear cart:
+cartProductsRouter.delete('/clear', async function ( req, res, next ){
+    const { cartId } = req.params;
+
+    try{
+        const removedItems = await clearCart({cartId})
+        if (removedItems){
+            res.send({ status: 'success', message:'Cart cleared.', removed: removedItems })
+        } else {
+            res.send({ 
+                status: 'failed', 
+                message: `cart was already empty`})
         }
     } catch(error){
         console.error(error)

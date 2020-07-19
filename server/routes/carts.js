@@ -75,13 +75,13 @@ cartsRouter.post('/create', requireUser, async function( req, res, next ){
 // - Update stock (Completed in DB Method)                     [x]
 
 cartsRouter.patch('/checkout', requireUser, async (req, res, next) => {
-    const user = req.user;
+    const { id: userId } = req.user;
     const { shippingAddress, cartId } = req.body
     try {
-        const userCart = await getOpenCartByUserId({userId: user.id});
+        const userCart = await getOpenCartByUserId({userId});
 
         if (userCart.id === cartId) {
-            const closedCart = await closeCart({cartId, shippingAddress});
+            const closedCart = await closeCart({cartId, shippingAddress, userId});
             const total = await getGrandTotal({cartId})
             res.send({
                 status: "success", 

@@ -8,11 +8,20 @@ const { updateProductQuantity } = require('./products');
 //Get open and closed carts
 const getCartsByUserID = async ({userId}) => {
     try {
-        const { rows: [carts] } = await client.query(`
-            SELECT * 
-            FROM carts
-            WHERE "userId"= $1;
-        `, [userId])
+        // This nasty query does something cool: It uses a subquery to create a table containing cartProducts and JOINs that table to the carts table to create a nested Products array of JSON objects
+        const { rows: carts } = await client.query(`
+            SELECT 
+            c.*,
+            CASE WHEN count(cp) = 0 THEN ARRAY[]::json[] ELSE array_agg(cp.product) END AS products
+            FROM carts c
+            LEFT OUTER JOIN (
+                SELECT cp1."cartId", json_build_object('id', cp1.id, 'productId', cp1."productId", 'purchasePrice', cp1."purchasePrice",'quantity', cp1.quantity) AS product
+                FROM cart_products AS cp1
+            ) cp 
+                ON c.id = cp."cartId"
+            WHERE c."userId"= $1
+            GROUP BY c.id;
+        `, [userId]);
 
         return carts;
     } catch (e) {
@@ -25,15 +34,24 @@ const getCartsByUserID = async ({userId}) => {
 const getOpenCartByUserId = async ({userId}) => {
     try {
         const { rows: [openCart] } = await client.query(`
-            SELECT * 
-            FROM carts
+            SELECT 
+            c.*,
+            CASE WHEN count(cp) = 0 THEN ARRAY[]::json[] ELSE array_agg(cp.product) END AS products
+            FROM carts c
+            LEFT OUTER JOIN (
+                SELECT cp1."cartId", json_build_object('id', cp1.id, 'productId', cp1."productId", 'purchasePrice', cp1."purchasePrice",'quantity', cp1.quantity) AS product
+                FROM cart_products AS cp1
+            ) cp 
+                ON c.id = cp."cartId" 
             WHERE "userId"= $1
-            AND purchased=FALSE;
+            AND purchased=FALSE
+            GROUP BY c.id;
         `, [userId]);
 
-        const products = await getCartProductsByCartId({cartId: openCart.id})
-        console.log(`products: `, products);
-        openCart.products = products;
+        if (!openCart) {
+            console.log(`User has no open carts, creating a new one.`)
+        };
+
         return openCart;
     } catch (e) {
         console.error(`error getting open cart by userId`, e);
@@ -44,13 +62,20 @@ const getOpenCartByUserId = async ({userId}) => {
 // Create cart:
 const createCart = async ({userId}) => {
     try {
-        const { rows: [emptyCart] } = await client.query(`
-            INSERT INTO carts("userId")
-            VALUES ($1)
-            RETURNING *;
-        `, [userId])
+        const openCart = await getOpenCartByUserId({userId})
 
-        return emptyCart;
+        if (!openCart) {
+            const { rows: [emptyCart] } = await client.query(`
+                INSERT INTO carts("userId")
+                VALUES ($1)
+                RETURNING *;
+            `, [userId])
+
+            return emptyCart;
+        } else {
+            console.log(`User already has an open cart`);
+            return openCart;
+        }
     } catch (e) {
         console.error(`Error creating cart`, e)
         throw e;
@@ -59,21 +84,26 @@ const createCart = async ({userId}) => {
 
 // Close Cart (on checkout. Adds shippingAddress, orderDate, and sets 'purchased' = true)
 
-const closeCart = async ({cartId, shippingAddress}) => {
+const closeCart = async ({cartId, shippingAddress, userId}) => {
     const now = new Date();
     const orderDate = now.toLocaleDateString("en-US");
 
     try {
+        // if the cart is still empty then the user should not be able to checkout
+        const { products } = await getOpenCartByUserId({userId});
+        if (!products) return null;
+
         //Update and close cart
         const { rows: [closedCart] } = await client.query(`
             UPDATE carts
-            SET "orderDate"=$1, "shippingAddress"=$2, purchsed=true
+            SET "orderDate"=$1, "shippingAddress"=$2, purchased=true
             WHERE id=$3
             RETURNING *;
         `, [orderDate, shippingAddress, cartId])
 
         //Update stock:
         const cartProducts = await getCartProductsByCartId({cartId});
+        console.log(`> CART PRODUCTS: `, cartProducts)
         const prodPromises = cartProducts.map(async (item) => {
             const updatedProd = await updateProductQuantity({productId: item.productId, quantity: item.quantity});
             return updatedProd;
@@ -82,6 +112,7 @@ const closeCart = async ({cartId, shippingAddress}) => {
         const updatedProds = await Promise.all(prodPromises);
         console.log(updatedProds);
         return closedCart;
+        
     } catch (e) {
         console.error(`Error checking out`, e);
         throw e;
