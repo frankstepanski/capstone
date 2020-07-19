@@ -11,8 +11,7 @@ const NavigationBar = ({ setShow, isUserLoggedIn, setIsUserLoggedIn, setUser }) 
     if (isUserLoggedIn) {
       // logout user, not showing modal
          setIsUserLoggedIn(false);
-      // set user object to {}?
-      // setUser({});
+         setUser({});
     } else {
       setShow(true);
     }
@@ -34,7 +33,6 @@ const NavigationBar = ({ setShow, isUserLoggedIn, setIsUserLoggedIn, setUser }) 
             <Nav.Link as = {Link} to="/blog">Blog</Nav.Link>
             <Nav.Link as = {Link} to="/about">About</Nav.Link>
             <Nav.Link as = {Link} to="/contact">Contact</Nav.Link>
-            <Nav.Link as = {Link} to="/product">Product Form</Nav.Link>
           </Nav>
             <Form inline>
               <Button variant="outline-success" onClick={handleShow}>

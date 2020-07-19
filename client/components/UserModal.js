@@ -5,8 +5,8 @@ import {
     Form
 } from 'react-bootstrap';
 
-import '../api';
 import { loginUser } from '../api';
+
 const token = localStorage.getItem('token');
 
 const UserModal = ({ show, setShow, setIsUserLoggedIn }) => {
@@ -18,26 +18,20 @@ const UserModal = ({ show, setShow, setIsUserLoggedIn }) => {
     const handleUsernameChange = event => setUsername(event.target.value)
     const handlePasswordChange = event => setPassword(event.target.value)
 
-    // POST API for login:
     const handleSubmit = (event) => {
         
         event.preventDefault();
-        
+
         console.log(`logging user`);
-        /*
 
-        const headers = {
-            "Content-Type":"application/json",
-            "Authorization":`Bearer ${token}`}
-
-        const data = loginUser(username, password, headers);  
-        console.log(data);
-        */
-        const data = true;
-        if (data) {
+        const data = loginUser({username, password});  
+      
+       if (data) {
             setIsUserLoggedIn(true); // set global state for isUserLoggedIn
-            setShow(false); // hide modal
-        }
+            setUsername("");
+            setPassword("");
+            setShow(false); 
+       }
     }
 
     return (

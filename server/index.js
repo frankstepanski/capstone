@@ -14,7 +14,7 @@ const { sync } = require("./db/index");
 const { seed } = require("./db/seed");
 
 const PORT = process.env.PORT || 3001;
-const FORCE = process.env.FORCE || false;
+const FORCE = process.env.FORCE || true;
 
 const server = express();
 
@@ -80,8 +80,8 @@ server.use(express.static(DIST_PATH));
 // images
 server.use('/assets',express.static(path.join(__dirname,'../assets')));
 
-// browser router fix for url browser refresh (all routes)
-["account", "cart", "shop", "blog", "about", "contact"].forEach((route) => {
+// browser router fix (manually entering route in browser)
+["account", "cart", "shop", "blog", "about", "contact", "product"].forEach((route) => {
   server.get(`/${route}`, (req, res) => {
     res.sendFile(path.join(__dirname, "../dist", "index.html"));
   });

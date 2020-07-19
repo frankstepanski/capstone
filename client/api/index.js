@@ -1,18 +1,16 @@
 import axios from "axios";
-
 // axios cheatsheet: https://kapeli.com/cheat_sheets/Axios.docset/Contents/Resources/Documents/index
 
 /* ******** user ******** */
 
-export async function loginUser(username, password, headers) {
+export async function loginUser({username, password}) {
     try {
-      const { data } = await axios.post("/api/users/login", {
+      const data  = await axios.post("/api/users/login", {
         username,
-        password,
-        headers
+        password
       });
       console.log(data);
-      localStorage.setItem("token", data.token);
+     //localStorage.setItem("token", data.token);
       return data;
     } catch (error) {
       throw error;
