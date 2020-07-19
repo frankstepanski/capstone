@@ -30,7 +30,7 @@ const sync = async (FORCE = false) => {
             password VARCHAR(255) UNIQUE NOT NULL,
             "firstName" VARCHAR(255) NOT NULL,
             "lastName" VARCHAR(255) NOT NULL,
-            email VARCHAR(255) NOT NULL,
+            email VARCHAR(255) UNIQUE NOT NULL,
             address VARCHAR(255) NOT NULL,
             admin BOOLEAN DEFAULT false,
             active BOOLEAN DEFAULT true
@@ -82,8 +82,6 @@ const sync = async (FORCE = false) => {
             );`
         );
     
-        // note: cart availabe only if user created; otherwise will in localstate
-        // need another column???
         await client.query(
             `CREATE TABLE IF NOT EXISTS carts (
                 id serial PRIMARY KEY,

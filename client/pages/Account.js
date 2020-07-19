@@ -2,7 +2,7 @@ import React from "react";
 
 import "./Account.css";
 
-const Account = ({user, orders}) => {
+const Account = ({isLoggenIn, setIsLoggedIn, user, orders}) => {
     return (
         <div className="account">
         <h2>Account</h2>

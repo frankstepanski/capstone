@@ -4,14 +4,16 @@ import axios from "axios";
 
 /* ******** user ******** */
 
-export async function loginUser(username, password) {
+export async function loginUser(username, password, headers) {
     try {
       const { data } = await axios.post("/api/users/login", {
         username,
         password,
+        headers
       });
       console.log(data);
-      return data;coeeco
+      localStorage.setItem("token", data.token);
+      return data;
     } catch (error) {
       throw error;
     }
@@ -22,11 +24,13 @@ export async function registerUser(username, password, firstName, lastName, addr
       const { data } = await axios.post("/api/users/register", {
           username,
           password,
+          email,
           firstName,
           lastName,
           address
       });
       console.log(data);
+      localStorage.setItem("token", data.token);
       return data;
     } catch (error) {
       throw error;
@@ -57,7 +61,16 @@ export async function searchProducts(searchTerm) {
 
 /* ******** cart ******** */
 
-// userId maybe null, productId will get us product info, and quantity (will UI only add one at a time?)
+export async function getCart() {
+  try {
+    const { data } = await axios.get("/api/cart");
+    console.log("cart:", data);
+    return data;
+  } catch (error) {
+    throw error;
+  }
+}
+
 export async function addToCart(userId, productId, quantity) {
   try {
     const { data } = await axios.post('/api/cart', {userId, productId, quantity});

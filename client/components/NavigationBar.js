@@ -1,48 +1,34 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from 'react-router-dom';
-import { Nav, Navbar, Form, FormControl, Button } from 'react-bootstrap';
+import { Nav, Navbar, Button } from 'react-bootstrap';
 
-const NavigationBar = ({ setResults }) => {
+const NavigationBar = ({ setShow }) => {
 
-    const handleInputChange= async(e)=>{
-
-      const searchValue = e.target.value;
+  const handleShow = (event) => {
   
-      let searchData={};
-      searchData.value=searchValue;
-    
-      setSearchTerm(searchData);
-    }
-
-    const handleSubmit = (event) => {
-      event.preventDefault();
-      
-      // const searchResult = axios call   
-      // setResults(searchResult) <-- array of products (App level gets it!!!)
-    
-    }
+    event.preventDefault();
+    setShow(true);
+  }
 
   return (
-
+    <>
     <Navbar expand ="lg" bg="light" variant="light">
     <Navbar.Brand href="/">afc Skate</Navbar.Brand>
     <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="mr-auto">
-            <Nav.Link as = {Link} to="/account">Account</Nav.Link>
+            <Nav.Link onClick={ handleShow } >Account</Nav.Link>
             <Nav.Link as = {Link} to="/cart">Cart</Nav.Link>
             <Nav.Link as = {Link} to="/shop">Shop</Nav.Link>
             <Nav.Link as = {Link} to="/blog">Blog</Nav.Link>
             <Nav.Link as = {Link} to="/about">About</Nav.Link>
             <Nav.Link as = {Link} to="/contact">Contact</Nav.Link>
+            <Button variant="primary" onClick={handleShow}>Login</Button>
           </Nav>
-          <Form inline onSubmit={handleSubmit}>
-            <FormControl type="text" placeholder="Search" className="mr-sm-2" onChange={handleInputChange}/>
-              <Button variant="outline-primary">Search</Button>
-          </Form>
         </Navbar.Collapse>
     </Navbar>
 
+    </>
   );
 };
 
