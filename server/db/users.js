@@ -16,18 +16,17 @@ const createUser = async ({
     lastName,
     email,
     address,
-    admin = false,
-    active
+    admin = false
 }) => {
   
     try {
         const pw = await hashStr(password)
         const { rows: [ users ] } = await client.query(`
-            INSERT INTO users(username, password, "firstName", "lastName", email, address, admin, active)
-            VALUES ($1,$2,$3,$4,$5,$6,$7,$8)
+            INSERT INTO users(username, password, "firstName", "lastName", email, address, admin)
+            VALUES ($1,$2,$3,$4,$5,$6,$7)
             ON CONFLICT (username) DO NOTHING
             RETURNING *;
-            `, [username, pw, firstName, lastName, email, address, admin, active]
+            `, [username, pw, firstName, lastName, email, address, admin]
         );
 
         return users;
