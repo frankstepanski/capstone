@@ -47,11 +47,11 @@ apiRouter.use('/products', productsRouter);
 const usersRouter = require('./users');
 apiRouter.use('/users', usersRouter);
 
-const cartsRouter = require('./cart_products');
-apiRouter.use('/cart_products', cartsRouter);
+const cartsRouter = require('./carts');
+apiRouter.use('/carts', cartsRouter);
 
-const ordersRouter = require('./orders');
-apiRouter.use('/orders', ordersRouter);
+const cartProductsRouter = require('./cart_products');
+apiRouter.use('/cart_products', cartProductsRouter);
 
 apiRouter.use((error, req, res, next) => {
     res.send(error);

@@ -206,18 +206,9 @@ async function createInitialCarts() {
 
 }
 
-async function createInitialOrders() {
 
-    /*
-        table schema:
-
-        "userId" INTEGER REFERENCES users(id),
-        products INTEGER [] NOT NULL,
-        quantity INTEGER NOT NULL,
-        "orderDate" DATE NOT NULL,
-        "orderTotal" FLOAT(2) NOT NULL,
-        "shippingAddress" VARCHAR(255) NOT NULL    
-    */
+// commenting out due to ongoing schema changes
+/* async function createInitialOrders() {
 
     try {
 
@@ -244,21 +235,24 @@ async function createInitialOrders() {
         console.error("Error creating initial orders. Error: ", error);
         throw error;
     }
-
-}
+} */
 
 const seed = async (FORCE = false) => {
     
     if (FORCE) {
 
         try {
-        
+        console.log(`Seeding DB`);
         await createInitialUsers();
+        console.log(`>Users Created`);
         await createInitialCategories();
+        console.log(`>>Categoires created`);
         await createInitialProducts();
+        console.log(`>>>products created`);
         await createInitialReviews();
+        console.log(`>>>>Reviews created`);
         //await createInitialCarts();
-        await createInitialOrders();
+        //await createInitialOrders();
         
         } catch(error) {
             console.error("Error seeding. Error: ", error);
