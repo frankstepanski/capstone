@@ -48,7 +48,7 @@ const sync = async (FORCE = false) => {
 
         await client.query(
             `CREATE TABLE IF NOT EXISTS products (
-                id SERIAL PRIMARY KEY,
+                id SERIAL UNIQUE PRIMARY KEY,
                 name VARCHAR(255) NOT NULL,
                 description TEXT NOT NULL,
                 price FLOAT(2) NOT NULL,
@@ -90,15 +90,9 @@ const sync = async (FORCE = false) => {
         await client.query(`
         CREATE TABLE IF NOT EXISTS cart_products(
             id SERIAL PRIMARY KEY,
-<<<<<<< HEAD
-            "cartId" INTEGER REFERENCES carts(id) NOT NULL,
-            "productId" INTEGER REFERENCES products(id) NOT NULL,
-            total FLOAT(2) NOT NULL
-=======
             "userId" INTEGER REFERENCES users(id) NOT NULL,
             "productId" INTEGER REFERENCES products(id) NOT NULL,
             quantity INTEGER NOT NULL
->>>>>>> de43b5ef710d377b7938c5b4a6ac32ce61f5b30d
             );`
         );
     
@@ -109,7 +103,7 @@ const sync = async (FORCE = false) => {
           `CREATE TABLE IF NOT EXISTS orders (
             id serial PRIMARY KEY,
             "userId" INTEGER REFERENCES users(id),
-            products INTEGER REFERENCES products(name),
+            products VARCHAR(255) [],
             "orderDate" DATE NOT NULL,
             "orderTotal" FLOAT(2) REFERENCES orders(total),
             "shippingAddress" VARCHAR(255) NOT NULL            
@@ -131,8 +125,8 @@ const sync = async (FORCE = false) => {
             CREATE TABLE IF NOT EXISTS posts(
                 id SERIAL PRIMARY KEY,
                 date DATE DEFAULT CURRENT_DATE,
-                title VARCHAR(50),
-                "blogText" TEXT
+                title VARCHAR(50) NOT NULL,
+                "blogText" TEXT NOT NULL
             );`
         );
 
@@ -142,7 +136,8 @@ const sync = async (FORCE = false) => {
              id SERIAL PRIMARY KEY,
              name VARCHAR(255) NOT NULL,
              email VARCHAR(255) NOT NULL,
-             message TEXT
+             message TEXT NOT NULL,
+             resolved BOOLEAN DEFAULT false
          );`
      );
 

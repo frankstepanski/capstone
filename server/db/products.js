@@ -48,7 +48,7 @@ const updateProduct = async (id, fields = {} ) => {
         const { rows: [ product ] }= await client.query(`
           UPDATE products
           SET ${ setString }
-          WHERE id=${ id }
+          WHERE id= $1
           RETURNING *;
         `, Object.values(fields));
     
@@ -77,7 +77,7 @@ const getProductById = async(productId) => {
     try{ 
         const { rows: [product] } = await client.query(`
         SELECT * FROM products 
-        WHERE id=${ productId }
+        WHERE products.id =$1
         `);
 
      if (!product) {
@@ -156,7 +156,7 @@ const activateFeaturedProduct = async (product) => {
         
        return rows
      }catch(error){
-         console.error("Failed to deactivate product", error)
+         console.error("Failed to activate featured product", error)
      }
 }
 

@@ -53,7 +53,7 @@ const removeProductFromCart = async (cartProductId) => {
 
     try{
 
-        const cartProduct = await getCartProductById(cartProductId);
+        // const cartProduct = await getCartProductById(cartProductId);
 
         if(cartProduct){
             const { rows: [ deletedCartProduct ] } = await client.query(`
@@ -117,7 +117,7 @@ module.exports = {
     addProductToCart,
     removeProductFromCart,
     getCartProductById,
-    getProductsByCartId,
+    // getProductsByCartId,
     getCartProductsByProductId,
     updateCartProductQuantity,
     getCart

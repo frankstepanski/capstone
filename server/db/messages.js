@@ -12,17 +12,16 @@ async function getAllMessages() {
 const createMessage = async ({
     name,
     email, 
-    phone,
     message,
-
+    resolved
 }) => {
 
     try{
     const { rows: [ contact_message ] } = await client.query(
-        `INSERT INTO messages (name, email, phone, message)
-        VALUES($1,$2,$3,$4)
+        `INSERT INTO messages (name, email, message, resolved)
+        VALUES($1,$2,$3, $4)
         RETURNING *;
-        `, [name,email,phone,message]
+        `, [name,email,message, resolved]
     );
     console.log('>>>>>>>', contact_message)
         return message;
@@ -32,7 +31,25 @@ const createMessage = async ({
   }
 }
 
+const deactivateMessage = async ({messageId}) => {
+    try {
+        const { rows } = await client.query(`
+        UPDATE messages
+        SET resolved = true
+        WHERE id = $1
+        RETURNING * ; 
+        `, [messageId]);
+
+        return rows
+    }catch(error){
+        console.error("Failed to deactivate message", error)
+    }
+}
+
+
+
 module.exports = {
     getAllMessages,
-    createMessage
+    createMessage,
+    deactivateMessage,
 }
