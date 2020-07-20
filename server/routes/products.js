@@ -49,19 +49,22 @@ productsRouter.post('/create', requireUser, async ( req, res, next ) => {
 
         console.log('Product Post:' )
 
-        if (!name || !description || !price || !stock || !active|| !featured|| !categoryId) {
-            next ({
-                name: 'Missing Item Name',
-                description: 'Missing Item Description',
-                price: 'Missing Item Price',
-                stock: 'Missing if Item is in Stock',
-                active:'Missing if the Item is active',
-                featured:'Missing if Item is Featured',
-                categoryId: 'Missing the Category Id Number'
-            })
-        }
-
         try {
+            const requiredParams = {            
+                name,
+                description,
+                price,
+                stock,
+                thumbnail,
+                image,
+                categoryId
+            };
+            for (const [key, value] of Object.entries(requiredParams)) {
+                if (!value) {
+                    throw new Error(`Missing data at position '${key}'`)
+                }
+            }
+
             const productItems = await getProductByName({ name });
 
             if (productItems) {
@@ -75,6 +78,8 @@ productsRouter.post('/create', requireUser, async ( req, res, next ) => {
                     description,
                     price,
                     stock,
+                    thumbnail,
+                    image,
                     featured,
                     categoryId, 
                 }) 

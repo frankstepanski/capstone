@@ -103,7 +103,7 @@ const createCart = async ({userId}) => {
             return openCart;
         }
     } catch (e) {
-        console.error(`Error creating cart`, e)
+        console.error(`Error creating cart`)
         throw e;
     }
 }
@@ -117,7 +117,7 @@ const closeCart = async ({cartId, shippingAddress, userId}) => {
         const {products: cartProducts} = await getOpenCartByUserId({userId});
         console.log(`cartProducts: `, cartProducts);
         if (cartProducts.length < 1) {
-            return null;
+            throw new Error("Empty carts cannot be checked out")
         }
         //Update and close cart
         const { rows: [closedCart] } = await client.query(`

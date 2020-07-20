@@ -21,14 +21,9 @@ cartsRouter.get('/', requireUser, async function( req, res, next ){
 
     try{
         const carts = await getCartsByUserID({userId})
-        if(carts){
-            res.send({ carts });
-        } else {
-            res.send({message: 'user has no carts'})
-        }
+        res.send({ carts });
     }catch(error){
-    console.error(error)
-    next()
+        next(error)
     }
 });
 
@@ -38,14 +33,10 @@ cartsRouter.get('/open', requireUser, async function( req, res, next ){
 
     try {
         const cart = await getOpenCartByUserId({userId})
-        if(cart){
-            res.send({ cart })
-        } else {
-            res.send({status: 'failed', message: 'User has no open carts, try opening a new one with the POST /create route'})
-        }
+        res.send({ cart })
+
     } catch(e){
-    console.error(e)
-    next(e)
+        next(e)
     }
 });
 
@@ -56,12 +47,9 @@ cartsRouter.post('/create', requireUser, async function( req, res, next ){
 
     try {
         const newCart = await createCart({userId})
-        if (newCart) {
-            res.send({ message:'New cart created: ', cart: newCart} )
-        }
-    } catch(error) {
-        console.error(error)
-        next(error)    
+        res.send({ message:'New cart created: ', cart: newCart} )
+    } catch(e) {
+        next(e)    
     };
 });
 
@@ -100,13 +88,9 @@ cartsRouter.patch('/checkout', requireUser, async (req, res, next) => {
             });
         } else {
             console.log('Database is out of sync or user is hacking');
-            res.send({
-                status: 'failed', 
-                message: `The cart with the id of '${cartId}' is not your cart.`
-            });
+            throw new ReferenceError('[Request Header] Authorization Token invalid for this request')
         }
     } catch (e) {
-        console.error(e);
         next(e);
     }
 })
