@@ -2,16 +2,17 @@ import React, { useState } from "react";
 import { Link } from 'react-router-dom';
 import { Nav, Navbar, Form, Button } from 'react-bootstrap';
 
-const NavigationBar = ({ setShow, isUserLoggedIn, setIsUserLoggedIn, user, setUser }) => {
+const NavigationBar = ({ setShow, isUserLoggedIn, setIsUserLoggedIn, setUser }) => {
 
   const handleShow = (event) => {
     
     event.preventDefault();
 
     if (isUserLoggedIn) {
-         // logout user, not showing modal
+      // logout user, not showing modal
          setIsUserLoggedIn(false);
-         setUser({});
+      // set user object to {}?
+      // setUser({});
     } else {
       setShow(true);
     }
@@ -33,12 +34,13 @@ const NavigationBar = ({ setShow, isUserLoggedIn, setIsUserLoggedIn, user, setUs
             <Nav.Link as = {Link} to="/blog">Blog</Nav.Link>
             <Nav.Link as = {Link} to="/about">About</Nav.Link>
             <Nav.Link as = {Link} to="/contact">Contact</Nav.Link>
+            <Nav.Link as = {Link} to="/product">Product Form</Nav.Link>
           </Nav>
             <Form inline>
               <Button variant="outline-success" onClick={handleShow}>
                 { isUserLoggedIn
                 ? 'Logout'
-                : 'Login/Register'
+                : 'Login'
                 }
                 </Button>
               </Form>

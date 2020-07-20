@@ -80,8 +80,8 @@ server.use(express.static(DIST_PATH));
 // images
 server.use('/assets',express.static(path.join(__dirname,'../assets')));
 
-// browser router fix (manually entering route in browser)
-["account", "cart", "shop", "blog", "about", "contact", "product"].forEach((route) => {
+// browser router fix for url browser refresh (all routes)
+["account", "cart", "shop", "blog", "about", "contact"].forEach((route) => {
   server.get(`/${route}`, (req, res) => {
     res.sendFile(path.join(__dirname, "../dist", "index.html"));
   });

@@ -17,7 +17,6 @@ const sync = async (FORCE = false) => {
                 DROP TABLE IF EXISTS products;
                 DROP TABLE IF EXISTS categories;
                 DROP TABLE IF EXISTS users;
-            
             `);
             console.log(`Tables Dropped`);
             // Did we get rid of the product_images table on purpose?
