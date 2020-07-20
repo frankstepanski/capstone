@@ -8,7 +8,19 @@ function requireUser(req, res, next) {
   
     next();
 }
+
+function requireAdminUser (req, res, next) {
+  if (!req.user.admin) {
+    next({
+      name: "InsufficientPrivileges",
+      message: "Only admin users can perform this action"
+    });
+  }
+
+  next();
+}
   
 module.exports = {
-    requireUser
+    requireUser,
+    requireAdminUser
 }

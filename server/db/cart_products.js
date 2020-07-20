@@ -16,7 +16,6 @@ const getCartProductsByCartId = async ({cartId}) => {
     }
 }
 
-
 const addProductToCart = async ({productId, cartId, purchasePrice, quantity}) => {
 
     try{

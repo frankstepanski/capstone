@@ -54,10 +54,13 @@ const cartProductsRouter = require('./cart_products');
 apiRouter.use('/cart_products', cartProductsRouter);
 
 const postsRouter = require('./posts');
-apiRouter.use('/posts', postsRouter)
+apiRouter.use('/posts', postsRouter);
 
 const messagesRouter = require('./messages');
-apiRouter.use('/messages', messagesRouter)
+apiRouter.use('/messages', messagesRouter);
+
+const reviewsRouter = require('./reviews');
+apiRouter.use('/reviews', reviewsRouter);
 
 apiRouter.use((error, req, res, next) => {
     res.send(error);

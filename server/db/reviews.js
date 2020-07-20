@@ -1,5 +1,46 @@
 const { client } = require('./client');
 
+const { getClosedCartsByUserID } = require('./carts');
+
+
+const getReviewsByUserId = async ({userId}) => {
+    try {
+        const {rows: reviews} = await client.query(`
+            SELECT * FROM reviews
+            WHERE "userId"=$1;
+        `, [userId]);
+
+        return reviews;
+    } catch (e) {
+        throw e;
+    }
+}
+
+//returns boolean if the user has purchased product
+const userHasPurchased = async ({userId, productId}) => {
+    try {
+        const closedCarts = await getClosedCartsByUserID({userId});
+        console.log(closedCarts);
+
+        const productsPurchased = closedCarts.filter((cart) => {
+            const products = cart.products.filter((product) => {
+                const { productId: pid} = product;
+                if (pid === productId) {
+                    return product;
+                }
+            });
+            console.log('products: ', products.length);
+            return products.length;
+        });
+
+        return Boolean(productsPurchased.length);
+    } catch (e) {
+        throw e;
+    }
+}
+
+
+// works
 const createReview = async ({
     productId,
     userId,
@@ -21,19 +62,23 @@ const createReview = async ({
     }
 }
 
-const deleteReview = async (reviewId) => {
-    
+const deleteReview = async ({reviewId}) => {
     try{
+        const { rows: removedItems } = await client.query(`
+            DELETE FROM reviews
+            WHERE id=$1
+            RETURNING *;
+        `, [reviewId]);
 
-       
+        return removedItems;
     }
     catch(error){
-        console.error(`>>>>>deleteReviews error. ${ error }`)
+        console.error(`Error deleting review: ${ error }`)
         throw error;
     }
 }
 
-const updateReview = async (reviewId, fields = {}) => {
+const updateReview = async ({reviewId, fields}) => {
 
     const setString = Object.keys(fields).map(
         (key, index) => `"${ key }"=$${ index + 1 }`
@@ -62,16 +107,13 @@ const updateReview = async (reviewId, fields = {}) => {
 }
 
 const getReviewById = async (reviewId) => {
-
     try{
-
         const { rows: [review] } = await client.query(`
             SELECT * FROM reviews
             WHERE id=$1;
         `, [ reviewId ]);
         
-        return reviewId;
-
+        return review;
     }
     catch(error){
         console.error(`getREviewById error. ${ error }`)
@@ -84,10 +126,10 @@ const getReviewsByProductId = async(productId) => {
 
     try {
 
-        const { rows: [reviews] } = await client.query(
-            `SELECT * FROM reviews
-            WHERE "productId"=$1`
-        , [productId]);
+        const { rows: [reviews] } = await client.query(`
+            SELECT * FROM reviews
+            WHERE "productId"=$1;
+        `, [productId]);
 
         return reviews;
 
@@ -99,29 +141,12 @@ const getReviewsByProductId = async(productId) => {
 
 }
 
-const getReviewsByUserId = async(userId) => {
-
-    try {
-        const { rows: reviews } = await client.query(
-            `SELECT * FROM reviews
-            WHERE "userId"=$1`
-        , [userId]);
-
-        return reviews;
-
-    }
-    catch(error){
-        console.error(`getReviewsByUserId error. ${ error }`)
-        throw error;
-    }
-
-}
-
 module.exports = {
     createReview,
+    userHasPurchased,
     deleteReview,
     updateReview,
     getReviewsByProductId,
+    getReviewById,
     getReviewsByUserId,
-    getReviewById
 }

@@ -1,6 +1,6 @@
 const express = require('express');
 const cartsRouter = express.Router();
-const {requireUser} = require('./utils')
+const { requireUser } = require('./utils')
 
 const { 
     getCartsByUserID, // comes from db/carts
@@ -76,18 +76,25 @@ cartsRouter.post('/create', requireUser, async function( req, res, next ){
 
 cartsRouter.patch('/checkout', requireUser, async (req, res, next) => {
     const { id: userId } = req.user;
-    const { shippingAddress, cartId } = req.body
+    const { shippingAddress } = req.body
     try {
         const userCart = await getOpenCartByUserId({userId});
 
         if (userCart.userId === userId) {
-            const {closedCart, newCart, newProductStock} = await closeCart({cartId, shippingAddress, userId});
-            const total = await getGrandTotal({cartId})
+            // calculate grand total:
+            const total = await getGrandTotal({cartId: userCart.id});
+            //Close current cart:
+            const {closedCart, newCart, newProductStock} = await closeCart({
+                cartId: userCart.id, 
+                shippingAddress, 
+                userId
+            });
+
+            closedCart.total = total
             res.send({
                 status: "success", 
                 message: "Checkout successful", 
                 order: closedCart,
-                total,
                 newCart,
                 newProductStock
             });

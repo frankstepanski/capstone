@@ -1,7 +1,17 @@
 const express = require('express');
 const productsRouter = express.Router();
 
-const { getAllProducts, createProduct, getProductById, updateProduct, getProductByName , deactivateProduct, activateFeaturedProduct, getFeaturedProducts, getProductStock} = require('../db/products.js')
+const { getAllProducts, 
+    createProduct, 
+    getProductById, 
+    updateProduct, 
+    getProductByName , 
+    deactivateProduct, 
+    activateFeaturedProduct, 
+    getFeaturedProducts, 
+    getProductStock
+} = require('../db/products.js')
+
 const { requireUser } = require('./utils')
 
 productsRouter.use((req, res, next) => {
