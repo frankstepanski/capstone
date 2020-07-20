@@ -58,25 +58,41 @@ const updateProduct = async (id, fields = {} ) => {
 }
 
 const getAllProducts = async () => {
-
-   try{
-    const { rows } = await client.query(`
-    SELECT * FROM products;
-    `);
-    
-    return rows;
+    try {
+        const { rows } = await client.query(`
+            SELECT
+            p.*,
+            CASE WHEN count(r) = 0 THEN ARRAY[]::json[] ELSE array_agg(r.review) END AS reviews
+            FROM products p
+            LEFT OUTER JOIN (
+                SELECT r1."productId", json_build_object('id', r1.id, 'userId', r1."userId", 'title', r1.title,'rating', r1.rating) AS review
+                FROM reviews AS r1
+            ) r 
+                ON p.id = r."productId"
+            GROUP BY p.id;
+        `);
+        
+        return rows;
 
    } catch(error){
        throw error;
    }
-    
 }
 
 const getProductById = async(productId) => {
-    try{ 
+    try { 
         const { rows: [product] } = await client.query(`
-        SELECT * FROM products 
-        WHERE products.id =$1
+            SELECT
+            p.*,
+            CASE WHEN count(r) = 0 THEN ARRAY[]::json[] ELSE array_agg(r.review) END AS reviews
+            FROM products p
+            LEFT OUTER JOIN (
+                SELECT r1."productId", json_build_object('id', r1.id, 'userId', r1."userId", 'title', r1.title,'rating', r1.rating) AS review
+                FROM reviews AS r1
+            ) r 
+                ON p.id = r."productId"
+            WHERE p.id = $1
+            GROUP BY p.id;
         `, [productId]);
 
         if (!product) {
@@ -143,8 +159,9 @@ const updateProductQuantity = async ({productId, quantity}) => {
         const {rows: [updatedProduct]} = await client.query(`
             UPDATE products
             SET stock=$1
+            WHERE id=$2
             RETURNING *;
-        `, [newStock]);
+        `, [newStock, productId]);
 
         return updatedProduct;
     } catch (e) {

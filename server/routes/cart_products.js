@@ -6,7 +6,8 @@ const {
     updateCartProductQuantity, // comes from db/cart_products 
     removeProductFromCart, // comes from db/cart_products
     getProductById, // comes from db/products
-    clearCart // from db/cart_products
+    clearCart, // from db/cart_products
+    getOpenCartByUserId // from db/carts
 } = require('../db');
 
 cartProductsRouter.use((req, res, next) => {
@@ -18,16 +19,19 @@ cartProductsRouter.use((req, res, next) => {
 cartProductsRouter.post('/add', requireUser, async function (req, res, next){
     const { 
         productId, 
-        cartId, 
         quantity 
     } = req.body;
-
-    const { price: purchasePrice} = await getProductById(productId)
-    
+    const {id: userId} = req.user;
     try {
-        const newCartItem = await addProductToCart({ productId, cartId, purchasePrice, quantity})
-        res.send({ status: "success", message:'Item added to cart', newCartItem })
-        
+        // get cartId:
+        const {id: cartId} = await getOpenCartByUserId({userId});
+        // get current purchase price:
+        const { price: purchasePrice} = await getProductById(productId);
+        // add item:
+        const newCartItem = await addProductToCart({ productId, cartId, purchasePrice, quantity});
+        // get updated cart object:
+        const updatedCart = await getOpenCartByUserId({userId});
+        res.send({ status: "success", message:'Item added to cart', updatedCart });        
     } catch(error) {
         console.error(error)
         next();
@@ -38,14 +42,17 @@ cartProductsRouter.post('/add', requireUser, async function (req, res, next){
 cartProductsRouter.patch('/:cartProductId', async function (req, res, next){
     const { cartProductId } = req.params
     const { quantity } = req.body
+    const { id: userId } = req.user
     
     try{
         const updatedCartProduct = await updateCartProductQuantity({cartProductId, quantity})
         if(updatedCartProduct){
+            const updatedCart = await getOpenCartByUserId({userId});
+
             res.send({ 
                 status: 'success', 
                 message: 'Quantity updated', 
-                item: updatedCartProduct
+                updatedCart
             })
         } else {
             res.send({status: 'failed', error: 'stockExceeded', message: 'There are not enough products to fulfill the request'})
@@ -57,10 +64,10 @@ cartProductsRouter.patch('/:cartProductId', async function (req, res, next){
 });
 
 // remove item from cart
-cartProductsRouter.delete('/:cartProductId', async function ( req, res, next ){
+cartProductsRouter.delete('/:cartProductId', requireUser, async function ( req, res, next ){
     const { cartProductId } = req.params;
 
-    try{
+    try {
         const removedItem = await removeProductFromCart({cartProductId})
         if (removedItem){
             res.send({ status: 'success', message:'Item deleted.', removed: removedItem })
@@ -76,13 +83,18 @@ cartProductsRouter.delete('/:cartProductId', async function ( req, res, next ){
 });
 
 //clear cart:
-cartProductsRouter.delete('/clear', async function ( req, res, next ){
-    const { cartId } = req.body;
+cartProductsRouter.delete('/clear', requireUser, async function ( req, res, next ){
+    const { id: userId } = req.user;
 
     try{
+        //Get cartId:
+        const { id: cartId} = await getOpenCartByUserId({userId});
+        //Remove all items from cart:
         const removedItems = await clearCart({cartId})
+        //Get updated/ emptyCart:
+        const emptyCart = await getOpenCartByUserId({userId});
         if (removedItems){
-            res.send({ status: 'success', message:'Cart cleared.', removed: removedItems })
+            res.send({ status: 'success', message:'Cart cleared.', emptyCart })
         } else {
             res.send({ 
                 status: 'failed', 

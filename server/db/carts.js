@@ -60,6 +60,31 @@ const getOpenCartByUserId = async ({userId}) => {
     }
 }
 
+//Get only closed carts
+const getClosedCartsByUserID = async ({userId}) => {
+    try {
+        const { rows: carts } = await client.query(`
+            SELECT 
+            c.*,
+            CASE WHEN count(cp) = 0 THEN ARRAY[]::json[] ELSE array_agg(cp.product) END AS products
+            FROM carts c
+            LEFT OUTER JOIN (
+                SELECT cp1."cartId", json_build_object('id', cp1.id, 'productId', cp1."productId", 'purchasePrice', cp1."purchasePrice",'quantity', cp1.quantity) AS product
+                FROM cart_products AS cp1
+            ) cp 
+                ON c.id = cp."cartId"
+            WHERE "userId"= $1
+            AND purchased=TRUE
+            GROUP BY c.id;
+        `, [userId]);
+
+        return carts;
+    } catch (e) {
+        console.error(`error getting cart by userId`, e);
+        throw (e);
+    }
+}
+
 // Create cart:
 const createCart = async ({userId}) => {
     try {
@@ -78,7 +103,7 @@ const createCart = async ({userId}) => {
             return openCart;
         }
     } catch (e) {
-        console.error(`Error creating cart`, e)
+        console.error(`Error creating cart`)
         throw e;
     }
 }
@@ -89,9 +114,11 @@ const closeCart = async ({cartId, shippingAddress, userId}) => {
 
     try {
         // if the cart is still empty then the user should not be able to checkout
-        const { products } = await getOpenCartByUserId({userId});
-        if (!products) return null;
-
+        const {products: cartProducts} = await getOpenCartByUserId({userId});
+        console.log(`cartProducts: `, cartProducts);
+        if (cartProducts.length < 1) {
+            throw new Error("Empty carts cannot be checked out")
+        }
         //Update and close cart
         const { rows: [closedCart] } = await client.query(`
             UPDATE carts
@@ -103,7 +130,6 @@ const closeCart = async ({cartId, shippingAddress, userId}) => {
         `, [ shippingAddress, cartId])
 
         //Update stock:
-        const cartProducts = await getCartProductsByCartId({cartId});
         console.log(`> CART PRODUCTS: `, cartProducts)
         const prodPromises = cartProducts.map(async (item) => {
             const updatedProd = await updateProductQuantity({productId: item.productId, quantity: item.quantity});
@@ -126,6 +152,7 @@ const closeCart = async ({cartId, shippingAddress, userId}) => {
 module.exports = {
     getCartsByUserID,
     getOpenCartByUserId,
+    getClosedCartsByUserID,
     createCart,
     closeCart
 }

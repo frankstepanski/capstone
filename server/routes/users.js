@@ -40,21 +40,27 @@ usersRouter.post('/register', async (req, res, next) => {
         address,
         admin 
     } = req.body;
-    console.log(`> UN: ${username}`)
-
-    if (!username || !password || !firstName || !lastName || !email || !address){
-        next({
-            name: `MissingRequiredFields`,
-            message: `Complete all required fields to create and account.`
-        })
-    } else if (password.length < 8) {
-        next({
-            name: `invalidPassword`,
-            message: `Your password must be 8 characters or more`
-        })
-    }
+    console.log(`> UN: ${username}`);
 
     try {
+        if (password.length < 8) {
+            throw new Error(`Password must be at least 8 characters`)
+        }
+
+        const requiredParams = {            
+            username, 
+            password, 
+            firstName, 
+            lastName, 
+            email,
+            address 
+        };
+        for (const [key, value] of Object.entries(requiredParams)) {
+            if (!value) {
+                throw new Error(`Missing data at position '${key}'`)
+            }
+        }
+
         const _user = await getUserByUsername({username});
         console.log(_user)
 
@@ -94,11 +100,12 @@ usersRouter.post('/login', async (req, res, next) => {
     try {
         const user = await authenticate({username, password});
         console.log(`>>> User: `, user)
-        const { id, username: un, admin } = user;
+        const { id, username: un } = user;
+        delete user.password;
 
         if (user) {
             const token = jwt.sign({id, un}, SECRET, {expiresIn: '1w'});
-            res.send({ status: "success", message: "you're logged in!", token, admin});
+            res.send({ status: "success", message: "you're logged in!", token, user});
         } else {
             console.log('user could not be logged in')
             next({ 
