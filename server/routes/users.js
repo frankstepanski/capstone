@@ -98,7 +98,7 @@ usersRouter.post('/login', async (req, res, next) => {
 
         if (user) {
             const token = jwt.sign({id, un}, SECRET, {expiresIn: '1w'});
-            res.send({ status: "success", message: "you're logged in!", token, admin});
+            res.send({ status: "success", message: "you're logged in!", token, user});
         } else {
             console.log('user could not be logged in')
             next({ 

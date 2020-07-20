@@ -2,14 +2,14 @@ import React, { useState } from "react";
 import { Link } from 'react-router-dom';
 import { Nav, Navbar, Form, Button } from 'react-bootstrap';
 
-const NavigationBar = ({ setShow, isUserLoggedIn, setIsUserLoggedIn, setUser }) => {
+const NavigationBar = ({ setShow, isUserLoggedIn, setIsUserLoggedIn, user, setUser }) => {
 
   const handleShow = (event) => {
     
     event.preventDefault();
 
     if (isUserLoggedIn) {
-      // logout user, not showing modal
+         // logout user, not showing modal
          setIsUserLoggedIn(false);
          setUser({});
     } else {
@@ -38,7 +38,7 @@ const NavigationBar = ({ setShow, isUserLoggedIn, setIsUserLoggedIn, setUser }) 
               <Button variant="outline-success" onClick={handleShow}>
                 { isUserLoggedIn
                 ? 'Logout'
-                : 'Login'
+                : 'Login/Register'
                 }
                 </Button>
               </Form>

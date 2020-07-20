@@ -25,22 +25,24 @@ const App = () => {
     return (
         <div className = "container">
           <UserModal 
-            show={show} 
+            show = {show} 
             setShow = { setShow } 
             setIsUserLoggedIn = { setIsUserLoggedIn } 
+            user = { user }
             setUser = {setUser} 
           /> 
           <NavBar 
             setShow = { setShow } 
             isUserLoggedIn = { isUserLoggedIn } 
             setIsUserLoggedIn = { setIsUserLoggedIn } 
-            setUser = {setUser} 
+            user = { user }
+            setUser = { setUser } 
           /> 
            <Switch>
-              <Route exact path = "/" component ={Home} />
+              <Route exact path = "/" component = { Home } />
               { 
               
-                Object.keys(user).length && <Route path = "/account" render = {() => ( 
+              isUserLoggedIn && <Route path = "/account" render = {() => ( 
                           <Account 
                             user = { user } 
                           /> )} 

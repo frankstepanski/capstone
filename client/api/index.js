@@ -5,12 +5,10 @@ import axios from "axios";
 
 export async function loginUser({username, password}) {
     try {
-      const data  = await axios.post("/api/users/login", {
+      const { data }   = await axios.post("/api/users/login", {
         username,
         password
       });
-      console.log(data);
-     //localStorage.setItem("token", data.token);
       return data;
     } catch (error) {
       throw error;
