@@ -1,77 +1,33 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from "react";
 import {
-    Modal as Mod,
-    Button,
-    Form
+    Modal as Mod, Tab, Tabs
 } from 'react-bootstrap';
 
-import '../api';
-import { loginUser } from '../api';
-const token = localStorage.getItem('token');
+import Login from './Login';
+import Register from './Register';
 
-const UserModal = ({ show, setShow, setIsUserLoggedIn }) => {
-
+const UserModal = ({ show, setShow, setIsUserLoggedIn, user, setUser }) => {
+    
+    const [key, setKey] = useState('login'); // tab state
+  console.log("gg");
     const handleClose = () => setShow(false);
-    const [username, setUsername] = useState("")
-    const [password, setPassword] = useState("")
-
-    const handleUsernameChange = event => setUsername(event.target.value)
-    const handlePasswordChange = event => setPassword(event.target.value)
-
-    // POST API for login:
-    const handleSubmit = (event) => {
-        
-        event.preventDefault();
-        
-        console.log(`logging user`);
-        /*
-
-        const headers = {
-            "Content-Type":"application/json",
-            "Authorization":`Bearer ${token}`}
-
-        const data = loginUser(username, password, headers);  
-        console.log(data);
-        */
-        const data = true;
-        if (data) {
-            setIsUserLoggedIn(true); // set global state for isUserLoggedIn
-            setShow(false); // hide modal
-        }
-    }
 
     return (
         <Mod show={show} onHide={handleClose}>
-            <Mod.Header closeButton>
-                <Mod.Title>Login</Mod.Title>
-            </Mod.Header>
-            <Mod.Body>
-            <Form>
-                <Form.Group>
-                    <Form.Label>User Name:</Form.Label>
-                    <Form.Control 
-                      placeholder="Enter username"
-                      onChange={handleUsernameChange}
-                      value={username}
-                    />
-                </Form.Group>
-                <Form.Group controlId="formBasicPassword">
-                    <Form.Label>Password</Form.Label>
-                    <Form.Control 
-                       type="password"
-                       placeholder="Password"
-                       onChange={handlePasswordChange}
-                       value={password}
-                       />
-                </Form.Group>
-                <Button variant="primary" type="submit" onClick={handleSubmit}>
-                Submit
-                </Button>
-            </Form>
-            </Mod.Body>
+            <Tabs
+                id="login-register"
+                activeKey={key}
+                onSelect={(k) => setKey(k)}
+            >
+                <Tab eventKey="login" title="Login">
+                    <Login show = { show } setShow = { setShow } setIsUserLoggedIn = { setIsUserLoggedIn } user = { user } setUser = { setUser} />
+                </Tab>
+                <Tab eventKey="register" title="Register">
+                    <Register show = { show } setShow = { setShow } setIsUserLoggedIn = { setIsUserLoggedIn } user = { user } setUser = { setUser} />
+                </Tab>
+            </Tabs>
         </Mod>
     );
 };
-
 
 export default UserModal;

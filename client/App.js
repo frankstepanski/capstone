@@ -7,12 +7,12 @@ import  Account from './pages/Account';
 import  Shop  from './pages/Shop';
 import  ShoppingCart from './pages/ShoppingCart';
 import  Blog  from './pages/Blog';
-//import  Contact from './pages/Contact';
+import  Contact from './pages/Contact';
 import  About from './pages/About';
 import  NotFoundPage  from './pages/NotFoundPage';
 import  NavBar  from './components/NavigationBar';
 import  Footer  from './pages/layouts/Footer';
-import  Product from './pages/productForm';
+import  Product from './pages/ProductForm';
 
 const App = () => {
   const [show, setShow] = useState(false); 
@@ -25,24 +25,29 @@ const App = () => {
     return (
         <div className = "container">
           <UserModal 
-            show={show} 
+            show = {show} 
             setShow = { setShow } 
             setIsUserLoggedIn = { setIsUserLoggedIn } 
+            user = { user }
             setUser = {setUser} 
           /> 
           <NavBar 
             setShow = { setShow } 
             isUserLoggedIn = { isUserLoggedIn } 
             setIsUserLoggedIn = { setIsUserLoggedIn } 
-            setUser = {setUser} 
+            user = { user }
+            setUser = { setUser } 
           /> 
            <Switch>
-              <Route exact path = "/" component ={Home} />
-              <Route path = "/account" render = {() => ( 
-                  <Account 
-                    user = { user } 
-                  /> )} 
-              />
+              <Route exact path = "/" component = { Home } />
+              { 
+              
+              isUserLoggedIn && <Route path = "/account" render = {() => ( 
+                          <Account 
+                            user = { user } 
+                          /> )} 
+                       /> 
+              }
               <Route path = "/shop" render ={() => ( 
                   <Shop 
                     cart={cart}  
