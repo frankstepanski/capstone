@@ -61,12 +61,13 @@ server.post("/payment", (req, res) => {
 */
 
 server.use((error, req, res, next) => {
-  console.log("this is error:", error);
-  res.status(500).json({
+  console.log("server error:", error.message);
+  res.status(error.status || 500).json({
     error: error.message,
-  });
+   });
   next();
 });
+
 
 // check health of server:
 server.get('/health', (req, res, next)=>{
