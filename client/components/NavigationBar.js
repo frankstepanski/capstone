@@ -20,7 +20,16 @@ const NavigationBar = ({ setShow, isUserLoggedIn, setIsUserLoggedIn, user, setUs
   return (
     <>
     <Navbar expand ="lg" bg="light" variant="light">
-    <Navbar.Brand href="/">afc Skate</Navbar.Brand>
+    <Navbar.Brand href="/">
+            <img
+                src="/assets/images/AFC SS.svg"
+                width="225"
+                height="100"
+                className="d-inline-block align-top"
+                alt="React Bootstrap logo"
+              />
+
+    </Navbar.Brand>
     <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="mr-auto">

@@ -1,13 +1,21 @@
 import React from "react";
 import Jumbotron from "../components/Jumbotron";
-import Carousel from "../components/Carousel"
+import FrontPageCarousel from "../components/Carousel"
 import "./Home.css";
+import FeaturedCarousel from "../components/featuredCarousel";
+
+import {CardDeck, Card} from "react-bootstrap"
 
 const Home = () => {
     return (
       <div className="home">
-        <Jumbotron />
-        <Carousel />
+        <FrontPageCarousel />
+        <Card>
+          <Card.Title>Featured Products</Card.Title>
+        </Card>
+        
+       <FeaturedCarousel />
+        
       </div>
     );
   };
