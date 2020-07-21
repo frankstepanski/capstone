@@ -97,6 +97,7 @@ usersRouter.post('/login', async (req, res, next) => {
             message: "A username and password are required to log in"
         })
     }
+    
     try {
         const user = await authenticate({username, password});
         console.log(`>>> User: `, user)
@@ -108,10 +109,7 @@ usersRouter.post('/login', async (req, res, next) => {
             res.send({ status: "success", message: "you're logged in!", token, user});
         } else {
             console.log('user could not be logged in')
-            next({ 
-                name: 'IncorrectCredentialsError', 
-                message: 'Username or password is incorrect'
-          });
+            throw new Error('User could not be authenticated')
         }
     } catch(error) {
         console.log(error);
