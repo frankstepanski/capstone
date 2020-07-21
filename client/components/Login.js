@@ -20,11 +20,11 @@ const Login = ({ setShow, setIsUserLoggedIn, user, setUser }) => {
         
         event.preventDefault();
 
-        const data  = await loginUser({username, password});  
+        try {
+            
+            const data  = await loginUser({username, password});  
 
-        console.log(data);
-
-        if (data.token) {
+            console.log(data);
     
             setIsUserLoggedIn(true); 
             localStorage.setItem("token", data.token);
@@ -34,9 +34,11 @@ const Login = ({ setShow, setIsUserLoggedIn, user, setUser }) => {
             setPassword("");
             setShow(false); 
         
-        } else {
-            
+        } catch (error) {
+
+            console.log(error.message);
         }
+            
     }
 
     return (

@@ -43,7 +43,7 @@ const Register = ({ setShow, setIsUserLoggedIn, user, setUser }) => {
         const address = `${streetaddress} ${city} ${state} ${zip}`;
         
         const data  = await registerUser({username, password, firstname, lastname, email, address});  
-
+       
         if (data.token) {
           
             setIsUserLoggedIn(true); 

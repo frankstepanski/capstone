@@ -61,9 +61,9 @@ server.post("/payment", (req, res) => {
 */
 
 server.use((error, req, res, next) => {
-  console.error(error);
+  console.log("this is error:", error);
   res.status(500).json({
-    error: error.toString(),
+    error: error.message,
   });
   next();
 });

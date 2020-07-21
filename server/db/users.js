@@ -92,7 +92,9 @@ const authenticate = async ({username, password}) => {
     try {
         const user = await getUserByUsername({username});
         if (!user) {
-            throw new Error('invalid username');
+            const error = new Error('invalid username');
+            error.status = 400;
+            throw error;
         };
         const authenticated = await bcrypt.compare(password, user.password)
         if (!authenticated) {
