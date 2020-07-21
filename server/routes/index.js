@@ -62,11 +62,13 @@ apiRouter.use('/messages', messagesRouter);
 const reviewsRouter = require('./reviews');
 apiRouter.use('/reviews', reviewsRouter);
 
+/*
 apiRouter.use((error, req, res, next) => {
-    console.error(error);
-    res.status(500).json({
-        error: error.toString(),
+    console.log("route error", error.message);
+    res.status(error.status || 500).json({
+        error: error.message,
     });
 });
+*/
 
 module.exports= apiRouter;

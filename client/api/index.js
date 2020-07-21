@@ -1,21 +1,31 @@
 import axios from "axios";
+
 // axios cheatsheet: https://kapeli.com/cheat_sheets/Axios.docset/Contents/Resources/Documents/index
 
 /* ******** user ******** */
+
 
 export async function loginUser({username, password}) {
     try {
       const { data }   = await axios.post("/api/users/login", {
         username,
         password
+      }, {
+        headers: {
+          "Content-Type": "application/json"
+        },
+        validateStatus: function (status) {
+          return status === 200 || status === 400; // default
+        },
       });
+
       return data;
     } catch (error) {
       throw error;
     }
   }
-
-export async function registerUser(username, password, firstName, lastName, address) {
+ 
+export async function registerUser(username, password, firstName, lastName, email, address) {
     try {
       const { data } = await axios.post("/api/users/register", {
           username,
