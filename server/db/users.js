@@ -83,7 +83,7 @@ async function getUserByUsername ({username}) {
         return user;
     } catch (e) {
         console.log(`> failed to get user with username ${username}`)
-        throw e;
+        throw new Error(`failed to get user with username ${username}`);
     }
 }
 
@@ -91,6 +91,9 @@ async function getUserByUsername ({username}) {
 const authenticate = async ({username, password}) => {
     try {
         const user = await getUserByUsername({username});
+        if (!user) {
+            throw new Error('invalid username');
+        };
         const authenticated = await bcrypt.compare(password, user.password)
         if (!authenticated) {
             throw new Error('invalid password');
@@ -98,7 +101,7 @@ const authenticate = async ({username, password}) => {
         
         return user;
     } catch (e) {
-        console.log(e, `Could not authenticate user`);
+        throw e;
     }    
 }
 
