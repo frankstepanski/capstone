@@ -2,8 +2,7 @@ import React, { useState} from 'react';
 import {
     Modal as Mod,
     Button,
-    Form,
-    Col
+    Form
 } from 'react-bootstrap';
 
 import { loginUser } from '../api';
