@@ -1,11 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Route, Switch } from "react-router-dom";
 
 import  Home from './pages/Home';
 import  UserModal from './components/UserModal';
 import  Account from './pages/Account';
 import  Shop  from './pages/Shop';
-import  ShoppingCart from './pages/ShoppingCart';
 import  Blog  from './pages/Blog';
 import  Contact from './pages/Contact';
 import  About from './pages/About';
@@ -13,14 +12,45 @@ import  NotFoundPage  from './pages/NotFoundPage';
 import  NavBar  from './components/NavigationBar';
 import  Footer  from './pages/layouts/Footer';
 import  Product from './pages/ProductForm';
+import  Cart from './pages/Cart';
+
+import { getCart, checkToken } from "./api";
+
 
 const App = () => {
   const [show, setShow] = useState(false); 
   const [user, setUser] = useState({});
   const [cart, setCart] = useState({}); 
   const [products, setProducts] = useState([{}]); 
-  const [orders, setOrder] = useState([{}]) 
+  const [token, setToken] = useState(localStorage.token) 
   const [isUserLoggedIn, setIsUserLoggedIn] = useState(false);
+
+  useEffect( ()=> {
+    const authenticateToken = async () => {
+      try {
+        const res = await checkToken(token)
+        if (res.success) {
+          setUser(res.user);
+          setIsUserLoggedIn(true);
+        } else {
+          localStorage.removeItem("token");
+        }
+      } catch (e) {
+        console.log(e);
+      }
+    }
+
+    const fetchCurrentCart = async () => {
+      try {
+        const { cart: currCart} = await getCart({token});
+        setCart(currCart)
+      } catch (e) {
+        console.log(e)
+      }
+    };
+    authenticateToken();
+    fetchCurrentCart();
+  }, [token]);
 
     return (
         <div className = "container">
@@ -30,6 +60,7 @@ const App = () => {
             setIsUserLoggedIn = { setIsUserLoggedIn } 
             user = { user }
             setUser = {setUser} 
+            setToken = {setToken}
           /> 
           <NavBar 
             setShow = { setShow } 
@@ -57,7 +88,8 @@ const App = () => {
                   /> )}
               />
               <Route path = "/cart" render ={() => ( 
-                  <ShoppingCart 
+                  <Cart
+                    token={token}
                     cart={cart}
                     setCart={setCart}
                     user={user}
@@ -73,7 +105,6 @@ const App = () => {
               <Route path = "/contact" component ={Contact} />
               <Route path = "/product" component ={Product} />
               <Route path="*" component={NotFoundPage} />
-              
           </Switch>
           <Footer />
         </div>

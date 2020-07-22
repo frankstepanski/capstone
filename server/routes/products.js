@@ -88,7 +88,7 @@ productsRouter.post('/create', requireUser, async ( req, res, next ) => {
                 // next(newItem)
                 
                 return res.send ({ 
-                    status: "success",
+                    success: true,
                     message: "Item was created!",
                     product: newItem
                 }); 
@@ -128,7 +128,7 @@ productsRouter.patch('/edit', requireUser, async ( req, res, next ) => {
 
         console.log("<<<<<<<<< updated obj:",updatedProduct)
         
-        return res.send({status: "success",
+        return res.send({success: true,
         message: "Product Updated!", product: updatedProduct})
     
     } catch (error) {
@@ -142,7 +142,7 @@ productsRouter.post('/stock', async (req, res, next) => {
     const { productId } = req.body
     try {
         const stock = await getProductStock({productId});
-        res.send({status: 'success', stock})
+        res.send({success: true, stock})
     } catch (e) {
         console.error("Failed to get product stock", e)
         next(e)

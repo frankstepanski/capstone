@@ -1,6 +1,6 @@
 const express = require('express');
 const usersRouter = express.Router();
-const { authenticate, getUserByUsername, createUser, getAllUsers, updateUser } = require('../db');
+const { authenticate, getUserByUsername, createUser, getAllUsers, updateUser, getUserById } = require('../db');
 const jwt = require('jsonwebtoken');
 const { SECRET } = process.env;
 const { requireUser } = require('./utils')
@@ -10,7 +10,25 @@ usersRouter.use((req, res, next) => {
     next();
 })
 
+//get only current user
 usersRouter.get('/', requireUser, async (req, res, next) => {
+    const {id: userId} = req.user;
+    try {
+        const user = await getUserById(userId);
+
+        if (user) {
+            res.send({success: true, user})
+        } else {
+            throw new Error('User could not located')
+        }
+    } catch (e) {
+        console.error(error)
+        const{ name, message } = error
+        next({ name, message })
+    }
+})
+
+usersRouter.get('/all', requireUser, async (req, res, next) => {
     const {admin} = req.user;
     try {
         if (admin) {
@@ -21,7 +39,7 @@ usersRouter.get('/', requireUser, async (req, res, next) => {
             })
             res.send({ users })
         } else {
-            res.send({status: 'failed', message: 'restricted'})
+            res.send({success: false, message: 'restricted'})
         }
     } catch (e) {
         console.error(error)
@@ -106,7 +124,7 @@ usersRouter.post('/login', async (req, res, next) => {
 
         if (user) {
             const token = jwt.sign({id, un}, SECRET, {expiresIn: '1w'});
-            res.send({ status: "success", message: "you're logged in!", token, user});
+            res.send({ success: true, message: "you're logged in!", token, user});
         } else {
             console.log('user could not be logged in')
             throw new Error('User could not be authenticated')
@@ -133,7 +151,7 @@ usersRouter.patch('/update', requireUser, async (req, res, next) => {
         const { id } = user;
         const updatedUser = await updateUser(id, fields = filteredObj);
         console.log(updatedUser)
-        return res.send({status: "success", message: "User updated", user: updatedUser});
+        return res.send({success: true, message: "User updated", user: updatedUser});
         
     } catch (e) {
         next(e);

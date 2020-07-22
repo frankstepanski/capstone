@@ -31,7 +31,7 @@ cartProductsRouter.post('/add', requireUser, async function (req, res, next){
         const newCartItem = await addProductToCart({ productId, cartId, purchasePrice, quantity});
         // get updated cart object:
         const updatedCart = await getOpenCartByUserId({userId});
-        res.send({ status: "success", message:'Item added to cart', updatedCart });        
+        res.send({ success: true, message:'Item added to cart', updatedCart });        
     } catch(error) {
         console.error(error)
         next();
@@ -50,12 +50,12 @@ cartProductsRouter.patch('/:cartProductId', async function (req, res, next){
             const updatedCart = await getOpenCartByUserId({userId});
 
             res.send({ 
-                status: 'success', 
+                success: true, 
                 message: 'Quantity updated', 
                 updatedCart
             })
         } else {
-            res.send({status: 'failed', error: 'stockExceeded', message: 'There are not enough products to fulfill the request'})
+            res.send({success: false, error: 'stockExceeded', message: 'There are not enough products to fulfill the request'})
         }
     }catch(error){
         console.error(error)
@@ -64,16 +64,16 @@ cartProductsRouter.patch('/:cartProductId', async function (req, res, next){
 });
 
 // remove item from cart
-cartProductsRouter.delete('/:cartProductId', requireUser, async function ( req, res, next ){
+cartProductsRouter.delete('/:cartProductId/remove', requireUser, async function ( req, res, next ){
     const { cartProductId } = req.params;
 
     try {
         const removedItem = await removeProductFromCart({cartProductId})
         if (removedItem){
-            res.send({ status: 'success', message:'Item deleted.', removed: removedItem })
+            res.send({ success: true, message:'Item deleted.', removed: removedItem })
         } else {
             res.send({ 
-                status: 'failed', 
+                success: false, 
                 message: `could not remove item with cartProductId of ${cartProductId}`})
         }
     } catch(error){
@@ -94,10 +94,10 @@ cartProductsRouter.delete('/clear', requireUser, async function ( req, res, next
         //Get updated/ emptyCart:
         const emptyCart = await getOpenCartByUserId({userId});
         if (removedItems){
-            res.send({ status: 'success', message:'Cart cleared.', emptyCart })
+            res.send({ success: true, message:'Cart cleared.', emptyCart })
         } else {
             res.send({ 
-                status: 'failed', 
+                success: true, 
                 message: `cart was already empty`})
         }
     } catch(error){

@@ -8,7 +8,7 @@ import {
 
 import { loginUser } from '../api';
 
-const Login = ({ setShow, setIsUserLoggedIn, user, setUser }) => {
+const Login = ({ setToken, setShow, setIsUserLoggedIn, user, setUser }) => {
 
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
@@ -29,6 +29,7 @@ const Login = ({ setShow, setIsUserLoggedIn, user, setUser }) => {
             setIsUserLoggedIn(true); 
             localStorage.setItem("token", data.token);
             setUser( data.user );
+            setToken( data.token );
             console.log(user);
             setUsername("");
             setPassword("");

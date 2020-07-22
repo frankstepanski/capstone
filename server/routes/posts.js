@@ -49,7 +49,7 @@ postsRouter.patch('/edit', async ( req, res, next ) => {
 
         console.log("<<<<<<<<< updated obj:",updatedPost)
         
-        return res.send({status: "Success",
+        return res.send({success: true,
         message: "Product Updated!", post: updatedPost})
     
     } catch (error) {

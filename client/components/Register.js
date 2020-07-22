@@ -10,7 +10,7 @@ import states from 'states-us';
 
 import { registerUser } from '../api';
 
-const Register = ({ setShow, setIsUserLoggedIn, user, setUser }) => {
+const Register = ({ setToken, setShow, setIsUserLoggedIn, user, setUser }) => {
 
     //console.log(states.map(state => `<option>${state.name}</option>`));
 
@@ -49,6 +49,7 @@ const Register = ({ setShow, setIsUserLoggedIn, user, setUser }) => {
             setIsUserLoggedIn(true); 
             localStorage.setItem("token", data.token);
             setUser( data.user );
+            setToken( data.token );
 
             setUsername("");
             setPassword("");

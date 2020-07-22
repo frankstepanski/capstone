@@ -80,7 +80,7 @@ cartsRouter.patch('/checkout', requireUser, async (req, res, next) => {
 
             closedCart.total = total
             res.send({
-                status: "success", 
+                success: true, 
                 message: "Checkout successful", 
                 order: closedCart,
                 newCart,

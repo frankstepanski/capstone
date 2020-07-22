@@ -30,8 +30,10 @@ apiRouter.use(async (req, res, next) => {
                 console.log(`req.user: `, req.user)
                 next();
             }
-        } catch ({name, message}) {
-            next({name, message});
+        } catch (error) {
+            error.status = 400;
+            error.message = "Invalid token"
+            next(error);
         }
     } else {
         next({
