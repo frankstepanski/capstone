@@ -1,8 +1,10 @@
-import React from "react";
+import React, { useState } from "react";
 import { Form, FormControl, Button, CardDeck, Card } from 'react-bootstrap';
 
+import { getAllProducts } from "../api"
+
 import Nav from 'react-bootstrap/Nav'
-import FeaturedCarousel from "../components/FeaturedCarousel"
+import Featured from "../components/Featured"
 import ProductCard from "../components/ProductCard";
 import ProductView from "../components/ProductView";
 
@@ -10,21 +12,23 @@ import ProductView from "../components/ProductView";
 
 import "./Shop.css";
 
-const Shop = () => {
 
-  const handleSubmit = () => { }
-  const handleInputChange = () => { }
+const Shop = ( {products} ) => {
+  const featuredArray = products.filter(product => {
+    console.log("<<<<<", product.featured)
+    return product.featured
+  })
 
-    return (
+   return (
 
         
-      <div className= "shopCarousel">
+      <div className= "shopPage">
 
         <Card>
           <Card.Title>Featured Products</Card.Title>
         </Card>
         
-        <FeaturedCarousel />
+        <Featured featuredArray = {featuredArray} />
       
           <div className= "shopNav">
               <Nav className="justify-content-center margin-top-2rem " activeKey="/home">
@@ -44,7 +48,22 @@ const Shop = () => {
               </Nav>
           </div>
 
+          <div className= "shopProducts">
+          
+          {
+            products.map(prod => (
 
+              <ProductCard 
+                key = { prod.id}
+                  name = { prod.name } 
+                  price = { prod.price }
+                  thumbnail = { prod.thumbnail }
+                  stock = { prod.stock }
+              />
+            
+            ))
+          }  
+          </div>
      
       </div>
 
@@ -52,10 +71,6 @@ const Shop = () => {
     );
   }
 
-const shopPage = () =>{
-  return( <h5>Welcome to AFC Skate!</h5>
-  )
-  }
 
 export default Shop;
- shopPage;
+ 

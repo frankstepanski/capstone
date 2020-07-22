@@ -17,6 +17,8 @@ import  Cart from './pages/Cart';
 import { getCart, checkToken } from "./api";
 
 
+import { getAllProducts } from "./api"
+
 const App = () => {
   const [show, setShow] = useState(false); 
   const [user, setUser] = useState({});
@@ -24,6 +26,15 @@ const App = () => {
   const [products, setProducts] = useState([{}]); 
   const [token, setToken] = useState(localStorage.token) 
   const [isUserLoggedIn, setIsUserLoggedIn] = useState(false);
+  
+  useEffect ( () => {
+      const fetchProducts = async () => {
+        const getProd = await getAllProducts()
+        setProducts(getProd)
+      }
+        fetchProducts()
+  }, []);
+
 
   useEffect( ()=> {
     const authenticateToken = async () => {
@@ -70,7 +81,11 @@ const App = () => {
             setUser = { setUser } 
           /> 
            <Switch>
-              <Route exact path = "/" component = { Home } />
+              <Route exact path = "/" render = {() => (
+                 < Home products = {products} />
+              )}
+                 />
+              
               { 
               
               isUserLoggedIn && <Route path = "/account" render = {() => ( 
