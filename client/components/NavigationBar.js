@@ -9,11 +9,10 @@ const NavigationBar = ({ setShow, isUserLoggedIn, setIsUserLoggedIn, user, setUs
     event.preventDefault();
 
     if (isUserLoggedIn) {
-         // logout user, not showing modal
-         setIsUserLoggedIn(false);
+         setIsUserLoggedIn(false); // logout state: not show modal, close out user object
          setUser({});
     } else {
-      setShow(true);
+      setShow(true); // login/register state: opens modal
     }
   }
 
@@ -45,7 +44,7 @@ const NavigationBar = ({ setShow, isUserLoggedIn, setIsUserLoggedIn, user, setUs
           </Nav>
             
             <Form inline>
-            <Form.Label className="mr-sm-5 text-uppercase">{ isUserLoggedIn && `Welcome ${user.name}` }</Form.Label>
+            <Form.Label className="mr-sm-5 text-uppercase">{ isUserLoggedIn && `Welcome ${user.username}` }</Form.Label>
               <Button variant="outline-success" onClick={handleShow}>
                 { isUserLoggedIn
                 ? 'Logout'

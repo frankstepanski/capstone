@@ -19,7 +19,7 @@ const App = () => {
   const [user, setUser] = useState({});
   const [cart, setCart] = useState({}); 
   const [products, setProducts] = useState([{}]); 
-  const [orders, setOrder] = useState([{}]) 
+  const [orders, setOrder] = useState([{}]); 
   const [isUserLoggedIn, setIsUserLoggedIn] = useState(false);
 
     return (
