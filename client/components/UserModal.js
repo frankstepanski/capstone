@@ -13,7 +13,8 @@ const UserModal = ({ setToken, show, setShow, setIsUserLoggedIn, user, setUser }
     
     const [key, setKey] = useState('login'); // tab state
     const handleClose = () => setShow(false);
-
+    const [error, setError] = useState({});
+ 
     return (
         <Mod 
             show={show} 
@@ -28,12 +29,14 @@ const UserModal = ({ setToken, show, setShow, setIsUserLoggedIn, user, setUser }
             >
                 <Tab eventKey="login" title="Login">
                     <Login 
-                        show = { show }
-                        setShow = { setShow }
-                        setIsUserLoggedIn = { setIsUserLoggedIn }
-                        user = { user }
-                        setUser = { setUser}
-                        setToken = {setToken}
+                       setShow = { setShow }
+                       user = {user}
+                       setUser = {setUser}
+                       setIsUserLoggedIn = {setIsUserLoggedIn}
+                       show = { show }
+                       error = { error }
+                       setError = { setError}
+                       setToken = {setToken}
                     />
                 </Tab>
                 <Tab eventKey="register" title="Register">
@@ -44,6 +47,8 @@ const UserModal = ({ setToken, show, setShow, setIsUserLoggedIn, user, setUser }
                         user = { user } 
                         setUser = { setUser} 
                         setToken = {setToken}
+                        error = { error }
+                        setError = { setError}
                     />
                 </Tab>
             </Tabs>

@@ -19,10 +19,10 @@ cartsRouter.use(function( req, res, next){
 cartsRouter.get('/', requireUser, async function( req, res, next ){
     const { id: userId} = req.user;
 
-    try{
+    try {
         const carts = await getCartsByUserID({userId})
         res.send({ carts });
-    }catch(error){
+    } catch(error){
         next(error)
     }
 });

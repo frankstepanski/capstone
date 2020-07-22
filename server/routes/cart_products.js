@@ -66,11 +66,18 @@ cartProductsRouter.patch('/:cartProductId', async function (req, res, next){
 // remove item from cart
 cartProductsRouter.delete('/:cartProductId/remove', requireUser, async function ( req, res, next ){
     const { cartProductId } = req.params;
+    const {id: userId} = req.user;
 
     try {
         const removedItem = await removeProductFromCart({cartProductId})
         if (removedItem){
-            res.send({ success: true, message:'Item deleted.', removed: removedItem })
+            const updatedCart = await getOpenCartByUserId({userId});
+            res.send({ 
+                status: 'success', 
+                message:'Item deleted.', 
+                removed: removedItem,
+                updatedCart
+            })
         } else {
             res.send({ 
                 success: false, 

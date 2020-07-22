@@ -10,9 +10,7 @@ import states from 'states-us';
 
 import { registerUser } from '../api';
 
-const Register = ({ setToken, setShow, setIsUserLoggedIn, user, setUser }) => {
-
-    //console.log(states.map(state => `<option>${state.name}</option>`));
+const Register = ({ setShow, setIsUserLoggedIn, user, setUser, error, setError, setToken }) => {
 
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
@@ -155,7 +153,7 @@ const Register = ({ setToken, setShow, setIsUserLoggedIn, user, setUser }) => {
                             onChange={handleStateChange}
                             value={state}
                             <option>Choose...</option>
-                            { states.map(state => `<option>${state.name}</option>`) }
+                            { states.map((sta) => <option key={ sta.name }>{ sta.name }</option>) }
                         </Form.Control>
                     </Form.Group>
                     <Form.Group as = {Col}>
@@ -170,6 +168,7 @@ const Register = ({ setToken, setShow, setIsUserLoggedIn, user, setUser }) => {
                 <Button variant="primary" type="submit" onClick={handleSubmit}>
                 Submit
                 </Button>
+                <Form.Label className = "ml-5 alert-danger">{error.error ? `Login error: ${error.error}` : '' }</Form.Label>
             </Form>
             </Mod.Body>
             </>
