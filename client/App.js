@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState , useEffect } from "react";
 import { Route, Switch } from "react-router-dom";
 
 import  Home from './pages/Home';
@@ -14,6 +14,8 @@ import  NavBar  from './components/NavigationBar';
 import  Footer  from './pages/layouts/Footer';
 import  Product from './pages/ProductForm';
 
+import { getAllProducts } from "./api"
+
 const App = () => {
   const [show, setShow] = useState(false); 
   const [user, setUser] = useState({});
@@ -21,6 +23,15 @@ const App = () => {
   const [products, setProducts] = useState([{}]); 
   const [orders, setOrder] = useState([{}]) 
   const [isUserLoggedIn, setIsUserLoggedIn] = useState(false);
+  
+  useEffect ( () => {
+      const fetchProducts = async () => {
+        const getProd = await getAllProducts()
+        setProducts(getProd)
+      }
+        fetchProducts()
+  }, []);
+
 
     return (
         <div className = "container">
@@ -39,7 +50,11 @@ const App = () => {
             setUser = { setUser } 
           /> 
            <Switch>
-              <Route exact path = "/" component = { Home } />
+              <Route exact path = "/" render = {() => (
+                 < Home products = {products} />
+              )}
+                 />
+              
               { 
               
               isUserLoggedIn && <Route path = "/account" render = {() => ( 
