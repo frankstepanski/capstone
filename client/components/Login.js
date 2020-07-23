@@ -2,13 +2,14 @@ import React, { useState} from 'react';
 import {
     Modal as Mod,
     Button,
-    Form
+    Form,
+    Col
 } from 'react-bootstrap';
 
 import { loginUser } from '../api';
 
 const Login = ({ setShow, setIsUserLoggedIn, user, setUser }) => {
-    console.log("login", user);
+
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
 
@@ -18,23 +19,26 @@ const Login = ({ setShow, setIsUserLoggedIn, user, setUser }) => {
     const handleSubmit = async (event) => {
         
         event.preventDefault();
-        console.log("submit hit");
 
-        const data  = await loginUser({username, password});  
+        try {
+            
+            const data  = await loginUser({username, password});  
 
-        if (data.token) {
-          
+            console.log(data);
+    
             setIsUserLoggedIn(true); 
             localStorage.setItem("token", data.token);
             setUser( data.user );
-
+            console.log(user);
             setUsername("");
             setPassword("");
             setShow(false); 
         
-        } else {
-            // login error
+        } catch (error) {
+
+            console.log(error.message);
         }
+            
     }
 
     return (
@@ -45,7 +49,8 @@ const Login = ({ setShow, setIsUserLoggedIn, user, setUser }) => {
             </Mod.Header>
             <Mod.Body>
             <Form>
-                <Form.Group>
+                <Form.Row>
+                <Form.Group as = {Col}>
                     <Form.Label>User Name:</Form.Label>
                     <Form.Control 
                       placeholder="Enter username"
@@ -53,7 +58,7 @@ const Login = ({ setShow, setIsUserLoggedIn, user, setUser }) => {
                       value={username}
                     />
                 </Form.Group>
-                <Form.Group controlId="formBasicPassword">
+                <Form.Group as = {Col}>
                     <Form.Label>Password</Form.Label>
                     <Form.Control 
                        type="password"
@@ -62,6 +67,7 @@ const Login = ({ setShow, setIsUserLoggedIn, user, setUser }) => {
                        value={password}
                        />
                 </Form.Group>
+                </Form.Row>
                 <Button variant="primary" type="submit" onClick={handleSubmit}>
                 Submit
                 </Button>

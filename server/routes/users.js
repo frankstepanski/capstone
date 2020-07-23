@@ -45,6 +45,8 @@ usersRouter.post('/register', async (req, res, next) => {
     try {
         if (password.length < 8) {
             throw new Error(`Password must be at least 8 characters`)
+        } else if (username.length < 5) {
+            throw new Error(`Username must be at least 5 characters`)
         }
 
         const requiredParams = {            
@@ -69,7 +71,7 @@ usersRouter.post('/register', async (req, res, next) => {
             console.log(`User already exists. Logging in instead`)
             return res.redirect(308, './login');
         } else {
-            const user = await createUser({
+            await createUser({
                 username,
                 password,
                 firstName, 
@@ -90,15 +92,16 @@ usersRouter.post('/register', async (req, res, next) => {
 
 usersRouter.post('/login', async (req, res, next) => {
     const {username, password} = req.body;
-
-    if (!username || !password) {
-        next({
-            name: 'UsernameAndPasswordRequired',
-            message: "A username and password are required to log in"
-        })
-    }
     
     try {
+        const requiredParams = {username, password};
+
+        for (const [key, value] of Object.entries(requiredParams)) {
+            if (!value) {
+                throw new Error(`Please profide a valid ${key}`);
+            }
+        };
+
         const user = await authenticate({username, password});
         console.log(`>>> User: `, user)
         const { id, username: un } = user;

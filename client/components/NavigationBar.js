@@ -43,7 +43,9 @@ const NavigationBar = ({ setShow, isUserLoggedIn, setIsUserLoggedIn, user, setUs
             <Nav.Link as = {Link} to="/about">About</Nav.Link>
             <Nav.Link as = {Link} to="/contact">Contact</Nav.Link>
           </Nav>
+            
             <Form inline>
+            <Form.Label className="mr-sm-5 text-uppercase">{ isUserLoggedIn && `Welcome ${user.name}` }</Form.Label>
               <Button variant="outline-success" onClick={handleShow}>
                 { isUserLoggedIn
                 ? 'Logout'
