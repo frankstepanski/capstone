@@ -41,7 +41,6 @@ export async function loginUser({username, password}) {
         },
       });
       console.log('> loginUser', data);
-      localStorage.setItem("token", data.token);
       return data;
   }
  
@@ -56,7 +55,6 @@ export async function registerUser({username, password, firstName, lastName, ema
           address
       });
       console.log('> registerUser', data);
-      localStorage.setItem("token", data.token);
       return data;
   
 }

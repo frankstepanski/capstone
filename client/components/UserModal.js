@@ -9,7 +9,7 @@ import './Usermodal.css';
 import Login from './Login';
 import Register from './Register';
 
-const UserModal = ({ setToken, show, setShow, setIsUserLoggedIn, user, setUser }) => {
+const UserModal = ({ setToken, show, setShow, setIsUserLoggedIn, user, token, setUser }) => {
     
     const [key, setKey] = useState('login'); // tab state
     const handleClose = () => setShow(false);

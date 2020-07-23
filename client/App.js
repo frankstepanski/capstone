@@ -79,6 +79,7 @@ const App = () => {
             setShow = { setShow } 
             setIsUserLoggedIn = { setIsUserLoggedIn } 
             user = { user }
+            token = { token }
             setUser = {setUser} 
             setToken = {setToken}
           /> 
@@ -100,6 +101,7 @@ const App = () => {
               isUserLoggedIn && <Route path = "/account" render = {() => ( 
                           <Account 
                             user = { user } 
+                            token = { token }
                           /> )} 
                        /> 
               }

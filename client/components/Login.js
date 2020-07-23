@@ -54,6 +54,7 @@ const Login = ({ setShow, setIsUserLoggedIn, user, setUser, error, setError, set
                     setIsUserLoggedIn(true); 
                     setUser( data.user );
                     setToken( data.token );
+                    localStorage.setItem("token", data.token);
                     setUsername("");
                     setPassword("");
                     setError({});

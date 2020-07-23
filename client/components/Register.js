@@ -86,7 +86,7 @@ const Register = ({ setShow, setIsUserLoggedIn, user, setUser, error, setError, 
                 } else {
            
                     setError(data);
-                    console.log(data);
+                    localStorage.removeItem("token");
                     console.log(error.error);
                 }
 
