@@ -13,6 +13,7 @@ import "./Shop.css";
 
 
 
+
 const Shop = ( {products} ) => {
    const [ filteredProducts, setFilteredProducts ] = useState([])
     useEffect(()=>{
