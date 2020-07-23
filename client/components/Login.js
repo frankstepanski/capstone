@@ -63,10 +63,11 @@ const Login = ({ setShow, setIsUserLoggedIn, user, setUser, error, setError }) =
                 } else {
                     setError(data);
                     console.log(data);
+                    console.log(error.error);
                 }
 
             } catch (error) {
-                console.log("> login error: ", error.message);
+                console.log("> login error: ", error);
             }
         }
     }
