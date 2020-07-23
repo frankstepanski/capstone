@@ -1,6 +1,6 @@
 const express = require('express');
 const usersRouter = express.Router();
-const { authenticate, getUserByUsername, createUser, getAllUsers, updateUser, getUserById } = require('../db');
+const { authenticate, getUserByUsername, createUser, getAllUsers, updateUser, getUserById, createCart } = require('../db');
 const jwt = require('jsonwebtoken');
 const { SECRET } = process.env;
 const { requireUser } = require('./utils')
@@ -127,6 +127,7 @@ usersRouter.post('/login', async (req, res, next) => {
 
         if (user) {
             const token = jwt.sign({id, un}, SECRET, {expiresIn: '1w'});
+            const newCart = await createCart({userId: user.id});
             res.send({ success: true, message: "you're logged in!", token, user});
         } else {
             console.log('user could not be logged in')

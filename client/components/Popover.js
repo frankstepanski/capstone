@@ -1,5 +1,5 @@
 import React, { useState } from "react"
-import  { Popover , popover, PopoverContent, Overlay, OverlayTrigger, Button, Tooltip }  from 'react-bootstrap';
+import  { Popover, PopoverContent, Overlay, OverlayTrigger, Button, Tooltip }  from 'react-bootstrap';
 
 import ProductView from './/ProductView'
 
@@ -24,7 +24,7 @@ const CardPopover = () => {
       right?
     </Popover.Content>
     </Popover>
-        <OverlayTrigger trigger="click" placement="right" overlay={popover}>
+        <OverlayTrigger trigger="click" placement="right" overlay={Popover}>
         <Button variant="success" type="button" target= ".//ProductView.js" >Click me to see</Button>
     </OverlayTrigger>
 
