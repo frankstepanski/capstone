@@ -9,7 +9,7 @@ import { updateUser } from '../api';
 
 import "./Account.css";
 
-const Account = ({ user }) => {
+const Account = ({ user, token }) => {
 
     const [error, setError] = useState("");
     const [validated, setValidated] = useState(false);

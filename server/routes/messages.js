@@ -44,7 +44,7 @@ messagesRouter.patch('/resolve', async ( req, res, next ) => {
 
         console.log("<<<<<<<<< resolved message:",resolvedMessage)
         
-        return res.send({status: "Success",
+        return res.send({success: true,
         message: "Product Updated!", post: resolvedMessage})
     
     } catch (error) {

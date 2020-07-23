@@ -7,7 +7,7 @@ import {
 
 import { loginUser } from '../api';
 
-const Login = ({ setShow, setIsUserLoggedIn, user, setUser, error, setError }) => {
+const Login = ({ setShow, setIsUserLoggedIn, user, setUser, error, setError, setToken }) => {
 
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
@@ -53,6 +53,7 @@ const Login = ({ setShow, setIsUserLoggedIn, user, setUser, error, setError }) =
                 if (data.token) {
                     setIsUserLoggedIn(true); 
                     setUser( data.user );
+                    setToken( data.token );
                     setUsername("");
                     setPassword("");
                     setError({});

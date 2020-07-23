@@ -66,7 +66,7 @@ async function createInitialCategories() {
 
         const clothing = await createCategory({name: 'clothing'});
         const boards = await createCategory({name: 'boards'});
-        const accessories = await createCategory({name: 'accessories'});
+        const shoes = await createCategory({name: 'shoes'});
 
 
     }
@@ -79,58 +79,193 @@ async function createInitialCategories() {
 
 async function createInitialProducts() {
 
-    //note: Chris can make these real skareboard products:
-
-    /*
-        table schema:
-
-        name VARCHAR(255) NOT NULL,
-        description TEXT NOT NULL,
-        price FLOAT(2) NOT NULL,
-        stock INTEGER NOT NULL,
-        rating FLOAT(1),
-        "categoryID" INTEGER REFERENCES categories(id) NOT NULL
-
-    */
-
     try {
 
-        const skateboard1 = await createProduct({
-              name: 'Skateboard 1',
-              description: 'A cool skateboard...',
-              price: 549.99,
+        const shirt1 = await createProduct({
+              name: 'The Hundreds Malibu Long Sleeve',
+              description: 'Light Blue and Purple 100% Cotton Long Sleeve Shirt',
+              price: 45.00,
               stock: 10,
-              rating: 4.7,
-              thumbnail: 'testpath',
+              thumbnail: src = "/assets/images/Clothing/hundredsMalibuThumb.jpg",
               image: 'testpath',
               featured: true,
-              "categoryId": 2
+              "categoryId": 1
               
         });
 
-        const shirt1 = await createProduct({
-            name: 'Shirt 1',
-            description: 'A cool t-shirt...',
-            price: 29.99,
-            stock: 5,
-            rating: 4.4,
-            thumbnail: 'testpath',
+        const skateboard1 = await createProduct({
+            name: 'Santa Cruz Fabiana Hand Skateboard',
+            description: 'Retro-Styled Skateboard',
+            price: 59.99,
+            stock: 7,
+            thumbnail: src="/assets/images/Skateboards/SC_FabianaHand.jpg ",
             image: 'testpath',
             featured: true,
-            "categoryId": 1
+            "categoryId": 2
 
         });
 
-        const wheels1 = await createProduct({
-            name: 'Skateboard wheels',
-            description: 'A cool set of wheels...',
-            price: 89.99,
+        const shirt2 = await createProduct({
+            name: 'Stüssy Sprout Tee',
+            description: 'Orange 100% Cotton Shirt',
+            price: 29.99,
             stock: 16,
-            rating: 4.0,
-            thumbnail: 'testpath',
+            thumbnail: src= "/assets/images/Clothing/stussySproutTeeThumb2.jpg",
             image: 'testpath',
             featured:true,
-            "categoryId": 3,
+            "categoryId": 1,
+        });
+
+        const shoes1 = await createProduct({
+            name: 'Vans Retro Stripes Authentic SF',
+            description: 'Navy Blue White Sole',
+            price: 49.99,
+            stock: 10,
+            thumbnail: src="/assets/images/Shoes/Vans.jpg",
+            image: 'testpath',
+            featured: true,
+            "categoryId": 3
+            
+        });
+
+        const shirt3 = await createProduct({
+            name: 'The Hundreds Heights Tee',
+            description: 'White,Blue,Yellow,Teal,Magenta Knit Shirt 100% Cotton',
+            price: 49.99,
+            stock: 12,
+            thumbnail: src= "/assets/images/Clothing/hundredsHeights.jpg",
+            image: 'testpath',
+            featured: false,
+            "categoryId": 1,
+        });
+
+        const shirt4 = await createProduct({
+            name: 'Obey Buggs Tee',
+            description: 'White, Light Blue,Yellow, Knit Shirt 100% Cotton',
+            price: 39.99,
+            stock: 19,
+            thumbnail: src= "/assets/images/Clothing/BuggsTee.jpg",
+            image: 'testpath',
+            featured: false,
+            "categoryId": 1,
+        });
+
+        const shirt5 = await createProduct({
+            name: 'Stüssy Italic Collage Tee',
+            description: 'Light Yellow Shirt 100% Cotton',
+            price: 29.99,
+            stock: 8,
+            thumbnail: src= "/assets/images/Clothing/stussyItalicCollageThumb.jpg",
+            image: 'testpath',
+            featured: false,
+            "categoryId": 1,
+        });
+
+        const shirt6 = await createProduct({
+            name: ' Vans Classic Stripe Long Sleeve',
+            description: 'White and Black Knit Long Sleeve Shirt 100% Cotton',
+            price: 49.99,
+            stock: 14,
+            thumbnail: src= "/assets/images/Clothing/classicStripeLongSleeveFull.jpg",
+            image: 'testpath',
+            featured: false,
+            "categoryId": 1,
+        });
+
+        const skateboard2 = await createProduct({
+            name: 'Believe Full Red',
+            description: 'Alien Workshop 8.5',
+            price: 59.99,
+            stock: 12,
+            thumbnail: src= "/assets/images/Skateboards/believeFullRed.jpg",
+            image: 'testpath',
+            featured: true,
+            "categoryId": 2
+
+        });
+
+        const skateboard3 = await createProduct({
+            name: 'BAKER Classic',
+            description: 'Baker Logo 8.5',
+            price: 49.99,
+            stock: 3,
+            thumbnail: src="/assets/images/Skateboards/BK_BRAND_LOGO_WHITE_.png ",
+            image: 'testpath',
+            featured: false,
+            "categoryId": 2
+
+        });
+
+        const skateboard4 = await createProduct({
+            name: 'Sammy Rolling Shutter',
+            description: 'Alien Workshop 8.5',
+            price: 54.99,
+            stock: 6,
+            thumbnail: src="/assets/images/Skateboards/SAMMY_ROLLING_SHUTTER_1000x.jpg ",
+            image: 'testpath',
+            featured: false,
+            "categoryId": 2
+
+        });
+
+        const skateboard5 = await createProduct({
+            name: 'TFThoughts Deck',
+            description: 'Baker Skateboard 8.5',
+            price: 62.99,
+            stock: 9,
+            thumbnail: src="/assets/images/Skateboards/TFThoughtsDeck.png ",
+            image: 'testpath',
+            featured: false,
+            "categoryId": 2
+
+        });
+
+        const shoes2 = await createProduct({
+            name: 'Addidas Busenitz Pros',
+            description: 'Black, White, Gum Sole',
+            price: 69.99,
+            stock: 10,
+            thumbnail: src="/assets/images/Shoes/Busenitz_Pro_Shoes_Black.jpg",
+            image: 'testpath',
+            featured: false,
+            "categoryId": 3
+            
+        });
+
+        const shoes3 = await createProduct({
+            name: 'Addidas Busenitz Classics',
+            description: 'Blue, White, Red, Gum Sole',
+            price: 59.99,
+            stock: 5,
+            thumbnail: src="/assets/images/Shoes/Busenitz_Shoes_Blue.jpg",
+            image: 'testpath',
+            featured: false,
+            "categoryId": 3
+            
+        });
+
+        const shoes4 = await createProduct({
+            name: 'Lakai Cambridge',
+            description: 'White, Burgundy, Gum Sole',
+            price: 64.99,
+            stock: 13,
+            thumbnail: src="/assets/images/Shoes/CAMBRIDGE_WHITE-BURGUNDY.jpg",
+            image: 'testpath',
+            featured: true,
+            "categoryId": 3
+            
+        });
+
+        const shoes5 = await createProduct({
+            name: 'Vans SK8 Lows',
+            description: 'Mustard, Royal Purple, White Sole',
+            price: 74.99,
+            stock: 13,
+            thumbnail: src="/assets/images/Shoes/VansSK8Low.jpg",
+            image: 'testpath',
+            featured: false,
+            "categoryId": 3
+            
         });
 
 

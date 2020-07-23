@@ -9,7 +9,7 @@ import './Usermodal.css';
 import Login from './Login';
 import Register from './Register';
 
-const UserModal = ({ show, setShow, setIsUserLoggedIn, user, setUser }) => {
+const UserModal = ({ setToken, show, setShow, setIsUserLoggedIn, user, setUser }) => {
     
     const [key, setKey] = useState('login'); // tab state
     const handleClose = () => setShow(false);
@@ -39,6 +39,7 @@ const UserModal = ({ show, setShow, setIsUserLoggedIn, user, setUser }) => {
                        show = { show }
                        error = { error }
                        setError = { setError}
+                       setToken = {setToken}
                     />
                 </Tab>
                 <Tab eventKey="register" title="Register">
@@ -48,6 +49,7 @@ const UserModal = ({ show, setShow, setIsUserLoggedIn, user, setUser }) => {
                         setIsUserLoggedIn = { setIsUserLoggedIn } 
                         user = { user } 
                         setUser = { setUser} 
+                        setToken = {setToken}
                         error = { error }
                         setError = { setError}
                     />

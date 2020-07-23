@@ -61,10 +61,9 @@ const getAllUsers = async () => {
         `, [userId]);
         
         if(!user) {
-            throw { 
-                name: "UserNotFoundError",
-                message: "Cannot find user with that userId"
-            };   
+            const error = new Error('invalid username');
+            error.status = 400;
+            throw error;
         };
 
         return user;

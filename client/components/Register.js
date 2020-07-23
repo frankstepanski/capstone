@@ -10,7 +10,7 @@ import states from 'states-us';
 
 import { registerUser } from '../api';
 
-const Register = ({ setShow, setIsUserLoggedIn, user, setUser, error, setError }) => {
+const Register = ({ setShow, setIsUserLoggedIn, user, setUser, error, setError, setToken }) => {
 
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
@@ -20,7 +20,7 @@ const Register = ({ setShow, setIsUserLoggedIn, user, setUser, error, setError }
     const [email, setEmail] = useState("");
     const [streetaddress, setStreetAddress] = useState("");
     const [city, setCity] = useState("");
-    const [state, setState] = useState("");
+    const [state, setState] = useState("-");
     const [zip, setZip] = useState("");
 
     const [validated, setValidated] = useState(false);
@@ -68,6 +68,7 @@ const Register = ({ setShow, setIsUserLoggedIn, user, setUser, error, setError }
                     setIsUserLoggedIn(true); 
                     localStorage.setItem("token", data.token);
                     setUser( data.user );
+                    setToken( data.token );
 
                     setUsername("");
                     setPassword("");

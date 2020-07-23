@@ -2,6 +2,10 @@ import axios from "axios";
 
 // axios cheatsheet: https://kapeli.com/cheat_sheets/Axios.docset/Contents/Resources/Documents/index
 
+// axios syntax: axios.METHOD('URL', DATA, HEADERS)
+
+// Authentication Header:
+
 /* ******** user ******** */
 
 // Authentication Header:
@@ -13,6 +17,15 @@ const HEADERS = (token) => {
   const headersObj = {headers, validateStatus}  
   return headersObj;
 }
+export async function checkToken(token) {
+  try {
+    const { data } = await axios.get("/api/users", HEADERS(token));
+    return data;
+  } catch (e) {
+    throw e
+  }
+}
+
 
 export async function loginUser({username, password}) {
  
@@ -86,9 +99,9 @@ export async function getUserInfo() {
 
 export async function getAllProducts() {
     try {
-      const { data } = await axios.get("/api/products");
-      console.log("products:", data);
-      return data;
+      const { data: { products } } = await axios.get("/api/products");
+      console.log("products:", products);
+      return products;
     } catch (error) {
       throw error;
     }
@@ -132,37 +145,75 @@ export async function createProducts(
     }   catch (error) {
       throw error;
     }
-
     //authorization/ bearer token needed... pull from state
 }
+
+export async function checkStock({token, productId}) {
+  try {
+    const { data: stock } = await axios.post("/api/products/stock", {productId}, HEADERS(token));
+    return stock;
+  } catch (error) {
+    throw error;
+  }
+}
+
 /* ******** cart ******** */
 
-export async function getCart() {
+export async function getCart({token}) {
   try {
-    const { data } = await axios.get("/api/cart");
-    console.log("cart:", data);
+    const { data: { cart } } = await axios.get("/api/carts/open", HEADERS(token));
+    console.log("cart:", cart);
+    return cart;
+  } catch (error) {
+    throw error;
+  }
+}
+//add item to cart
+export async function addToCart({productId, quantity, token}) {
+  try {
+    const { data } = await axios.post('/api/cart_products/add', {productId, quantity}, HEADERS(token));
     return data;
   } catch (error) {
     throw error;
   }
 }
 
-export async function addToCart(userId, productId, quantity) {
+//Update cartProduct quantity
+export async function updateCartProductQuantity({cartProductId, quantity, token}) {
   try {
-    const { data } = await axios.post('/api/cart', {userId, productId, quantity});
+    const { data } = await axios.patch(`/api/cart_products/${cartProductId}`, {quantity}, HEADERS(token));
     return data;
   } catch (error) {
     throw error;
   }
 }
 
-// what do we need to remove an item? removing from cart is a post or delete request?
-export async function removeFromCart(cartId, productId) {
+//remove item from cart
+export async function removeFromCart({token, cartProductId}) {
   try {
-    const { data } = await axios.post('/api/cart/remove', {cartId, productId});
+    const { data } = await axios.delete(`/api/cart_products/${cartProductId}/remove`, HEADERS(token));
     return data;
   } catch (error) {
     throw error;
+  }
+}
+//clear cart
+export async function clearCart({token}) {
+  try {
+    const { data } = await axios.delete(`/api/cart_products/clear`, HEADERS(token));
+    return data;
+  } catch (error) {
+    throw error;
+  }
+}
+
+//CHECKOUT:
+export async function checkout({shippingAddress, token}) {
+  try {
+    const { data } = await axios.patch(`/api/carts/checkout`, {shippingAddress}, HEADERS(token));
+    return data;
+  } catch (e) {
+    throw e;
   }
 }
 
