@@ -52,7 +52,6 @@ const Login = ({ setShow, setIsUserLoggedIn, user, setUser, error, setError }) =
                 // user object returned:
                 if (data.token) {
                     setIsUserLoggedIn(true); 
-                    localStorage.setItem("token", data.token);
                     setUser( data.user );
                     setUsername("");
                     setPassword("");
@@ -87,7 +86,7 @@ const Login = ({ setShow, setIsUserLoggedIn, user, setUser, error, setError }) =
                       onChange={handleUsernameChange}
                       value={username}
                       required
-                      minlength="5"
+                      minLength="5"
                     />
                 <Form.Text id="passwordHelpBlock" muted>
                         Must be at least 5 characters long.
@@ -105,7 +104,7 @@ const Login = ({ setShow, setIsUserLoggedIn, user, setUser, error, setError }) =
                        onChange={handlePasswordChange}
                        value={password}
                        required
-                       minlength="8"
+                       minLength="8"
                        />
                     <Form.Text id="passwordHelpBlock" muted>
                         Must be 8-20 characters long.

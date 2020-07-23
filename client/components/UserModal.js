@@ -25,7 +25,10 @@ const UserModal = ({ show, setShow, setIsUserLoggedIn, user, setUser }) => {
             <Tabs
                 id="login-register"
                 activeKey={key}
-                onSelect={(k) => setKey(k)}
+                onSelect={(k) => { 
+                        setKey(k)
+                        setError({})
+                }}
             >
                 <Tab eventKey="login" title="Login">
                     <Login 

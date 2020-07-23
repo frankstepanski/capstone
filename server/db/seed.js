@@ -20,8 +20,8 @@ async function createInitialUsers() {
             password: 'password1',
             "firstName": 'Frank',
             "lastName": 'Stepanski',
-            email: 'frank.stepanski@gamil.com',
-            address: "125 E Fake St Apt B San Luis Obispo CA 93405",
+            email: 'frank.stepanski@gmail.com',
+            address: "125 E Fake St Apt B, San Luis Obispo, CA, 93405",
             admin: false,
             active: true
         });
@@ -32,7 +32,7 @@ async function createInitialUsers() {
             "firstName": 'Aidan',
             "lastName": 'Weber',
             email: 'aidanweber37@gmail.com',
-            address: "123 E Fake St Apt C San Luis Obispo CA 93405",
+            address: "123 E Fake St, Apt C, San Luis Obispo, CA, 93405",
             admin: true,
             active: true
         });
@@ -43,7 +43,7 @@ async function createInitialUsers() {
             "firstName": 'Chris',
             "lastName": 'Jones',
             email: 'chrisfyi@hotmail.com',
-            address: "123 E Fake St Apt C San Luis Obispo CA 93405",
+            address: "123 E Fake St Apt C, San Luis Obispo, CA, 93405",
             admin: true,
             active: true
         });

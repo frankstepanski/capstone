@@ -16,7 +16,7 @@ module.exports = {
             use: {
                 loader: 'babel-loader'
             },
-            exclude: /node_nodules/,
+            exclude: /node_modules/,
             },
             {
                 test: /\.css/i,

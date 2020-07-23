@@ -14,7 +14,7 @@ const { sync } = require("./db/index");
 const { seed } = require("./db/seed");
 
 const PORT = process.env.PORT || 3001;
-const FORCE = process.env.FORCE || false;
+const FORCE = process.env.FORCE || true;
 
 const server = express();
 
