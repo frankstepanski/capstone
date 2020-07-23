@@ -20,6 +20,7 @@ import { getCart, checkToken } from "./api";
 import { getAllProducts } from "./api"
 
 const App = () => {
+  const [cartEmpty, setCartEmpty] = useState(true) // always boolean
   const [show, setShow] = useState(false); 
   const [user, setUser] = useState({});
   const [cart, setCart] = useState({}); 
@@ -38,6 +39,7 @@ const App = () => {
 
   useEffect( ()=> {
     const authenticateToken = async () => {
+      console.log(`Checking if token is valid`)
       try {
         const res = await checkToken(token)
         if (res.success) {
@@ -50,18 +52,23 @@ const App = () => {
         console.log(e);
       }
     }
+    authenticateToken();
+  }, [token]);
 
+  useEffect(()=> {
     const fetchCurrentCart = async () => {
+      console.log(`Grabbing current cart`)
       try {
-        const { cart: currCart} = await getCart({token});
-        setCart(currCart)
+        const currentCart = await getCart({token});
+        console.log("current cart: ", currentCart)
+        setCart(currentCart)
+        setCartEmpty(false)
       } catch (e) {
         console.log(e)
       }
     };
-    authenticateToken();
     fetchCurrentCart();
-  }, [token]);
+  }, [cartEmpty]);
 
     return (
         <div className = "container">
@@ -108,6 +115,9 @@ const App = () => {
                     cart={cart}
                     setCart={setCart}
                     user={user}
+                    products={products}
+                    cartEmpty={cartEmpty}
+                    setCartEmpty={setCartEmpty}
                   /> )}
               />
               <Route path = "/payment" render ={() => ( 

@@ -12,18 +12,21 @@ const Cart = ({
     cart,
     setCart,
     user,
-    token
+    token,
+    products,
+    setCartEmpty,
+    cartEmpty
 }) => {
-
-    //const [] = useState()
-
+    console.log("CE(cart): ", cartEmpty)
     const handleCheckout = () => {}
 
     const handleClear = async () => {
         try {
             const res = await clearCart({token});
+            console.log(`Clearing cart`, res)
             if (res.status) {
                 setCart(res.emptyCart)
+                setCartEmpty(true)
             }
         } catch (e) {
             console.error(error)
@@ -31,22 +34,20 @@ const Cart = ({
     }
 
     const cartProducts = cart.products;
-    const disabled = !Boolean(cartProducts.length)
 
     return (
     <>
-        <h1>Shopping Cart</h1>
-        <Container>
-            <Row>
+        <h1>My Cart</h1>
+        <Container fluid>
+            <Row sm={12}>
                 {
-                    cartProducts.length > 0 
+                    cartEmpty === false
                     ? (
-                        cartProducts.map(cartProd => (
+                        cartProducts.map(cartProduct => (
                             <CartItem 
-                                key={cartProd.id}
-                                productId={cartProd.productId}
-                                purchasePrice={cartProd.purchasePrice}
-                                quantity={cartProd.quantity}
+                                key={cartProduct.id}
+                                cartProduct={cartProduct}
+                                products={products}
                                 user={user}
                                 token={token}
                                 setCart={setCart}
@@ -57,17 +58,17 @@ const Cart = ({
                 }
             </Row>
 
-            <Row>
+            <Row sm="auto">
                 <Button
                 variant="danger"
                 onClick={handleClear}
-                {...disabled ? disabled : ""}
+                disabled={cartEmpty}
                 >Clear Cart</Button>
                 <Button
                 variant="primary"
                 onClick={handleCheckout}
-                {...disabled ? disabled : ""}
-                >Checkout</Button>)
+                disabled={cartEmpty}
+                >Checkout</Button>
             </Row>
         </Container>
     </>

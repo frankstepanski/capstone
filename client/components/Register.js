@@ -20,7 +20,7 @@ const Register = ({ setShow, setIsUserLoggedIn, user, setUser, error, setError, 
     const [email, setEmail] = useState("");
     const [streetaddress, setStreetAddress] = useState("");
     const [city, setCity] = useState("");
-    const [state, setState] = useState("");
+    const [state, setState] = useState("-");
     const [zip, setZip] = useState("");
 
     const handleUsernameChange = event => setUsername(event.target.value);
@@ -149,11 +149,19 @@ const Register = ({ setShow, setIsUserLoggedIn, user, setUser, error, setError, 
                     </Form.Group>
                     <Form.Group as = {Col} className = "col-md-2">
                         <Form.Label>State:</Form.Label>
-                        <Form.Control as="select"  defaultValue="Choose...">
+                        <Form.Control 
+                            as="select"
                             onChange={handleStateChange}
-                            value={state}
-                            <option>Choose...</option>
-                            { states.map((sta) => <option key={ sta.name }>{ sta.name }</option>) }
+                            value={state}>
+                        <>
+                        <option key={'-'} value='-'></option>
+                        { states.map((sta) => {
+                            return (
+                                    <option key={ sta.name } value={sta.value}>{ sta.name }</option>
+                                )
+                            })
+                        }
+                        </>
                         </Form.Control>
                     </Form.Group>
                     <Form.Group as = {Col}>
