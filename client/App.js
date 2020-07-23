@@ -107,7 +107,8 @@ const App = () => {
               }
               <Route path = "/shop" render ={() => ( 
                   <Shop 
-                    cart={cart}  
+                    cart={cart}
+                    token={token}  
                     setCart={setCart} 
                     user={user} 
                     products={products} 

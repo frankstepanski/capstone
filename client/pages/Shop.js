@@ -14,7 +14,12 @@ import "./Shop.css";
 
 
 
-const Shop = ( {products} ) => {
+const Shop = ( {
+    products,
+    setCart,
+    token
+      
+} ) => {
    const [ filteredProducts, setFilteredProducts ] = useState([])
     useEffect(()=>{
         if (products && products.length) {
@@ -81,6 +86,9 @@ const Shop = ( {products} ) => {
 
               <ProductCard 
                 key = { prod.id}
+                token = { token }
+                setCart = { setCart }
+                productId = {prod.id}
                   name = { prod.name } 
                   price = { prod.price }
                   thumbnail = { prod.thumbnail }

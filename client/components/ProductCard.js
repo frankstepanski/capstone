@@ -1,20 +1,50 @@
-import React, { useState } from "react"
+import React, { useState , useEffect } from "react"
 import { CardDeck, Card , Button, Pagination } from 'react-bootstrap'
 
 import CardPopover from '../components/Popover'
-
-// const handleStockDecrement = () => setItemQuantity(--itemQuantity);
-// const handleStockIncrement = () => {
-//     setItemQuantity(++itemQuantity)
-// }
+import { addToCart } from "../api"
 
 const ProductCard = ({
     name,
     price,
     thumbnail,
-    stock
+    stock,
+    setCart,
+    token,
+    productId
 }) => {
+    let [itemQuantity, setItemQuantity] = useState(0)
+    const [prodId, setProdId] = useState(0)
+    
 
+    const handleAddToCart = async () => {
+        try {
+            const res = await addToCart({token, productId:prodId , quantity: itemQuantity});
+            if (res.success) { setCart(res.updatedCart) };
+        } catch (e) {
+            console.error(e);
+        }
+    }
+
+    useEffect(() => {
+        if (productId) {
+            setProdId(productId)
+        }
+    }, [productId])
+    
+    const handleStockDecrement = () => {
+        const newQuantity = itemQuantity-1
+        setItemQuantity(newQuantity); 
+
+    }
+
+    const handleStockIncrement = async () => {
+        const newQuantity = itemQuantity+1
+        setItemQuantity(newQuantity)
+    }
+    
+    
+    
     return (
     <CardDeck>
         <Card style ={{
@@ -49,12 +79,14 @@ const ProductCard = ({
 
                 <Button style ={{
                     "textAlign": "center"
-                }}>Add to Cart</Button>
-                {/* <Pagination>
-                    <Pagination.Prev disabled={itemQuantity <= 1 ? true : false} onClick={handleStockDecrement}/>
+                }}
+                onClick = {handleAddToCart}
+                >Add to Cart</Button>
+                <Pagination>
+                    <Pagination.Prev disabled={itemQuantity <= 0 ? true : false} onClick={handleStockDecrement}/>
                     <Pagination.Item disabled>{itemQuantity}</Pagination.Item>
                     <Pagination.Next disabled={itemQuantity >= stock ? true : false} onClick={handleStockIncrement}/>
-                </Pagination> */}
+                </Pagination>
 
                 <CardPopover />
                 
