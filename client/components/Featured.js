@@ -1,7 +1,7 @@
 import React from 'react';
 import Carousel from 'react-bootstrap/Carousel'
 
-import ProductCard from '../components/ProductCard'
+import FeaturedCard from '../components/FeaturedCard'
 
 
 const Featured = ({ featuredArray }) => (
@@ -11,7 +11,7 @@ const Featured = ({ featuredArray }) => (
           featuredArray.map(featProd => (
 
             <Carousel.Item key = { featProd.id }>                     
-              <ProductCard 
+              <FeaturedCard 
                   name = { featProd.name } 
                   price = { featProd.price }
                   thumbnail = { featProd.thumbnail }
