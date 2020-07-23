@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Form, FormControl, Button, CardDeck, Card } from 'react-bootstrap';
+import { Form, FormControl, Button, CardDeck, Card,  } from 'react-bootstrap';
 
 import { getAllProducts } from "../api"
 
@@ -26,15 +26,14 @@ const Shop = ( {products} ) => {
     return product.featured
   })
   const handleCategoryChange = (eventKey) => {
-    console.log("eventKey", eventKey)
+    
 
     const prodArr = products.filter(product => { 
-      console.log("product", product)
+      
       
       return eventKey  === "all" ? true : product.categoryId == eventKey;
       
     })
-    console.log("<<<<<", prodArr)
       setFilteredProducts(prodArr)
   }
 

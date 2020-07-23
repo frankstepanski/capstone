@@ -1,5 +1,7 @@
 import React, { useState } from "react"
-import { CardDeck, Card , Button, Pagination  } from 'react-bootstrap'
+import { CardDeck, Card , Button, Pagination } from 'react-bootstrap'
+
+import CardPopover from '../components/Popover'
 
 // const handleStockDecrement = () => setItemQuantity(--itemQuantity);
 // const handleStockIncrement = () => {
@@ -13,7 +15,7 @@ const ProductCard = ({
     stock
 }) => {
 
-   return (
+    return (
     <CardDeck>
         <Card style ={{
            
@@ -53,6 +55,10 @@ const ProductCard = ({
                     <Pagination.Item disabled>{itemQuantity}</Pagination.Item>
                     <Pagination.Next disabled={itemQuantity >= stock ? true : false} onClick={handleStockIncrement}/>
                 </Pagination> */}
+
+                <CardPopover />
+                
+                
                 
             </Card.Body>
         </Card>
