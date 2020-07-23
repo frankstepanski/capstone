@@ -22,6 +22,7 @@ const App = () => {
   const [cart, setCart] = useState({}); 
   const [products, setProducts] = useState([{}]); 
   const [orders, setOrder] = useState([{}]) 
+  const [showPop, setPop] = useState(false);
   const [isUserLoggedIn, setIsUserLoggedIn] = useState(false);
   
   useEffect ( () => {
