@@ -10,9 +10,7 @@ import states from 'states-us';
 
 import { registerUser } from '../api';
 
-const Register = ({ setShow, setIsUserLoggedIn, user, setUser }) => {
-
-    //console.log(states.map(state => `<option>${state.name}</option>`));
+const Register = ({ setShow, setIsUserLoggedIn, user, setUser, error, setError, setToken }) => {
 
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
@@ -22,7 +20,7 @@ const Register = ({ setShow, setIsUserLoggedIn, user, setUser }) => {
     const [email, setEmail] = useState("");
     const [streetaddress, setStreetAddress] = useState("");
     const [city, setCity] = useState("");
-    const [state, setState] = useState("");
+    const [state, setState] = useState("-");
     const [zip, setZip] = useState("");
 
     const handleUsernameChange = event => setUsername(event.target.value);
@@ -49,6 +47,7 @@ const Register = ({ setShow, setIsUserLoggedIn, user, setUser }) => {
             setIsUserLoggedIn(true); 
             localStorage.setItem("token", data.token);
             setUser( data.user );
+            setToken( data.token );
 
             setUsername("");
             setPassword("");
@@ -150,11 +149,19 @@ const Register = ({ setShow, setIsUserLoggedIn, user, setUser }) => {
                     </Form.Group>
                     <Form.Group as = {Col} className = "col-md-2">
                         <Form.Label>State:</Form.Label>
-                        <Form.Control as="select"  defaultValue="Choose...">
+                        <Form.Control 
+                            as="select"
                             onChange={handleStateChange}
-                            value={state}
-                            <option>Choose...</option>
-                            { states.map(state => `<option>${state.name}</option>`) }
+                            value={state}>
+                        <>
+                        <option key={'-'} value='-'></option>
+                        { states.map((sta) => {
+                            return (
+                                    <option key={ sta.name } value={sta.value}>{ sta.name }</option>
+                                )
+                            })
+                        }
+                        </>
                         </Form.Control>
                     </Form.Group>
                     <Form.Group as = {Col}>
@@ -169,6 +176,7 @@ const Register = ({ setShow, setIsUserLoggedIn, user, setUser }) => {
                 <Button variant="primary" type="submit" onClick={handleSubmit}>
                 Submit
                 </Button>
+                <Form.Label className = "ml-5 alert-danger">{error.error ? `Login error: ${error.error}` : '' }</Form.Label>
             </Form>
             </Mod.Body>
             </>

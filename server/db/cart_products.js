@@ -18,15 +18,32 @@ const getCartProductsByCartId = async ({cartId}) => {
 
 const addProductToCart = async ({productId, cartId, purchasePrice, quantity}) => {
 
-    try{
-        const { rows: [ newCartProduct ] } = await client.query(`
-            INSERT INTO cart_products
-            ("cartId", "productId", "purchasePrice", quantity)
-            VALUES ($1, $2, $3, $4)
-            RETURNING *
-        `, [cartId, productId, purchasePrice, quantity])
+    try {
+        const cartProduct = await getCartProductByProductId({productId, cartId});
+        const currStock = await getProductStock({productId})
+        const newQuantity = cartProduct ? quantity + cartProduct.quantity : false;
+        
+        if (cartProduct && newQuantity > currStock) {
+            //if the requested amount exceeds stock return null
+            return null;
+        } else if (!cartProduct) {
+            // if the product is not in the cart already, add it
+            console.log('Adding item to cart')
+            const { rows: [ newCartProduct ] } = await client.query(`
+                INSERT INTO cart_products
+                ("cartId", "productId", "purchasePrice", quantity)
+                VALUES ($1, $2, $3, $4)
+                RETURNING *
+            `, [cartId, productId, purchasePrice, quantity])
 
-        return newCartProduct;
+            return newCartProduct;
+        } else {
+            // If the product is already in the cart but the stock permi
+            console.log('The item is already in the cart. Updating quantity')
+            const newCartProduct = await updateCartProductQuantity({cartProductId: cartProduct.id, quantity: newQuantity});
+
+            return newCartProduct;
+        }
     }
     catch(error){
         console.error(`addProductToCart error. ${ error }`)
@@ -43,7 +60,8 @@ const updateCartProductQuantity = async ({cartProductId, quantity}) => {
 
         console.log(`
             productId: ${productId}, 
-            productStock: ${productId}
+            productStock: ${productId},
+            quantity: ${quantity}
         `)
 
         //if item has enough stock, update cartProduct, if not, return null
@@ -58,7 +76,7 @@ const updateCartProductQuantity = async ({cartProductId, quantity}) => {
             return updatedItem;
         } else if (quantity > productStock){
             console.log(`Exceeds product stock`)
-            return {code: `stockExceeded`};
+            return 
         } else {
             throw new Error('Unknown error updating product stock');
         }
@@ -123,6 +141,23 @@ const getCartProductById = async (cartProductId) => {
     }
     catch(error){
         console.error(`getCartproductById error. ${ error }`)
+        throw error;
+    }
+}
+
+// used only in the addProductToCart func. Not exporting
+const getCartProductByProductId = async ({productId, cartId}) => {
+    try {
+        const { rows: [ cartProduct ] } = await client.query(`
+            SELECT * FROM cart_products
+            WHERE "productId"=$1
+            AND "cartId"=$2;
+        `, [productId, cartId]);
+
+        return cartProduct;
+    }
+    catch(error){
+        console.error(`Error getting product by productId error. ${ error }`)
         throw error;
     }
 }

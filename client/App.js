@@ -1,11 +1,10 @@
-import React, { useState , useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { Route, Switch } from "react-router-dom";
 
 import  Home from './pages/Home';
 import  UserModal from './components/UserModal';
 import  Account from './pages/Account';
 import  Shop  from './pages/Shop';
-import  ShoppingCart from './pages/ShoppingCart';
 import  Blog  from './pages/Blog';
 import  Contact from './pages/Contact';
 import  About from './pages/About';
@@ -13,16 +12,22 @@ import  NotFoundPage  from './pages/NotFoundPage';
 import  NavBar  from './components/NavigationBar';
 import  Footer  from './pages/layouts/Footer';
 import  Product from './pages/ProductForm';
+import  Cart from './pages/Cart';
+
+import { getCart, checkToken } from "./api";
+
 
 import { getAllProducts } from "./api"
 
 const App = () => {
+  const [cartEmpty, setCartEmpty] = useState(true) // always boolean
   const [show, setShow] = useState(false); 
   const [user, setUser] = useState({});
   const [cart, setCart] = useState({}); 
   const [products, setProducts] = useState([{}]); 
   const [orders, setOrder] = useState([{}]) 
   const [showPop, setPop] = useState(false);
+  const [token, setToken] = useState(localStorage.token) 
   const [isUserLoggedIn, setIsUserLoggedIn] = useState(false);
   
   useEffect ( () => {
@@ -34,6 +39,41 @@ const App = () => {
   }, []);
 
 
+  useEffect( ()=> {
+    const authenticateToken = async () => {
+      console.log(`Checking if token is valid`)
+      try {
+        const res = await checkToken(token)
+        if (res.success) {
+          setUser(res.user);
+          setIsUserLoggedIn(true);
+        } else {
+          localStorage.removeItem("token");
+        }
+      } catch (e) {
+        console.log(e);
+      }
+    }
+    authenticateToken();
+  }, [token]);
+
+  useEffect(()=> {
+    const fetchCurrentCart = async () => {
+      console.log(`Grabbing current cart`)
+      try {
+        const currentCart = await getCart({token});
+        setCart(currentCart)
+        setCartEmpty(false)
+      } catch (e) {
+        console.log(e)
+      }
+    };
+    fetchCurrentCart();
+    return (() => {
+
+    })
+  }, [token]);
+
     return (
         <div className = "container">
           <UserModal 
@@ -42,6 +82,7 @@ const App = () => {
             setIsUserLoggedIn = { setIsUserLoggedIn } 
             user = { user }
             setUser = {setUser} 
+            setToken = {setToken}
           /> 
           <NavBar 
             setShow = { setShow } 
@@ -73,10 +114,14 @@ const App = () => {
                   /> )}
               />
               <Route path = "/cart" render ={() => ( 
-                  <ShoppingCart 
+                  <Cart
+                    token={token}
                     cart={cart}
                     setCart={setCart}
                     user={user}
+                    products={products}
+                    cartEmpty={cartEmpty}
+                    setCartEmpty={setCartEmpty}
                   /> )}
               />
               <Route path = "/payment" render ={() => ( 
@@ -89,7 +134,6 @@ const App = () => {
               <Route path = "/contact" component ={Contact} />
               <Route path = "/product" component ={Product} />
               <Route path="*" component={NotFoundPage} />
-              
           </Switch>
           <Footer />
         </div>
