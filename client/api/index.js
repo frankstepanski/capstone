@@ -38,7 +38,7 @@ export async function registerUser(username, password, firstName, lastName, addr
 export async function getAllProducts() {
     try {
       const { data: { products } } = await axios.get("/api/products");
-      console.log("products:", products);
+      
       return products;
     } catch (error) {
       throw error;

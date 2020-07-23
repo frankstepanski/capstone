@@ -36,7 +36,6 @@
     "react-bootstrap": "^1.1.1",
     "react-dom": "^16.13.1",
     "react-iframe": "^1.8.0",
-    "react-multi-carousel": "^2.5.5",
     "react-router-dom": "^5.2.0",
     "react-stripe-checkout": "^2.6.3",
     "sass": "^1.26.10",
