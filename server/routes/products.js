@@ -35,43 +35,41 @@ productsRouter.get('/featured', async (req, res, next) => {
 
 // create product route
 productsRouter.post('/create', requireUser, async ( req, res, next ) => {
-        const {
+    const {
+        name,
+        description,
+        price,
+        stock,
+        active,
+        featured,
+        thumbnail,
+        image,
+        categoryId,
+    } = req.body;
+
+    console.log('Product Post:' )
+
+    try {
+        const requiredParams = {            
             name,
             description,
             price,
             stock,
-            active,
-            featured,
             thumbnail,
             image,
-            categoryId,
-        } = req.body;
-
-        console.log('Product Post:' )
-
-        try {
-            const requiredParams = {            
-                name,
-                description,
-                price,
-                stock,
-                thumbnail,
-                image,
-                categoryId
-            };
-            for (const [key, value] of Object.entries(requiredParams)) {
-                if (!value) {
-                    throw new Error(`Missing data at position '${key}'`)
-                }
+            categoryId
+        };
+        for (const [key, value] of Object.entries(requiredParams)) {
+            if (!value) {
+                throw new Error(`Missing data at position '${key}'`)
             }
+        }
 
-            const productItems = await getProductByName({ name });
+        const productItems = await getProductByName({ name });
 
-            if (productItems) {
-                
-                console.log('Item already exist')
-
-                return;
+        if (productItems) {
+            console.log('Item already exist')
+            return;
             } else { 
                 const newItem = await createProduct({
                     name,
@@ -92,12 +90,12 @@ productsRouter.post('/create', requireUser, async ( req, res, next ) => {
                     message: "Item was created!",
                     product: newItem
                 }); 
-             } }catch (error){
-                 console.error('Error creating item!', error)
-                 next(error)
-
-                }
-        });
+            } 
+        } catch (error){
+            console.error('Error creating item!', error)
+            next(error)
+    }
+});
 
 
 //edit product route

@@ -24,14 +24,18 @@ cartProductsRouter.post('/add', requireUser, async function (req, res, next){
     const {id: userId} = req.user;
     try {
         // get cartId:
-        const {id: cartId} = await getOpenCartByUserId({userId});
+        const openCart = await getOpenCartByUserId({userId});
         // get current purchase price:
         const { price: purchasePrice} = await getProductById(productId);
         // add item:
-        const newCartItem = await addProductToCart({ productId, cartId, purchasePrice, quantity});
+        const newCartItem = await addProductToCart({ productId, cartId: openCart.id, purchasePrice, quantity});
         // get updated cart object:
         const updatedCart = await getOpenCartByUserId({userId});
-        res.send({ success: true, message:'Item added to cart', updatedCart });        
+        if (newCartItem) {
+            res.send({ success: true, message:'Item added to cart', updatedCart });   
+        } else {
+            res.send({ success: false, message:'Quantity exceeds current product stock', openCart });   
+        }
     } catch(error) {
         console.error(error)
         next();
@@ -73,7 +77,7 @@ cartProductsRouter.delete('/:cartProductId/remove', requireUser, async function 
         if (removedItem){
             const updatedCart = await getOpenCartByUserId({userId});
             res.send({ 
-                status: 'success', 
+                success: true, 
                 message:'Item deleted.', 
                 removed: removedItem,
                 updatedCart

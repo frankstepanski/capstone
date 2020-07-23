@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
     Container, 
     Row,
-    Button
+    Button,
+    Col,
 } from 'react-bootstrap'
 
 import { clearCart } from "../api"
@@ -17,7 +18,28 @@ const Cart = ({
     setCartEmpty,
     cartEmpty
 }) => {
-    console.log("CE(cart): ", cartEmpty)
+    const [total, setTotal] = useState(0)
+    const [cartProducts, setCartProducts] = useState([])
+
+    useEffect(() => {
+        if (user && cart.products && cart.products.length > 0){
+            setCartProducts(cart.products)
+        } else {
+            setCartEmpty(true)
+        }
+    }, [user, cart])
+
+    useEffect(() => {
+        const calculateTotal = () => {
+            const priceArr = cartProducts.map((prod) => prod.purchasePrice * prod.quantity);
+            const val = (priceArr.reduce((sum, currentVal) => sum + currentVal));
+            setTotal(val);
+        }
+        if (cartProducts.length > 0){
+            calculateTotal()
+        }
+    }, [cartProducts, cart])
+
     const handleCheckout = () => {}
 
     const handleClear = async () => {
@@ -33,42 +55,49 @@ const Cart = ({
         }
     }
 
-    const cartProducts = cart.products;
-
     return (
     <>
         <h1>My Cart</h1>
-        <Container fluid>
-            <Row sm={12}>
-                {
-                    cartEmpty === false
-                    ? (
-                        cartProducts.map(cartProduct => (
+        <Container
+        className='w-100'>
+            {
+                cartEmpty === false
+                ? (
+                    cartProducts.map(cartProduct => (
+                        <Row key={cartProduct.id} className='w-100'>
                             <CartItem 
-                                key={cartProduct.id}
                                 cartProduct={cartProduct}
                                 products={products}
                                 user={user}
                                 token={token}
                                 setCart={setCart}
+                                setTotal={setTotal}
                             />
-                        ))
-                    )
-                    : <span>Your cart is empty!</span>
-                }
-            </Row>
-
-            <Row sm="auto">
+                        </Row>
+                    ))
+                )
+                : <Row className='w-100'><span>Your cart is empty!</span></Row>
+            }
+            <Row sm="auto" className="justify-content-stretch">
+                <Col sm={2}>
+                    <Button
+                    className="m-1 align-self-left"
+                    variant="danger"
+                    onClick={handleClear}
+                    disabled={cartEmpty}
+                    >Clear Cart</Button>
+                </Col>
+                <Col sm={2}>
+                    <h4>Grand Total: ${total}</h4>
+                </Col>
+                <Col sm={2}>
                 <Button
-                variant="danger"
-                onClick={handleClear}
-                disabled={cartEmpty}
-                >Clear Cart</Button>
-                <Button
-                variant="primary"
-                onClick={handleCheckout}
-                disabled={cartEmpty}
-                >Checkout</Button>
+                    className="m-1"
+                    variant="primary"
+                    onClick={handleCheckout}
+                    disabled={cartEmpty}
+                    >Checkout</Button>
+                </Col>
             </Row>
         </Container>
     </>

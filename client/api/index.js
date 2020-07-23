@@ -119,9 +119,18 @@ export async function createProducts(
     }   catch (error) {
       throw error;
     }
-
     //authorization/ bearer token needed... pull from state
 }
+
+export async function checkStock({token, productId}) {
+  try {
+    const { data: stock } = await axios.post("/api/products/stock", {productId}, HEADERS(token));
+    return stock;
+  } catch (error) {
+    throw error;
+  }
+}
+
 /* ******** cart ******** */
 
 export async function getCart({token}) {
@@ -146,7 +155,7 @@ export async function addToCart({productId, quantity, token}) {
 //Update cartProduct quantity
 export async function updateCartProductQuantity({cartProductId, quantity, token}) {
   try {
-    const { data } = await axios.post(`/api/cart_products/${cartProductId}`, {quantity}, HEADERS(token));
+    const { data } = await axios.patch(`/api/cart_products/${cartProductId}`, {quantity}, HEADERS(token));
     return data;
   } catch (error) {
     throw error;

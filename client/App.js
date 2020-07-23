@@ -60,7 +60,6 @@ const App = () => {
       console.log(`Grabbing current cart`)
       try {
         const currentCart = await getCart({token});
-        console.log("current cart: ", currentCart)
         setCart(currentCart)
         setCartEmpty(false)
       } catch (e) {
@@ -68,7 +67,10 @@ const App = () => {
       }
     };
     fetchCurrentCart();
-  }, [cartEmpty]);
+    return (() => {
+
+    })
+  }, [token]);
 
     return (
         <div className = "container">
