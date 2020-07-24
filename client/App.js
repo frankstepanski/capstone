@@ -67,9 +67,6 @@ const App = () => {
       }
     };
     fetchCurrentCart();
-    return (() => {
-
-    })
   }, [token]);
 
     return (
