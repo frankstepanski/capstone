@@ -12,8 +12,8 @@ import "./Account.css";
 const Account = ({ user, token }) => {
 
     const [error, setError] = useState("");
-    const [validated, setValidated] = useState(false);
     const [success, setSuccess] = useState("");
+    const [validated, setValidated] = useState(false);
 
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
