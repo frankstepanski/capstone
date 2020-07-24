@@ -16,18 +16,17 @@ const createUser = async ({
     lastName,
     email,
     address,
-    admin = false,
-    active
+    admin = false
 }) => {
   
     try {
         const pw = await hashStr(password)
         const { rows: [ users ] } = await client.query(`
-            INSERT INTO users(username, password, "firstName", "lastName", email, address, admin, active)
-            VALUES ($1,$2,$3,$4,$5,$6,$7,$8)
+            INSERT INTO users(username, password, "firstName", "lastName", email, address, admin)
+            VALUES ($1,$2,$3,$4,$5,$6,$7)
             ON CONFLICT (username) DO NOTHING
             RETURNING *;
-            `, [username, pw, firstName, lastName, email, address, admin, active]
+            `, [username, pw, firstName, lastName, email, address, admin]
         );
 
         return users;
@@ -62,14 +61,12 @@ const getAllUsers = async () => {
         `, [userId]);
         
         if(!user) {
-            throw { 
-                name: "UserNotFoundError",
-                message: "Cannot find user with that userId"
-            };   
+            const error = new Error('invalid username');
+            error.status = 400;
+            throw error;
         };
 
         return user;
-
     } catch(error){
         throw error;
     }
@@ -85,7 +82,7 @@ async function getUserByUsername ({username}) {
         return user;
     } catch (e) {
         console.log(`> failed to get user with username ${username}`)
-        throw e;
+        throw new Error(`failed to get user with username ${username}`);
     }
 }
 
@@ -93,13 +90,21 @@ async function getUserByUsername ({username}) {
 const authenticate = async ({username, password}) => {
     try {
         const user = await getUserByUsername({username});
+        if (!user) {
+            const error = new Error('invalid username');
+            error.status = 400;
+            throw error;
+        };
         const authenticated = await bcrypt.compare(password, user.password)
         if (!authenticated) {
-            throw new Error('invalid password');
-        }
+            const error = new Error('invalid password');
+            error.status = 400;
+            throw error;
+        };
+        
         return user;
     } catch (e) {
-        console.log(e, `Could not authenticate user`);
+        throw e;
     }    
 }
 

@@ -1,6 +1,11 @@
 //Server
 const express = require ('express');
 const path = require('path');
+/*
+const stripe = require("stripe")(
+  "sk_test_51H5aWNICjx0urQmckVFOscQzfNC0UDZhM3ObJRQOTeSniYpdRdwJhoMScUKz4vnbXkRRAjhFWXUyTatpYOzHuGoe000oj5UQyG"
+);
+*/
 
 const morgan = require('morgan');
 const bodyParser = require('body-parser');
@@ -9,7 +14,7 @@ const { sync } = require("./db/index");
 const { seed } = require("./db/seed");
 
 const PORT = process.env.PORT || 3001;
-const FORCE = process.env.FORCE || false;
+const FORCE = process.env.FORCE || true;
 
 const server = express();
 
@@ -32,13 +37,37 @@ server.use((req, res, next) => {
 const apiRouter = require('./routes');
 server.use('/api', apiRouter);
 
+// stripe API (separate from our own API):
+
+/*
+server.post("/payment", (req, res) => {
+  const { user, cart, token } = req.body;
+  
+  stripe.customers.create({
+    email: token.email,
+   source: token.id
+  })
+
+  .then(customer =>
+    stripe.charges.create({
+      amount,
+      description: "Sample Charge",
+      currency: "usd",
+      customer: customer.id
+    }))
+  .catch(err => console.log("Error:", err))
+  .then(charge => res.render("charge.pug"));
+});
+*/
+
 server.use((error, req, res, next) => {
-  console.error(error);
-  res.status(500).json({
-    error: error.toString(),
-  });
+  console.log("server error:", error.message);
+  res.status(error.status || 500).json({
+    error: error.message,
+   });
   next();
 });
+
 
 // check health of server:
 server.get('/health', (req, res, next)=>{
@@ -52,19 +81,12 @@ server.use(express.static(DIST_PATH));
 // images
 server.use('/assets',express.static(path.join(__dirname,'../assets')));
 
-// 404?
-server.get('*', function(req, res, next) {
-  res.status(404).sendFile(path.join(__dirname, '../dist', 'index.html'));
-});
-
-// make a route for each front end page
-/*
-["create"].forEach((route) => {
+// browser router fix (manually entering route in browser)
+["account", "cart", "shop", "blog", "about", "contact", "product"].forEach((route) => {
   server.get(`/${route}`, (req, res) => {
     res.sendFile(path.join(__dirname, "../dist", "index.html"));
   });
 });
-*/
 
 const startServer = new Promise((resolve) => {
   server.listen(PORT, () => {

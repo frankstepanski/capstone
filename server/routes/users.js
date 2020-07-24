@@ -1,6 +1,6 @@
 const express = require('express');
 const usersRouter = express.Router();
-const { authenticate, getUserByUsername, createUser, getAllUsers, updateUser } = require('../db');
+const { authenticate, getUserByUsername, createUser, getAllUsers, updateUser, getUserById } = require('../db');
 const jwt = require('jsonwebtoken');
 const { SECRET } = process.env;
 const { requireUser } = require('./utils')
@@ -10,14 +10,37 @@ usersRouter.use((req, res, next) => {
     next();
 })
 
-usersRouter.get('/', async (req, res, next) => {
+//get only current user
+usersRouter.get('/', requireUser, async (req, res, next) => {
+    const {id: userId} = req.user;
     try {
-        const data = await getAllUsers();
-        const users = data.map((user) => {
-            delete user.password;
-            return user;
-        })
-        res.send({ users })
+        const user = await getUserById(userId);
+
+        if (user) {
+            res.send({success: true, user})
+        } else {
+            throw new Error('User could not located')
+        }
+    } catch (e) {
+        console.error(error)
+        const{ name, message } = error
+        next({ name, message })
+    }
+})
+
+usersRouter.get('/all', requireUser, async (req, res, next) => {
+    const {admin} = req.user;
+    try {
+        if (admin) {
+            const data = await getAllUsers();
+            const users = data.map((user) => {
+                delete user.password;
+                return user;
+            })
+            res.send({ users })
+        } else {
+            res.send({success: false, message: 'restricted'})
+        }
     } catch (e) {
         console.error(error)
         const{ name, message } = error
@@ -33,24 +56,31 @@ usersRouter.post('/register', async (req, res, next) => {
         lastName, 
         email,
         address,
-        admin,
-        active 
+        admin 
     } = req.body;
-    console.log(`> UN: ${username}`)
-
-    if (!username || !password || !firstName || !lastName || !email || !address){
-        next({
-            name: `MissingRequiredFields`,
-            message: `Complete all required fields to create and account.`
-        })
-    } else if (password.length < 8) {
-        next({
-            name: `invalidPassword`,
-            message: `Your password must be 8 characters or more`
-        })
-    }
+    console.log(`> UN: ${username}`);
 
     try {
+        if (password.length < 8) {
+            throw new Error(`Password must be at least 8 characters`)
+        } else if (username.length < 5) {
+            throw new Error(`Username must be at least 5 characters`)
+        }
+
+        const requiredParams = {            
+            username, 
+            password, 
+            firstName, 
+            lastName, 
+            email,
+            address 
+        };
+        for (const [key, value] of Object.entries(requiredParams)) {
+            if (!value) {
+                throw new Error(`Missing data at position '${key}'`)
+            }
+        }
+
         const _user = await getUserByUsername({username});
         console.log(_user)
 
@@ -59,26 +89,17 @@ usersRouter.post('/register', async (req, res, next) => {
             console.log(`User already exists. Logging in instead`)
             return res.redirect(308, './login');
         } else {
-            const user = await createUser({
+            await createUser({
                 username,
                 password,
                 firstName, 
                 lastName, 
                 email,
                 address,
-                admin,
-                active 
+                admin 
             });
             
-            //redundant code since we're forwarding req to ./login below
-/*             const token = jwt.sign({
-                id: user.id,
-                username
-            }, SECRET, {
-                expiresIn: '1w'
-            }) */
-            
-            //Once the new user is create, forward the request ./login to improve UX flow
+            //Once the new user is created, forward the request ./login to improve UX flow
             console.log(`User successfully created. Logging in.`)
             return res.redirect(308, './login');
         }
@@ -89,27 +110,27 @@ usersRouter.post('/register', async (req, res, next) => {
 
 usersRouter.post('/login', async (req, res, next) => {
     const {username, password} = req.body;
-
-    if (!username || !password) {
-        next({
-            name: 'UsernameAndPasswordRequired',
-            message: "A username and password are required to log in"
-        })
-    }
+    
     try {
+        const requiredParams = {username, password};
+
+        for (const [key, value] of Object.entries(requiredParams)) {
+            if (!value) {
+                throw new Error(`Please profide a valid ${key}`);
+            }
+        };
+
         const user = await authenticate({username, password});
         console.log(`>>> User: `, user)
-        const { id, username: un, admin } = user;
+        const { id, username: un } = user;
+        delete user.password;
 
         if (user) {
             const token = jwt.sign({id, un}, SECRET, {expiresIn: '1w'});
-            res.send({ status: "success", message: "you're logged in!", token, admin});
+            res.send({ success: true, message: "you're logged in!", token, user});
         } else {
             console.log('user could not be logged in')
-            next({ 
-                name: 'IncorrectCredentialsError', 
-                message: 'Username or password is incorrect'
-          });
+            throw new Error('User could not be authenticated')
         }
     } catch(error) {
         console.log(error);
@@ -119,7 +140,6 @@ usersRouter.post('/login', async (req, res, next) => {
 
 // Update non-read-only user informaiton:
 usersRouter.patch('/update', requireUser, async (req, res, next) => {
-    const { password, firstName, lastName, email, address } = req.body;
     const user = req.user;
 
     // This block of code returns an array of only the object entries with !null values
@@ -134,7 +154,7 @@ usersRouter.patch('/update', requireUser, async (req, res, next) => {
         const { id } = user;
         const updatedUser = await updateUser(id, fields = filteredObj);
         console.log(updatedUser)
-        return res.send({status: "success", message: "User updated", user: updatedUser});
+        return res.send({success: true, message: "User updated", user: updatedUser});
         
     } catch (e) {
         next(e);

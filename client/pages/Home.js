@@ -1,13 +1,27 @@
 import React from "react";
-import Jumbotron from "../components/Jumbotron";
-import Carousel from "../components/Carousel"
+import FrontPageCarousel from "../components/FrontPageCarousel"
 import "./Home.css";
+import Featured from "../components/Featured";
 
-const Home = () => {
+
+
+import {CardDeck, Card} from "react-bootstrap"
+
+const Home = ({ products  }) => {
+    const featuredArray = products.filter(product => {
+      console.log("<<<<<", product.featured)
+      return product.featured
+    })
+
     return (
-      <div class="home">
-        <Jumbotron />
-        <Carousel />
+      <div className="home">
+        <FrontPageCarousel />
+        <Card>
+          <Card.Title>Featured Products</Card.Title>
+        </Card>
+        
+       <Featured featuredArray = { featuredArray } />
+        
       </div>
     );
   };

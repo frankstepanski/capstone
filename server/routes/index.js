@@ -30,8 +30,10 @@ apiRouter.use(async (req, res, next) => {
                 console.log(`req.user: `, req.user)
                 next();
             }
-        } catch ({name, message}) {
-            next({name, message});
+        } catch (error) {
+            error.status = 400;
+            error.message = "Invalid token"
+            next(error);
         }
     } else {
         next({
@@ -47,8 +49,28 @@ apiRouter.use('/products', productsRouter);
 const usersRouter = require('./users');
 apiRouter.use('/users', usersRouter);
 
+const cartsRouter = require('./carts');
+apiRouter.use('/carts', cartsRouter);
+
+const cartProductsRouter = require('./cart_products');
+apiRouter.use('/cart_products', cartProductsRouter);
+
+const postsRouter = require('./posts');
+apiRouter.use('/posts', postsRouter);
+
+const messagesRouter = require('./messages');
+apiRouter.use('/messages', messagesRouter);
+
+const reviewsRouter = require('./reviews');
+apiRouter.use('/reviews', reviewsRouter);
+
+/*
 apiRouter.use((error, req, res, next) => {
-    res.send(error);
+    console.log("route error", error.message);
+    res.status(error.status || 500).json({
+        error: error.message,
+    });
 });
+*/
 
 module.exports= apiRouter;

@@ -1,35 +1,63 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from 'react-router-dom';
-import { Nav, Navbar } from 'react-bootstrap';
+import { Nav, Navbar, Form, Button } from 'react-bootstrap';
 
-const NavigationBar= () => (
+const NavigationBar = ({ setShow, isUserLoggedIn, setIsUserLoggedIn, user, setUser }) => {
 
-    <Navbar expand="lg">
-      <Navbar.Brand href="/">afc Skate</Navbar.Brand>
-      <Navbar.Toggle aria-controls="basic-navbar-nav" />
-      <Navbar.Collapse id="basic-navbar-nav">
-        <Nav className="ml-auto">
-          <Nav.Item>
-            <Nav.Link as = {Link} to="/">Home</Nav.Link>
-          </Nav.Item>
-          <Nav.Item>
-            <Nav.Link as = {Link} to="/account">Account</Nav.Link>
-          </Nav.Item>
-          <Nav.Item>
+  const handleShow = (event) => {
+    
+    event.preventDefault();
+
+    if (isUserLoggedIn) {
+         setIsUserLoggedIn(false); // logout state: not show modal, close out user object
+         setUser({});
+         localStorage.removeItem("token");
+    } else {
+      setShow(true); // login/register state: opens modal
+    }
+  }
+
+  return (
+    <>
+    <Navbar expand ="lg" bg="light" variant="light">
+    <Navbar.Brand href="/">
+            <img
+                src="/assets/images/AFC SS.svg"
+                width="225"
+                height="100"
+                className="d-inline-block align-top"
+                alt="React Bootstrap logo"
+              />
+
+    </Navbar.Brand>
+    <Navbar.Toggle aria-controls="basic-navbar-nav" />
+        <Navbar.Collapse id="basic-navbar-nav">
+          <Nav className="mr-auto">
+            { isUserLoggedIn             
+            ? <Nav.Link as = {Link} to="/account">Account</Nav.Link>
+            : ''
+            }
+            <Nav.Link as = {Link} to="/cart">Cart</Nav.Link>
             <Nav.Link as = {Link} to="/shop">Shop</Nav.Link>
-          </Nav.Item>
-          <Nav.Item>
-             <Nav.Link as = {Link} to="/blog">Blog</Nav.Link>
-          </Nav.Item>
-          <Nav.Item>
-             <Nav.Link as = {Link} to="/about">About</Nav.Link>
-          </Nav.Item>
-          <Nav.Item>
+            <Nav.Link as = {Link} to="/blog">Blog</Nav.Link>
+            <Nav.Link as = {Link} to="/about">About</Nav.Link>
             <Nav.Link as = {Link} to="/contact">Contact</Nav.Link>
-          </Nav.Item>
-        </Nav>
-      </Navbar.Collapse>
+          </Nav>
+            
+            <Form inline>
+            <Form.Label className="mr-sm-5 text-uppercase">{ isUserLoggedIn && `Welcome ${user.username}` }</Form.Label>
+              <Button variant="outline-success" onClick={handleShow}>
+                { isUserLoggedIn
+                ? 'Logout'
+                : 'Login/Register'
+                }
+                </Button>
+              </Form>
+        </Navbar.Collapse>
     </Navbar>
-);
+
+    </>
+  );
+};
 
 export default NavigationBar;
