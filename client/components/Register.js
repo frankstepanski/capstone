@@ -219,7 +219,7 @@ const Register = ({ setShow, setIsUserLoggedIn, user, setUser, error, setError, 
                             value={state}
                         >
                             <option></option>
-                            { states.map((sta) => <option value = { sta.name } key={ sta.name }>{ sta.name }</option>) }
+                            { states.map((sta) => <option key={sta.name} value={sta.name} >{sta.name}</option>) }
                         </Form.Control>
                         <Form.Control.Feedback type="invalid">
                         Please enter a state.

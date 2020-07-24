@@ -39,6 +39,10 @@ const App = () => {
 
   useEffect( ()=> {
     const authenticateToken = async () => {
+      if (!token) {
+        setIsUserLoggedIn(false)
+        return;
+      }
       console.log(`Checking if token is valid`)
       try {
         const res = await checkToken(token)
@@ -56,6 +60,10 @@ const App = () => {
   }, [token]);
 
   useEffect(()=> {
+    if (!token) {
+      setIsUserLoggedIn(false)
+      return;
+    }
     const fetchCurrentCart = async () => {
       console.log(`Grabbing current cart`)
       try {
@@ -90,17 +98,15 @@ const App = () => {
            <Switch>
               <Route exact path = "/" render = {() => (
                  < Home products = {products} />
-              )}
-                 />
-              
-              { 
-              
-              isUserLoggedIn && <Route path = "/account" render = {() => ( 
-                          <Account 
-                            user = { user } 
-                            token = { token }
-                          /> )} 
-                       /> 
+              )}/>
+              {
+              isUserLoggedIn 
+              && <Route path = "/account" render = {() => ( 
+                    <Account 
+                      user = { user } 
+                      token = { token }/> 
+                      )
+                    }/> 
               }
               <Route path = "/shop" render ={() => ( 
                   <Shop 
@@ -118,13 +124,13 @@ const App = () => {
                     user={user}
                     products={products}
                     cartEmpty={cartEmpty}
-                    setCartEmpty={setCartEmpty}
-                  /> )}
+                    setCartEmpty={setCartEmpty}/> 
+                  )}
               />
               <Route path = "/payment" render ={() => ( 
                   <Checkout 
-                    cart={cart}
-                  /> )}
+                    cart={cart}/> 
+                  )}
               />
               <Route path = "/blog" component ={Blog} />
               <Route path = "/about" component ={About} />rr
