@@ -1,34 +1,51 @@
-import React, { useState } from "react"
+import React, { useState , useEffect } from "react"
 import { Card , Button } from 'react-bootstrap'
 
+import { addToCart } from "../api"
+
 const ProductView = ({
-    name,
-    description,
-    price,
-    stock,
-    rating,
-    image
+   product,
+   token,
+   productId
+
 }) => {
+    let [itemQuantity] = useState(0)
+    const [prodId, setProdId] = useState(0)
+
+    const handleAddToCart = async () => {
+        try {
+            const res = await addToCart({token, productId:prodId , quantity: itemQuantity});
+            if (res.success) { setCart(res.updatedCart) };
+        } catch (e) {
+            console.error(e);
+        }
+    }
+
+    useEffect(() => {
+        if (productId) {
+            setProdId(productId)
+        }
+    }, [productId])
+
    return ( 
    
    <div className= "productPop">
 
-        <Card style={{ width: '18rem' }}>
-        <Card.Img variant="top" src= { image } />
+        <Card>
+        <Card.Img variant="top" src= { product.thumbnail } />
         
         <Card.Body>
             
-            <Card.Title> { name } </Card.Title>
-            <Card.Text> { description } </Card.Text>
-            <Card.Subtitle> { price } </Card.Subtitle>
-            <Card.Subtitle> { stock } </Card.Subtitle>
-            <Card.Subtitle> { rating } </Card.Subtitle>
+            <Card.Title style={{
+                "textAlign":"center"}}>
+                     { product.name } </Card.Title>
+            <Card.Text style={{
+                "textAlign":"center"}}> { product.description } </Card.Text>
+            <Card.Subtitle> Price: { product.price } </Card.Subtitle>
+            <Card.Subtitle> Stock: { product.stock } </Card.Subtitle>
+            <Card.Subtitle> Rating: { product.rating } </Card.Subtitle>
 
         </Card.Body>
-
-        <Button style ={{
-                    "textAlign": "center"
-                }}>Add to Cart</Button>
                 
         </Card>
 

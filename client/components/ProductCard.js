@@ -1,34 +1,83 @@
-import React, { useState } from "react"
-import { CardDeck, Card , Button, Pagination } from 'react-bootstrap'
+import React, { useState , useEffect } from "react"
+import { CardDeck, Card , Button, Pagination, Container, Col, Row, Popover,  PopoverContent, Overlay, OverlayTrigger } from 'react-bootstrap'
 
-import CardPopover from '../components/Popover'
-
-// const handleStockDecrement = () => setItemQuantity(--itemQuantity);
-// const handleStockIncrement = () => {
-//     setItemQuantity(++itemQuantity)
-// }
+// import CardPopover from '../components/Popover'
+import ProductView from './ProductView'
+import { addToCart } from "../api"
 
 const ProductCard = ({
     name,
     price,
     thumbnail,
-    stock
+    stock,
+    setCart,
+    token,
+    productId,
+    product
 }) => {
+    let [itemQuantity, setItemQuantity] = useState(0)
+    const [prodId, setProdId] = useState(0)
+    
 
+    const handleAddToCart = async () => {
+        try {
+            const res = await addToCart({token, productId:prodId , quantity: itemQuantity});
+            if (res.success) { setCart(res.updatedCart) };
+        } catch (e) {
+            console.error(e);
+        }
+    }
+
+    useEffect(() => {
+        if (productId) {
+            setProdId(productId)
+        }
+    }, [productId])
+    
+    const handleStockDecrement = () => {
+        const newQuantity = itemQuantity-1
+        setItemQuantity(newQuantity); 
+
+    }
+
+    const handleStockIncrement = async () => {
+        const newQuantity = itemQuantity+1
+        setItemQuantity(newQuantity)
+    }
+    
+     const popover = (   
+
+        <Popover id="popover-basic" style ={{
+            "minHeight":"10rem",
+            "minWidth":"25rem"
+        }}>
+        <Popover.Title as="h3"></Popover.Title>
+        <Popover.Content>
+            <ProductView product ={ product } />
+        </Popover.Content>
+        </Popover>
+
+    )
+    
     return (
-    <CardDeck>
-        <Card style ={{
+    <CardDeck role="button">
+        <OverlayTrigger trigger="click" placement="right" overlay={popover}>
+            <Card style ={{
            
-            "maxWidth":"15rem",
+            
             "margin": "2rem"
 
         }} >
         
-        <Card.Img variant="top" src= { thumbnail } />
+        <Card.Img variant="top" src= { thumbnail }  style ={{
+            "maxWidth":"10vw",
+            "height":"auto",
+            "alignSelf":"center"
+        }}/>
 
             <Card.Body style = {{
                 "maxHeight" : "34rem",
-                "maxWidth": "15rem",
+                
                 
             }}>
                 <Card.Title style ={{
@@ -45,24 +94,34 @@ const ProductCard = ({
                 
                 </Card.Subtitle>
 
+            <Container>
+                <Row>
+                    <Col className="d-flex justify-content-center">
+                    <Button   
+                        onClick = {handleAddToCart}
+                        >Add to Cart</Button>
+                    </Col>
+                    <Col>
+                        <Pagination>
+                            <Pagination.Prev disabled={itemQuantity <= 0 ? true : false} onClick={handleStockDecrement}/>
+                            <Pagination.Item disabled>{itemQuantity}</Pagination.Item>
+                            <Pagination.Next disabled={itemQuantity >= stock ? true : false} onClick={handleStockIncrement}/>
+                        </Pagination>
+                    </Col>
+                </Row>
                 
+                
+               
+               
+            </Container> 
 
-                <Button style ={{
-                    "textAlign": "center"
-                }}>Add to Cart</Button>
-                {/* <Pagination>
-                    <Pagination.Prev disabled={itemQuantity <= 1 ? true : false} onClick={handleStockDecrement}/>
-                    <Pagination.Item disabled>{itemQuantity}</Pagination.Item>
-                    <Pagination.Next disabled={itemQuantity >= stock ? true : false} onClick={handleStockIncrement}/>
-                </Pagination> */}
-
-                <CardPopover />
+                {/* <CardPopover product = {product} /> */}
                 
                 
-                
-            </Card.Body>
-        </Card>
-
+               
+                </Card.Body>
+            </Card>
+        </OverlayTrigger>
         
         
     </CardDeck>

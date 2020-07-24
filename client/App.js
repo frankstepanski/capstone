@@ -25,6 +25,7 @@ const App = () => {
   const [user, setUser] = useState({});
   const [cart, setCart] = useState({}); 
   const [products, setProducts] = useState([{}]); 
+  const [orders, setOrder] = useState([{}]) 
   const [token, setToken] = useState(localStorage.token) 
   const [isUserLoggedIn, setIsUserLoggedIn] = useState(false);
   
@@ -110,7 +111,8 @@ const App = () => {
               }
               <Route path = "/shop" render ={() => ( 
                   <Shop 
-                    cart={cart}  
+                    cart={cart}
+                    token={token}  
                     setCart={setCart} 
                     user={user} 
                     products={products} 
@@ -132,6 +134,7 @@ const App = () => {
                     cart={cart}/> 
                   )}
               />
+              
               <Route path = "/blog" component ={Blog} />
               <Route path = "/about" component ={About} />rr
               <Route path = "/contact" component ={Contact} />
