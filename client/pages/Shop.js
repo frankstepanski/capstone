@@ -54,9 +54,18 @@ const Shop = ( {
           }}>
             <Card.Title >Featured Products</Card.Title>
           </Card>
-          
-          <Featured featuredArray = {featuredArray} />
+
+            <Featured featuredArray = {featuredArray} />
+
+            <Card style = {{
+            "alignItems":"center",
+            "justifyItems":"center",
+            "marginTop":"2rem"
+          }}>
+            <Card.Title >Shop</Card.Title>
+            </Card>
       
+
           <div className= "shopNav">
               <Nav className="justify-content-center margin-top-2rem " activeKey="all">
               <Nav.Item>
@@ -93,6 +102,7 @@ const Shop = ( {
                   price = { prod.price }
                   thumbnail = { prod.thumbnail }
                   stock = { prod.stock }
+                  product = { prod }
               />
             ))
           }  

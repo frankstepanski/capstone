@@ -26,7 +26,6 @@ const App = () => {
   const [cart, setCart] = useState({}); 
   const [products, setProducts] = useState([{}]); 
   const [orders, setOrder] = useState([{}]) 
-  const [showPop, setPop] = useState(false);
   const [token, setToken] = useState(localStorage.token) 
   const [isUserLoggedIn, setIsUserLoggedIn] = useState(false);
   
@@ -130,6 +129,7 @@ const App = () => {
                     cart={cart}
                   /> )}
               />
+              
               <Route path = "/blog" component ={Blog} />
               <Route path = "/about" component ={About} />rr
               <Route path = "/contact" component ={Contact} />

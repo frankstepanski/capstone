@@ -8,6 +8,7 @@ import { CardDeck } from 'react-bootstrap';
 const Featured = ({ featuredArray }) => (
     
      <Carousel>
+       
         {
           featuredArray.map(featProd => (
 
@@ -24,6 +25,7 @@ const Featured = ({ featuredArray }) => (
             </Carousel.Item>
           ))
    }  
+      
       </Carousel>
       
    
