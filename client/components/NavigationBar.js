@@ -11,6 +11,7 @@ const NavigationBar = ({ setShow, isUserLoggedIn, setIsUserLoggedIn, user, setUs
     if (isUserLoggedIn) {
          setIsUserLoggedIn(false); // logout state: not show modal, close out user object
          setUser({});
+         localStorage.removeItem("token");
     } else {
       setShow(true); // login/register state: opens modal
     }

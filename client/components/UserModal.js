@@ -9,7 +9,7 @@ import './Usermodal.css';
 import Login from './Login';
 import Register from './Register';
 
-const UserModal = ({ setToken, show, setShow, setIsUserLoggedIn, user, setUser }) => {
+const UserModal = ({ setToken, show, setShow, setIsUserLoggedIn, user, token, setUser }) => {
     
     const [key, setKey] = useState('login'); // tab state
     const handleClose = () => setShow(false);
@@ -25,7 +25,10 @@ const UserModal = ({ setToken, show, setShow, setIsUserLoggedIn, user, setUser }
             <Tabs
                 id="login-register"
                 activeKey={key}
-                onSelect={(k) => setKey(k)}
+                onSelect={(k) => { 
+                        setKey(k)
+                        setError({})
+                }}
             >
                 <Tab eventKey="login" title="Login">
                     <Login 

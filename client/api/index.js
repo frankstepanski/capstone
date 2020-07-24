@@ -6,21 +6,17 @@ import axios from "axios";
 
 // Authentication Header:
 
+/* ******** user ******** */
+
+// Authentication Header:
 const HEADERS = (token) => {
   const headers = token
   ? {"Content-Type": "application/json", "Authorization": `Bearer ${token}`}
   : {"Content-Type": "application/json"}
-
   function validateStatus (status) {return status === 200 || status === 400;}
-
   const headersObj = {headers, validateStatus}  
   return headersObj;
 }
-
-console.log(HEADERS())
-
-/* ******** user ******** */
-
 export async function checkToken(token) {
   try {
     const { data } = await axios.get("/api/users", HEADERS(token));
@@ -32,7 +28,7 @@ export async function checkToken(token) {
 
 
 export async function loginUser({username, password}) {
-    try {
+ 
       const { data }   = await axios.post("/api/users/login", {
         username,
         password
@@ -44,15 +40,12 @@ export async function loginUser({username, password}) {
           return status === 200 || status === 400; // default
         },
       });
-
+      console.log('> loginUser', data);
       return data;
-    } catch (error) {
-      throw error;
-    }
   }
  
-export async function registerUser(username, password, firstName, lastName, email, address) {
-    try {
+export async function registerUser({username, password, firstName, lastName, email, address}) {
+
       const { data } = await axios.post("/api/users/register", {
           username,
           password,
@@ -61,13 +54,44 @@ export async function registerUser(username, password, firstName, lastName, emai
           lastName,
           address
       });
-      console.log(data);
-      localStorage.setItem("token", data.token);
+      console.log('> registerUser', data);
       return data;
-    } catch (error) {
-      throw error;
-    }
+  
 }
+
+export async function updateUser({username,password,email,firstName,lastName,address,token}) {
+
+    const { data } = await axios.patch('/api/users/update', {
+      username,
+      password,
+      email,
+      firstName,
+      lastName,
+      address
+    },
+      HEADERS(token)
+    );
+    console.log('> updateUser', data);
+    localStorage.setItem("token", data.token);
+    return data;
+}
+
+export async function getUserInfo() {
+  try {
+    const user = await axios.get("/api/users/getUserInfo", {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+    });
+    return user;
+  } catch (error) {
+    throw error;
+  }
+}
+
+
+
+
 
 /* ******** products ******** */
 

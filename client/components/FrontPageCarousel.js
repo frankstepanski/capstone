@@ -4,7 +4,7 @@ import Carousel  from 'react-bootstrap/Carousel';
 
 const FrontPageCarousel  = () => (
   
-  <Carousel>
+  <Carousel controls={false} indicators={false} interval={7500} fade={true}>
       <Carousel.Item>
           <img
           className="d-block w-100"

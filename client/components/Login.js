@@ -52,9 +52,9 @@ const Login = ({ setShow, setIsUserLoggedIn, user, setUser, error, setError, set
                 // user object returned:
                 if (data.token) {
                     setIsUserLoggedIn(true); 
-                    localStorage.setItem("token", data.token);
                     setUser( data.user );
                     setToken( data.token );
+                    localStorage.setItem("token", data.token);
                     setUsername("");
                     setPassword("");
                     setError({});
@@ -64,10 +64,11 @@ const Login = ({ setShow, setIsUserLoggedIn, user, setUser, error, setError, set
                 } else {
                     setError(data);
                     console.log(data);
+                    console.log(error.error);
                 }
 
             } catch (error) {
-                console.log("> login error: ", error.message);
+                console.log("> login error: ", error);
             }
         }
     }
@@ -87,7 +88,7 @@ const Login = ({ setShow, setIsUserLoggedIn, user, setUser, error, setError, set
                       onChange={handleUsernameChange}
                       value={username}
                       required
-                      minlength="5"
+                      minLength="5"
                     />
                 <Form.Text id="passwordHelpBlock" muted>
                         Must be at least 5 characters long.
@@ -105,7 +106,7 @@ const Login = ({ setShow, setIsUserLoggedIn, user, setUser, error, setError, set
                        onChange={handlePasswordChange}
                        value={password}
                        required
-                       minlength="8"
+                       minLength="8"
                        />
                     <Form.Text id="passwordHelpBlock" muted>
                         Must be 8-20 characters long.
