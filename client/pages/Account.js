@@ -13,6 +13,7 @@ const Account = ({ user, token }) => {
 
     const [error, setError] = useState("");
     const [validated, setValidated] = useState(false);
+    const [success, setSuccess] = useState("");
 
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
@@ -85,19 +86,10 @@ const Account = ({ user, token }) => {
 
               const data  = await updateUser({username,password,email,firstName,lastName,address,token});  
      
-              if (data.token) {
+              if (data.success) {
                   
-                  setUsername("");
-                  setPassword("");
-                  setVerifyPassword("");
-                  setFirstName("");
-                  setLastName("");
-                  setEmail("");
-                  setStreetAddress("");
-                  setCity("");
-                  setState("");
-                  setZip("");
-      
+                  setSuccess(data.message);
+
               // update error returned stored in data (not app error)
               } else {
          
@@ -249,6 +241,7 @@ const Account = ({ user, token }) => {
               Submit
               </Button>
               <Form.Label className = "ml-5 alert-danger">{error.error ? `Regiser error: ${error.error}` : '' }</Form.Label>
+              <Form.Label className = "ml-5 text-success">{success ? `${success}` : '' }</Form.Label>
           </Form>
         </div>
   );

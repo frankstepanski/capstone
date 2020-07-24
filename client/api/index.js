@@ -61,7 +61,7 @@ export async function registerUser({username, password, firstName, lastName, ema
 
 export async function updateUser({username,password,email,firstName,lastName,address,token}) {
 
-    const { data } = await axios.patch('/api/users/', {
+    const { data } = await axios.patch('/api/users/update', {
       username,
       password,
       email,
