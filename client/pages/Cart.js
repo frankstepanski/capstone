@@ -21,13 +21,22 @@ const Cart = ({
     const [total, setTotal] = useState(0)
     const [cartProducts, setCartProducts] = useState([])
 
-    useEffect(() => {
+/*     useEffect(() => {
         if (user && cart.products && cart.products.length > 0){
             setCartProducts(cart.products)
         } else {
             setCartEmpty(true)
         }
-    }, [user, cart])
+    }, [cart]) */
+
+    useEffect(() => {
+        if (cart.products && cart.products.length === 0){
+            setCartProducts(cart.products);
+            setCartEmpty(true)
+        } else {
+            setCartProducts(cart.products);
+        }
+    }, [cart])
 
     useEffect(() => {
         const calculateTotal = () => {
@@ -35,18 +44,23 @@ const Cart = ({
             const val = (priceArr.reduce((sum, currentVal) => sum + currentVal));
             setTotal(val);
         }
-        if (cartProducts.length > 0){
+        if (cartProducts && cartProducts.length > 0){
             calculateTotal()
         }
-    }, [cartProducts, cart])
+    }, [cartProducts])
 
-    const handleCheckout = () => {}
+    function money_round(num) {
+        return Math.ceil(num * 100) / 100;
+    }
+
+    const handleCheckout = () => {
+
+    }
 
     const handleClear = async () => {
         try {
             const res = await clearCart({token});
-            console.log(`Clearing cart`, res)
-            if (res.status) {
+            if (res.success) {
                 setCart(res.emptyCart)
                 setCartEmpty(true)
             }
@@ -58,13 +72,12 @@ const Cart = ({
     return (
     <>
         <h1>My Cart</h1>
-        <Container
-        className='w-100'>
+        <Container className='w-100' sm={12}>
             {
                 cartEmpty === false
                 ? (
                     cartProducts.map(cartProduct => (
-                        <Row key={cartProduct.id} className='w-100'>
+                        <Row key={cartProduct.id} sm="auto" className="justify-content-stretch d-flex align-items-center">
                             <CartItem 
                                 cartProduct={cartProduct}
                                 products={products}
@@ -78,8 +91,8 @@ const Cart = ({
                 )
                 : <Row className='w-100'><span>Your cart is empty!</span></Row>
             }
-            <Row sm="auto" className="justify-content-stretch">
-                <Col sm={2}>
+            <Row sm="auto" className="justify-content-stretch d-flex align-items-center">
+                <Col sm={6} className="d-flex justify-content-center">
                     <Button
                     className="m-1 align-self-left"
                     variant="danger"
@@ -87,10 +100,13 @@ const Cart = ({
                     disabled={cartEmpty}
                     >Clear Cart</Button>
                 </Col>
-                <Col sm={2}>
-                    <h4>Grand Total: ${total}</h4>
+                <Col sm={2} className="d-flex justify-content-center align-items-center">
+                    <h5>Grand Total: </h5>
                 </Col>
-                <Col sm={2}>
+                <Col sm={2} className="d-flex justify-content-center align-items-center">
+                    <h5>${money_round(total)}</h5>
+                </Col>
+                <Col sm={2} className="d-flex justify-content-center">
                 <Button
                     className="m-1"
                     variant="primary"

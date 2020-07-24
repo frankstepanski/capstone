@@ -21,7 +21,7 @@ const addProductToCart = async ({productId, cartId, purchasePrice, quantity}) =>
     try {
         const cartProduct = await getCartProductByProductId({productId, cartId});
         const currStock = await getProductStock({productId})
-        const newQuantity = quantity + cartProduct.quantity;
+        const newQuantity = cartProduct ? quantity + cartProduct.quantity : false;
         
         if (cartProduct && newQuantity > currStock) {
             //if the requested amount exceeds stock return null
@@ -38,9 +38,8 @@ const addProductToCart = async ({productId, cartId, purchasePrice, quantity}) =>
 
             return newCartProduct;
         } else {
-            // If the product is already in the cart but the stock permits
+            // If the product is already in the cart but the stock permi
             console.log('The item is already in the cart. Updating quantity')
-            const newQuantity = quantity + cartProduct.quantity;
             const newCartProduct = await updateCartProductQuantity({cartProductId: cartProduct.id, quantity: newQuantity});
 
             return newCartProduct;

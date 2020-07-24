@@ -98,7 +98,7 @@ export async function getUserInfo() {
 export async function getAllProducts() {
     try {
       const { data: { products } } = await axios.get("/api/products");
-      console.log("products:", products);
+      
       return products;
     } catch (error) {
       throw error;
@@ -169,8 +169,8 @@ export async function getCart({token}) {
 //add item to cart
 export async function addToCart({productId, quantity, token}) {
   try {
-    const { data } = await axios.post('/api/cart_products/add', {productId, quantity}, HEADERS(token));
-    return data;
+    const { data: updatedCart } = await axios.post('/api/cart_products/add', {productId, quantity}, HEADERS(token));
+    return updatedCart;
   } catch (error) {
     throw error;
   }

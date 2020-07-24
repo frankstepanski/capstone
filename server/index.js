@@ -7,6 +7,7 @@ const stripe = require("stripe")(
 );
 */
 
+
 const morgan = require('morgan');
 const bodyParser = require('body-parser');
 
@@ -14,7 +15,7 @@ const { sync } = require("./db/index");
 const { seed } = require("./db/seed");
 
 const PORT = process.env.PORT || 3001;
-const FORCE = process.env.FORCE || true;
+const FORCE = process.env.FORCE || false;
 
 const server = express();
 
