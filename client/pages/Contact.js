@@ -1,6 +1,6 @@
 import React from "react";
 import { Form, Button } from 'react-bootstrap';
-//import Iframe from 'react-iframe'
+import Iframe from 'react-iframe'
 
 import "./Contact.css";
 
