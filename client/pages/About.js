@@ -5,7 +5,7 @@ import FrontPageCarousel from "../components/FrontPageCarousel"
 
 const About = () => {
     return (
-      <div class="about">
+      <div className="about">
         <h2>About Us</h2>
 
 

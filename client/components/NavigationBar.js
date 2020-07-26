@@ -46,12 +46,16 @@ const NavigationBar = ({ setShow, isUserLoggedIn, setIsUserLoggedIn, user, setUs
             
             <Form inline>
             <Form.Label className="mr-sm-5 text-uppercase">{ isUserLoggedIn && `Welcome ${user.username}` }</Form.Label>
-              <Button variant="outline-success" onClick={handleShow}>
-                { isUserLoggedIn
-                ? 'Logout'
-                : 'Login/Register'
-                }
-                </Button>
+            {
+              !isUserLoggedIn 
+              ? <Button variant="outline-success" onClick={handleShow}>Login</Button>
+              : (
+                <Link to='/'>
+                  <Button variant="outline-danger" onClick={handleShow}>Logout</Button>
+                </Link>
+              )
+            }
+
               </Form>
         </Navbar.Collapse>
     </Navbar>
