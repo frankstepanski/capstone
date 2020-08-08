@@ -141,7 +141,6 @@ const App = () => {
               <Route path = "/product" component ={Product} />
               <Route path="*" component={NotFoundPage} />
           </Switch>
-          <Footer />
         </div>
     );
   };

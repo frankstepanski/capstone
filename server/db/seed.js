@@ -24,7 +24,7 @@ async function createInitialUsers() {
             "firstName": 'Aidan',
             "lastName": 'Weber',
             email: 'aidanweber37@gmail.com',
-            address: "123 E Fake St, Apt C, San Luis Obispo, CA, 93405",
+            address: "123 E Fake St, San Luis Obispo, California, 93405",
             admin: true,
             active: true
         });

@@ -24,7 +24,7 @@ const Account = ({ user, token }) => {
     const [address, setAddress] = useState("");
     const [streetAddress, setStreetAddress] = useState("");
     const [city, setCity] = useState("");
-    const [state, setState] = useState("");
+    const [state, setStateAddress] = useState("");
     const [zip, setZip] = useState("");
 
     useEffect(()=> {
@@ -45,7 +45,7 @@ const Account = ({ user, token }) => {
 
         setStreetAddress(addressObj.street);
         setCity(addressObj.city);
-        setState(addressObj.state);
+        setStateAddress(addressObj.state);
         setZip(addressObj.zip);
    
       }
@@ -167,7 +167,6 @@ const Account = ({ user, token }) => {
                           placeholder="Password"
                           onChange={handlePasswordChange}
                           value={password}
-                          required
                      />
                      <Form.Control.Feedback type="invalid">
                       Please enter a password.
@@ -180,7 +179,6 @@ const Account = ({ user, token }) => {
                           placeholder="Password"
                           onChange={handleVerifyPasswordChange}
                           value={verifypassword}
-                          required
                      />
                      <Form.Control.Feedback type="invalid">
                      Please verify your password.
